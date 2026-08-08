@@ -4,12 +4,16 @@ import { EMAILS_DIR } from './config.ts';
 import { tokensSchema } from './schema.ts';
 import { renderEmail, findUnhostedAssets } from './render-email.ts';
 import { validateMeta, reconcileMergeKeys } from './validate-email.ts';
+import { previewSamples, fillSamples } from './preview-samples.ts';
 
 export interface EmailBuildResult {
   name: string;
-  html: string;
+  html: string; // shippable — raw {{keys}} intact
+  previewHtml: string; // sample values filled in — for visual review only
   kb: string;
   category: string;
+  subject: string;
+  requiredKeys: string[];
   mjmlErrors: string[];
   keyErrors: string[];
   keyWarnings: string[];
@@ -50,11 +54,16 @@ export async function buildEmail(
   const { errors: keyErrors, warnings: keyWarnings } = reconcileMergeKeys(html, meta.requiredKeys);
   const { relative, placeholder } = findUnhostedAssets(html);
 
+  const previewHtml = fillSamples(html, { ...previewSamples, ...(meta.previewSamples ?? {}) });
+
   return {
     name,
     html,
+    previewHtml,
     kb: (Buffer.byteLength(html) / 1024).toFixed(1),
     category: meta.category,
+    subject: meta.subject,
+    requiredKeys: meta.requiredKeys,
     mjmlErrors: errors.map((error) => error.formattedMessage ?? error.message),
     keyErrors,
     keyWarnings,

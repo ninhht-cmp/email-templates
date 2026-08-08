@@ -1,7 +1,10 @@
 name: build
 
+# CI for feature branches + PRs. main is validated + deployed by pages.yml, so it's excluded
+# here to avoid running the same checks twice.
 on:
   push:
+    branches-ignore: [main]
   pull_request:
 
 jobs:

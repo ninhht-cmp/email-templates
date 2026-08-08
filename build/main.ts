@@ -10,6 +10,7 @@ import { createEnv } from './create-env.ts';
 import { discoverEmails } from './discover-emails.ts';
 import { buildEmail } from './build-email.ts';
 import { writeGallery, type BuiltEmail } from './write-gallery.ts';
+import { writeKeysDoc, type KeysDocEmail } from './write-keys-doc.ts';
 import { tokens } from '../src/design-system/tokens.ts';
 
 const minify = process.env.MINIFY === '1' || process.argv.includes('--minify');
@@ -26,6 +27,7 @@ async function main(): Promise<void> {
 
   let failed = false;
   const built: BuiltEmail[] = [];
+  const keysDoc: KeysDocEmail[] = [];
 
   for (const name of emailNames) {
     try {
@@ -48,18 +50,23 @@ async function main(): Promise<void> {
         for (const url of result.unhostedAssets) console.warn(`      · ${url}`);
       }
 
-      writeFileSync(`${OUT_DIR}/${name}.html`, result.html);
+      writeFileSync(`${OUT_DIR}/${name}.html`, result.html); // shippable (raw {{keys}})
+      writeFileSync(`${OUT_DIR}/${name}.preview.html`, result.previewHtml); // sample-filled preview
       const clip = Number(result.kb) > GMAIL_CLIP_KB ? '  ⚠ over Gmail 102KB clip limit' : '';
       console.log(`✓ ${OUT_DIR}/${name}.html  (${result.kb} KB · ${result.category})${clip}`);
       built.push({ name, kb: result.kb, category: result.category });
+      keysDoc.push({ name, category: result.category, subject: result.subject, requiredKeys: result.requiredKeys });
     } catch (error) {
       failed = true;
       console.error(`✗ ${name}: ${(error as Error).message}`);
     }
   }
 
-  writeGallery(OUT_DIR, built, new Date().toISOString().slice(0, 16).replace('T', ' '));
+  const builtAt = new Date().toISOString().slice(0, 16).replace('T', ' ');
+  writeGallery(OUT_DIR, built, builtAt);
   console.log(`✓ ${OUT_DIR}/index.html  (preview gallery)`);
+  writeKeysDoc(OUT_DIR, keysDoc, builtAt);
+  console.log(`✓ ${OUT_DIR}/KEYS.md  (merge-key reference)`);
 
   if (failed) {
     console.error('\nBuild failed: fix the issues above.');

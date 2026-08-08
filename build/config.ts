@@ -17,9 +17,3 @@ export const NUNJUCKS_TAGS = { variableStart: '{$', variableEnd: '$}' } as const
 
 /** Gmail clips messages larger than ~102 KB. */
 export const GMAIL_CLIP_KB = 102;
-
-/** Default icon presentation; an email overrides via `meta.icons`. */
-export const ICON_DEFAULTS = {
-  chip: { box: 52, radius: 14, inner: 26, bg: '#FEF1EB' },
-  fallbackHeight: 46,
-} as const;

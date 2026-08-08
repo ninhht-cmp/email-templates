@@ -7,6 +7,8 @@ export const emailMetaSchema = z.object({
   category: z.enum(['marketing', 'transactional', 'lifecycle']),
   subject: z.string().min(1),
   requiredKeys: z.array(z.string()),
+  // Per-email sample values for the preview build (override/extend the shared defaults).
+  previewSamples: z.record(z.string(), z.string()).optional(),
 });
 export type EmailMeta = z.infer<typeof emailMetaSchema>;
 

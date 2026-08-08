@@ -10,10 +10,10 @@ export interface BuiltEmail {
 export function writeGallery(outDir: string, built: BuiltEmail[], builtAt: string): void {
   const cards = built
     .map(
-      (email) => `    <a class="card" href="./${email.name}.html">
-      <span class="name">${email.name}</span>
-      <span class="meta">${email.kb} KB · ${email.category}</span>
-    </a>`,
+      (email) => `    <div class="card">
+      <a class="name" href="./${email.name}.preview.html">${email.name}</a>
+      <span class="meta">${email.kb} KB · ${email.category} · <a href="./${email.name}.html">raw</a></span>
+    </div>`,
     )
     .join('\n');
 
@@ -29,10 +29,12 @@ export function writeGallery(outDir: string, built: BuiltEmail[], builtAt: strin
   header { padding:28px 32px; border-bottom:1px solid #e6e8eb; }
   h1 { margin:0; font-size:18px; } .sub { color:#6b7280; font-size:13px; margin-top:4px; }
   .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; padding:24px 32px; }
-  .card { display:flex; justify-content:space-between; align-items:center; padding:16px 18px; background:#fff;
-          border:1px solid #e6e8eb; border-radius:10px; text-decoration:none; color:inherit; transition:.15s; }
+  .card { display:flex; flex-direction:column; gap:4px; padding:16px 18px; background:#fff;
+          border:1px solid #e6e8eb; border-radius:10px; transition:.15s; }
   .card:hover { border-color:#f37134; box-shadow:0 2px 10px rgba(243,113,52,.12); }
-  .name { font-weight:700; } .meta { color:#6b7280; font-size:12px; }
+  .name { font-weight:700; color:inherit; text-decoration:none; }
+  .name:hover { color:#f37134; }
+  .meta { color:#6b7280; font-size:12px; } .meta a { color:#6b7280; }
   @media (prefers-color-scheme: dark) {
     body { background:#0e1013; color:#fff; } header { border-color:#2a2e36; }
     .card { background:#191c22; border-color:#2a2e36; } .sub,.meta { color:#98a1ad; }

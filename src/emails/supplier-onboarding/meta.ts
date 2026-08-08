@@ -19,4 +19,9 @@ export const meta: EmailMeta = {
     'sender_avatar',
     'unsubscribe',
   ],
+
+  // Preview-only overrides (real avatar so dist/*.preview.html looks like a sent email).
+  previewSamples: {
+    sender_avatar: '../src/emails/supplier-onboarding/assets/anna-avatar.png',
+  },
 };
