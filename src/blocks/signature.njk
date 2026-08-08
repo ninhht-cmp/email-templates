@@ -8,13 +8,13 @@
        Needs an absolute HTTPS avatar URL in production (VML can't read relative paths). #}
     <mj-raw>
       <!--[if mso]>
-      <v:oval xmlns:v="urn:schemas-microsoft-com:vml" style="width:76px;height:76px;" stroked="false">
+      <v:oval xmlns:v="urn:schemas-microsoft-com:vml" style="width:88px;height:88px;" stroked="true" strokecolor="{$ tokens.color.hairline $}" strokeweight="2px">
         <v:fill type="frame" src="{$ content.assets.avatar $}" aspect="atleast" />
       </v:oval>
       <![endif]-->
       <!--[if !mso]><!-->
-      <img class="sig-avatar-img" src="{$ content.assets.avatar $}" alt="{{sender_name}}" width="76" height="76"
-           style="display:block;width:76px;height:76px;border:0;border-radius:50%;object-fit:cover;object-position:center;" />
+      <img class="sig-avatar-img" src="{$ content.assets.avatar $}" alt="{{sender_name}}" width="88" height="88"
+           style="display:block;width:88px;height:88px;border:2px solid {$ tokens.color.hairline $};border-radius:50%;object-fit:cover;object-position:center;" />
       <!--<![endif]-->
     </mj-raw>
   </mj-column>
