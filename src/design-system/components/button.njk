@@ -1,0 +1,4 @@
+{# Bulletproof CTA button (MJML generates the VML fallback for Outlook). #}
+{% macro button(label, href, backgroundColor) %}
+<mj-button background-color="{$ backgroundColor $}" color="#FFFFFF" align="center" href="{$ href $}">{$ label $}</mj-button>
+{% endmacro %}

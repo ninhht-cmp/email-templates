@@ -1,0 +1,23 @@
+{% from "design-system/components/badge.njk" import badge %}
+{# Company / legal block — offices rendered from content. #}
+<mj-section padding="16px 32px 4px 32px">
+  <mj-column>
+    <mj-text color="{$ tokens.color.heading $}" font-size="16px" font-weight="700" padding="0 0 4px 0">
+      {$ content.company.legalName $}
+    </mj-text>
+    <mj-text font-size="12px" color="{$ tokens.color.mutedLight $}" padding="0 0 16px 0">
+      UEN: <span style="color:{$ tokens.color.body $};font-weight:600;">{$ content.company.uen $}</span>
+    </mj-text>
+  </mj-column>
+</mj-section>
+
+<mj-section padding="0 32px 16px 32px">
+  {% for office in content.company.offices %}
+  <mj-column css-class="office-col" width="50%" vertical-align="top" padding="{$ '0 12px 0 0' if loop.first else '0 0 0 12px' $}">
+    <mj-text padding="0 0 8px 0">{$ badge(office.badge, office.tone, tokens) $}</mj-text>
+    <mj-text font-size="13px" line-height="1.55" color="{$ tokens.color.body $}" padding="0">
+      {$ office.address $}
+    </mj-text>
+  </mj-column>
+  {% endfor %}
+</mj-section>

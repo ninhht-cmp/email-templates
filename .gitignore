@@ -1,0 +1,12 @@
+# Dependencies
+node_modules/
+
+# Build output — generated, deterministic. Regenerate with `npm run build`.
+# The canonical, tested HTML is committed under test/__snapshots__/.
+dist/
+
+# Tooling / OS cruft
+*.tsbuildinfo
+*.log
+npm-debug.log*
+.DS_Store

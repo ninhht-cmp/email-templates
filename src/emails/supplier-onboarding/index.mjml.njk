@@ -1,0 +1,49 @@
+{#
+  COMACPRO — Supplier Onboarding (entry).
+  Composes the shared head + body sections + shared blocks. Build: npm run build.
+  {$ … $} = build-time (Nunjucks) · {{ … }} = send-time merge fields (untouched).
+  Context: `tokens` (design system) · `content` (this email) · `meta` (build/ops).
+#}
+{% set here = "emails/supplier-onboarding/sections" %}
+<mjml lang="en" dir="ltr">
+  <mj-head>
+    {% include "design-system/head.njk" %}
+    <mj-title>{$ content.document.title $}</mj-title>
+    <mj-preview>{$ content.document.preview $}</mj-preview>
+
+    {# Hero gradient LAYER (kept in the head, applied over the hero image in sections/hero.njk).
+       MJML paints the background on the wrapper div, its table and the inner td, so the override
+       targets the background-painting table. Clients honoring embedded CSS show the gradient;
+       Outlook ignores CSS gradients and shows the bare image. #}
+    {% set heroGradient = "linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 30%, rgba(255,255,255,.72) 48%, rgba(255,255,255,0) 66%)" %}
+    {% set heroGradientMobile = "linear-gradient(to bottom, rgba(255,255,255,.95) 0%, rgba(255,255,255,.85) 100%)" %}
+    <mj-style>
+      .hero-bg, .hero-bg table[background] {
+        background-image: {$ heroGradient $}, url('{$ content.assets.hero $}') !important;
+        background-size: cover !important;
+        background-position: right center !important;
+        background-repeat: no-repeat !important;
+      }
+      @media only screen and (max-width:479px) {
+        .hero-bg, .hero-bg table[background] {
+          background-image: {$ heroGradientMobile $}, url('{$ content.assets.hero $}') !important;
+          background-position: center !important;
+        }
+      }
+    </mj-style>
+  </mj-head>
+
+  <mj-body background-color="{$ tokens.color.canvas $}" width="{$ tokens.layout.width $}">
+    {% include here + "/hero.njk" %}
+    {% include here + "/intro.njk" %}
+    {% include here + "/primary-cta.njk" %}
+    {% include here + "/why-partner.njk" %}
+    {% include here + "/reassurance.njk" %}
+    {% include here + "/equipment.njk" %}
+    {% include here + "/secondary-cta.njk" %}
+
+    {% include "blocks/signature.njk" %}
+    {% include "blocks/company-legal.njk" %}
+    {% include "blocks/footer.njk" %}
+  </mj-body>
+</mjml>

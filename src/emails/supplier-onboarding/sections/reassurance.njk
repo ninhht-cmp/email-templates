@@ -1,0 +1,20 @@
+{# Reassurance line: shield image + text; inline centered on desktop, stacked on mobile. #}
+<mj-section padding="16px 32px 24px 32px">
+  <mj-column>
+    <mj-table align="center" width="auto" role="presentation" cellpadding="0" cellspacing="0">
+      <tr>
+        <td class="co-icon" valign="middle" style="padding-right:14px;text-align:center;">
+          <img src="{$ content.reassurance.icon $}" alt="" width="38" height="38" style="display:inline-block;vertical-align:middle;border:0;" />
+        </td>
+        <td class="co-text" valign="middle" style="font-family:{$ tokens.font.stack $};font-size:17px;font-weight:700;color:{$ tokens.color.orangeStrong $};line-height:1.35;">
+          {$ content.reassurance.text $}
+        </td>
+      </tr>
+    </mj-table>
+  </mj-column>
+</mj-section>
+
+{# Full-width divider before EQUIPMENT (mirrors the one before WHY PARTNER). #}
+<mj-section padding="8px 32px 0 32px">
+  <mj-column><mj-divider border-width="1px" border-color="{$ tokens.color.divider $}" padding="0" /></mj-column>
+</mj-section>

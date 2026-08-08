@@ -1,0 +1,60 @@
+{#
+  Shared <mj-head>: meta, brand defaults, styles, responsive rules.
+  Light-only — color-scheme pinned to light so dark-mode clients render as designed.
+  Colours/fonts come from `tokens`.
+#}
+<mj-raw>
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
+</mj-raw>
+
+{# Load the brand web font for clients that support it (Apple Mail, iOS…). Outlook/Gmail
+   ignore it and fall back to the native system stack in tokens.font.stack. #}
+<mj-font name="Inter" href="{$ tokens.font.webFontUrl $}" />
+
+<mj-attributes>
+  <mj-all font-family="{$ tokens.font.stack $}" />
+  <mj-text font-size="16px" line-height="1.6" color="{$ tokens.color.body $}" padding="0" />
+  <mj-section background-color="{$ tokens.color.white $}" padding="0" />
+  <mj-button font-weight="700" font-size="15px" inner-padding="12px 30px" border-radius="14px" />
+</mj-attributes>
+
+<mj-style inline="inline">
+  .link-orange a { color: {$ tokens.color.orangeStrong $} !important; text-decoration: none; }
+  .brand { color: {$ tokens.color.orangeStrong $}; font-weight: 700; }
+</mj-style>
+
+<mj-style>
+  /* Contact links (WhatsApp + email): subtle by default, orange + underline on hover.
+     Hover only fires on clients with embedded CSS + a mouse (desktop webmail, Apple Mail). */
+  .contact-link a:hover { color: {$ tokens.color.orangeStrong $} !important; text-decoration: underline !important; }
+  /* comacpro.net link: orange always, underline only on hover */
+  .link-orange a:hover { text-decoration: underline !important; }
+
+  /* Avatar: crop-to-fill (no distortion) for a non-square source. object-fit works in Apple Mail /
+     iOS / most webmail; Outlook ignores it, so the hosted avatar should still be a square crop. */
+  .avatar-img img { object-fit: cover !important; object-position: center !important; }
+
+  /* Reserve heights so feature titles / equipment labels bottom-align across the grid,
+     even when one wraps to a second line — without touching the copy. */
+  .feat-title { min-height: 44px; }
+  .feat-desc { min-height: 104px; }
+  .eq-label { min-height: 34px; }
+
+  /* Responsive */
+  @media only screen and (max-width:479px) {
+    /* Equipment 6-across and features 4-across both collapse to 2-across */
+    .eq-col, .feat-col { width: 50% !important; max-width: 50% !important; }
+    /* Wider mobile columns need fewer desc lines, so drop the desktop height reservation. */
+    .feat-desc { min-height: 0 !important; }
+    /* Stacked offices: gap between them + drop the desktop side gutter so both sit flush-left. */
+    .office-col { padding: 0 0 18px 0 !important; }
+    .office-col td { padding-left: 0 !important; padding-right: 0 !important; }
+    /* Callout: stack the icon above the text (centered) instead of side-by-side */
+    .co-icon, .co-text { display: block !important; text-align: center !important; }
+    .co-icon { padding: 0 0 8px 0 !important; }
+    .co-text { padding: 0 12px !important; }
+    /* Signature on mobile: avatar left-aligned (same axis as the details), then details below. */
+    .sig-avatar { padding: 0 0 14px 0 !important; }
+  }
+</mj-style>

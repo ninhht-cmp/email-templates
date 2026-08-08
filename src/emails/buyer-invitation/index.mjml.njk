@@ -1,0 +1,21 @@
+{#
+  COMACPRO — Buyer Invitation (entry). SCAFFOLD.
+  Head + placeholder body + shared chrome. Replace the placeholder with real sections/*.njk
+  once the design is provided. Context: `tokens` · `content` · `meta`.
+#}
+{% set here = "emails/buyer-invitation/sections" %}
+<mjml lang="en" dir="ltr">
+  <mj-head>
+    {% include "design-system/head.njk" %}
+    <mj-title>{$ content.document.title $}</mj-title>
+    <mj-preview>{$ content.document.preview $}</mj-preview>
+  </mj-head>
+
+  <mj-body background-color="{$ tokens.color.canvas $}" width="{$ tokens.layout.width $}">
+    {% include here + "/placeholder.njk" %}
+
+    {% include "blocks/signature.njk" %}
+    {% include "blocks/company-legal.njk" %}
+    {% include "blocks/footer.njk" %}
+  </mj-body>
+</mjml>

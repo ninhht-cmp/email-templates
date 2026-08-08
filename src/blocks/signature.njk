@@ -1,0 +1,36 @@
+{# Sales signature — avatar + contact details (no QR).
+   Desktop: avatar | details side-by-side. Mobile: avatar (top-left) then details below. #}
+<mj-section padding="24px 32px 8px 32px">
+  <mj-column css-class="sig-avatar" width="22%" vertical-align="middle" padding="0">
+    {# Circular avatar, cropped-to-fill with NO source-cropping and no distortion anywhere:
+       · Outlook desktop → VML <v:oval> filled with the image (aspect="atleast" = cover).
+       · Everyone else   → <img> with object-fit:cover.
+       Needs an absolute HTTPS avatar URL in production (VML can't read relative paths). #}
+    <mj-raw>
+      <!--[if mso]>
+      <v:oval xmlns:v="urn:schemas-microsoft-com:vml" style="width:76px;height:76px;" stroked="false">
+        <v:fill type="frame" src="{$ content.assets.avatar $}" aspect="atleast" />
+      </v:oval>
+      <![endif]-->
+      <!--[if !mso]><!-->
+      <img class="sig-avatar-img" src="{$ content.assets.avatar $}" alt="{{sender_name}}" width="76" height="76"
+           style="display:block;width:76px;height:76px;border:0;border-radius:50%;object-fit:cover;object-position:center;" />
+      <!--<![endif]-->
+    </mj-raw>
+  </mj-column>
+  <mj-column width="78%" vertical-align="middle" padding="0">
+    {# Name on line 1, title on line 2 (both desktop and mobile). #}
+    <mj-text padding="0 0 8px 0" line-height="1.45">
+      <span style="color:{$ tokens.color.heading $};font-size:15px;font-weight:700;">{{sender_name}}</span><br />
+      <span style="color:{$ tokens.color.mutedLight $};font-size:12px;">{{sender_title}}, COMACPRO</span>
+    </mj-text>
+    <mj-text css-class="contact-link" font-size="12px" padding="0 0 4px 0">
+      <img src="{$ content.assets.whatsappIcon $}" alt="" width="15" height="15" style="display:inline-block;vertical-align:middle;border:0;" />&nbsp;
+      <a href="https://wa.me/{{sender_whatsapp}}" style="color:{$ tokens.color.body $};text-decoration:none;">{{sender_phone}}</a>
+    </mj-text>
+    <mj-text css-class="contact-link" font-size="12px" padding="0">
+      <img src="{$ content.assets.emailIcon $}" alt="" width="15" height="15" style="display:inline-block;vertical-align:middle;border:0;" />&nbsp;
+      <a href="mailto:{{sender_email}}" style="color:{$ tokens.color.body $};text-decoration:none;">{{sender_email}}</a>
+    </mj-text>
+  </mj-column>
+</mj-section>

@@ -1,0 +1,18 @@
+{# Hero: image + gradient CSS layer (defined in the entry's mj-head) + logo/text on the light left. #}
+<mj-section css-class="hero-bg" background-url="{$ content.assets.hero $}" background-size="cover"
+            background-position="center center" background-repeat="no-repeat"
+            background-color="#FFFFFF" padding="0">
+  <mj-column width="56%" vertical-align="middle" padding="24px 8px 24px 32px">
+    <mj-image align="left" width="128px" height="auto" src="{$ content.assets.logo $}" alt="COMACPRO" padding="0 0 14px 0" />
+    <mj-text color="{$ tokens.color.heroTitle $}" font-size="24px" font-weight="600" line-height="1.25" padding="0">
+      {$ content.hero.heading $}
+    </mj-text>
+    <mj-divider border-width="3px" border-color="{$ tokens.color.orange $}" width="52px" align="left" padding="14px 0 14px 0" />
+    <mj-text color="{$ tokens.color.body $}" font-size="13px" line-height="1.5" padding="0">
+      {$ content.hero.subline | replace('{brand}', '<span class="brand">COMACPRO</span>') | safe $}
+    </mj-text>
+  </mj-column>
+  <mj-column width="44%" vertical-align="middle" padding="0">
+    <mj-text padding="0">&#8202;</mj-text>
+  </mj-column>
+</mj-section>

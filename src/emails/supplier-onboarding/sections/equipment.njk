@@ -1,0 +1,11 @@
+{% from "design-system/components/section-title.njk" import sectionTitle %}
+{# Equipment: title + image-over-label loop; 6-across desktop / 2-across mobile. #}
+{$ sectionTitle('EQUIPMENT WE COVER', tokens) $}
+<mj-section padding="16px 20px 8px 20px">
+  {% for item in content.equipment %}
+  <mj-column css-class="eq-col" width="16.66%" padding="8px 6px">
+    <mj-image src="{$ item.img $}" alt="{$ item.label | e $}" width="82px" border-radius="8px" align="center" padding="0 0 8px 0" />
+    <mj-text css-class="eq-label" align="center" color="{$ tokens.color.heading $}" font-size="13px" font-weight="600" line-height="1.3" padding="0">{$ item.label | e $}</mj-text>
+  </mj-column>
+  {% endfor %}
+</mj-section>

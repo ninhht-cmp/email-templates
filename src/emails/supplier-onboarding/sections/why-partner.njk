@@ -1,0 +1,18 @@
+{% from "design-system/components/section-title.njk" import sectionTitle %}
+{# Why partner: title + feature loop. Pastel chip = CSS container, icon = hosted image. #}
+{$ sectionTitle('WHY PARTNER WITH COMACPRO?', tokens) $}
+<mj-section padding="20px 20px 8px 20px">
+  {% for feature in content.features %}
+  <mj-column css-class="feat-col" width="25%" padding="0 6px">
+    <mj-text align="center" padding="0 0 12px 0">
+      <table role="presentation" cellpadding="0" cellspacing="0" align="center" style="margin:0 auto;">
+        <tr><td style="width:52px;height:52px;background-color:{$ tokens.color.orangeSoftBg $};border-radius:14px;text-align:center;vertical-align:middle;">
+          <img src="{$ feature.icon $}" alt="" width="26" height="26" style="display:inline-block;vertical-align:middle;border:0;" />
+        </td></tr>
+      </table>
+    </mj-text>
+    <mj-text css-class="feat-title" align="center" color="{$ tokens.color.heading $}" font-size="16px" font-weight="700" line-height="1.25" padding="0 0 6px 0">{$ feature.title $}</mj-text>
+    <mj-text css-class="feat-desc" align="center" font-size="13px" line-height="1.55" color="{$ tokens.color.muted $}" padding="0">{$ feature.desc $}</mj-text>
+  </mj-column>
+  {% endfor %}
+</mj-section>
