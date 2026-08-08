@@ -1,0 +1,47 @@
+name: pages
+
+# Build the email previews and publish them to GitHub Pages on every push to main.
+# dist/ is NOT committed — it is produced here and deployed, so the live preview is always
+# rebuilt from source (never stale, no build artifacts in git).
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      # Gate the deploy on quality: typecheck + build + snapshot tests must pass.
+      - run: npm run validate
+      # Stage dist/ + src/ so the emails' repo-relative asset paths (../src/…) resolve on Pages.
+      # A root redirect sends visitors from / to the /dist/ preview gallery.
+      - name: Stage site
+        run: |
+          mkdir -p _site
+          cp -r dist _site/dist
+          cp -r src _site/src
+          printf '<!doctype html><meta http-equiv="refresh" content="0; url=./dist/">' > _site/index.html
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4

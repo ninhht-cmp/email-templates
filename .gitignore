@@ -1,8 +1,8 @@
 # Dependencies
 node_modules/
 
-# Build output — generated, deterministic. Regenerate with `npm run build`.
-# The canonical, tested HTML is committed under test/__snapshots__/.
+# Build output — generated. NOT committed; CI (.github/workflows/pages.yml) builds & deploys
+# it to GitHub Pages on every push to main. Regenerate locally with `npm run build`.
 dist/
 
 # Tooling / OS cruft
