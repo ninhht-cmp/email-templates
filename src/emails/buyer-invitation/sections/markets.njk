@@ -1,0 +1,37 @@
+{% from "design-system/components/section-title.njk" import sectionTitle %}
+{#
+  Sourcing markets: a centered row of flag chips — where a buyer's machines come from.
+
+  Rendered as inline-block <span>s inside one mj-text rather than a column grid, so the row
+  reflows on its own (6 chips do not fit on one 536px line — they wrap to 4 + 2, and to fewer
+  per line on mobile) without any width maths or extra media queries.
+  Outlook's Word engine ignores inline-block padding and border-radius: chips degrade there to
+  bordered, square text runs — still legible, just less rounded.
+
+  Flag badges are circular via CSS, straight off flagcdn (no asset to host). Two things matter:
+
+  1. The size MUST be an INLINE style, not the width/height attributes. MJML's boilerplate CSS
+     carries `img { height: auto }`, which outranks the attributes — leave it to them and the
+     height follows each source's own aspect ratio, so the square globe icon renders taller than
+     the 3:2 flags and visibly inflates its chip. Inline styles outrank embedded CSS, so
+     `height:20px` here is what actually pins every badge to the same box.
+     The attributes stay for blocked-image clients, which read them before any CSS applies.
+  2. `object-fit:cover` fills the square without distortion; `object-position` (content.focus)
+     shifts the crop for flags whose emblem is off-centre.
+
+  Outlook's Word engine ignores border-radius, object-fit AND inline-block padding: there the chips
+  are bordered text runs and the flags are squares, slightly squashed since cover cannot apply.
+  Legible, just not round. Baking round PNGs would fix Outlook too, at the cost of 5 hosted assets.
+#}
+{$ sectionTitle('SOURCING MARKETS', tokens) $}
+<mj-section padding="14px 20px 4px 20px">
+  <mj-column>
+    <mj-text align="center" line-height="34px" padding="0">
+      {% for market in content.markets %}
+      <span style="display:inline-block;margin:0 3px 8px 3px;padding:6px 13px 6px 9px;border:1px solid {$ tokens.color.hairline $};border-radius:999px;background-color:{$ tokens.color.white $};font-size:13px;font-weight:600;line-height:1;color:{$ tokens.color.heading $};white-space:nowrap;">
+        <img src="{$ market.flag $}" alt="" width="20" height="20" style="display:inline-block;vertical-align:middle;width:20px;height:20px;border:1px solid {$ tokens.color.hairline $};border-radius:50%;object-fit:cover;object-position:{$ market.focus | default('center') $} center;margin-right:7px;" />{$ market.label | e $}
+      </span>
+      {% endfor %}
+    </mj-text>
+  </mj-column>
+</mj-section>

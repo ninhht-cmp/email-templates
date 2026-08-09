@@ -12,6 +12,8 @@ export const previewSamples: Record<string, string> = {
   sender_avatar: 'https://placehold.co/152x152/143E69/FFFFFF?text=AP',
   create_store_url: 'https://comacpro.net/register',
   become_supplier_url: 'https://comacpro.net',
+  explore_equipment_url: 'https://comacpro.net/equipment',
+  register_url: 'https://comacpro.net/register',
   unsubscribe: 'https://comacpro.net/unsubscribe',
 };
 

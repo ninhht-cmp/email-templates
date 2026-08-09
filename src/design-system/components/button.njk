@@ -1,4 +1,9 @@
-{# Bulletproof CTA button (MJML generates the VML fallback for Outlook). #}
-{% macro button(label, href, backgroundColor) %}
-<mj-button background-color="{$ backgroundColor $}" color="#FFFFFF" align="center" href="{$ href $}">{$ label $}</mj-button>
+{# Bulletproof CTA button (MJML generates the VML fallback for Outlook).
+   Optional keyword args:
+     width   — e.g. '100%' so side-by-side buttons match instead of each shrinking to its label.
+     padding — outer padding; MJML defaults to '10px 25px', which eats 50px of a narrow column
+               (pass '0' for paired buttons, or the label wraps). #}
+{% macro button(label, href, backgroundColor, width=none, padding=none) %}
+<mj-button background-color="{$ backgroundColor $}" color="#FFFFFF" align="center" href="{$ href $}"
+           {% if width %}width="{$ width $}"{% endif %} {% if padding %}padding="{$ padding $}"{% endif %}>{$ label $}</mj-button>
 {% endmacro %}

@@ -10,6 +10,7 @@ export const tokens = {
     orangeSoftBg: '#FEF1EB',
     orangeSoftBorder: '#F6C6A6',
     navy: '#143E69',
+    navyDeep: '#001942', // high-emphasis CTA fill (darker than navy)
     heading: '#122941',
     heroTitle: '#003B79', // hero headline only
 
@@ -24,6 +25,9 @@ export const tokens = {
     divider: '#EDEFF2',
     canvas: '#F4F5F7',
     white: '#FFFFFF',
+    skyBg: '#F1F8FF', // light-blue band behind a hero
+    panelBg: '#EDF0FF', // inset panel (benefit strip)
+    panelBorder: '#CBD7FF', // dividers inside an inset panel
 
     // Badges / accents
     badgeGrayBg: '#ECECEC',

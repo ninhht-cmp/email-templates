@@ -1,19 +1,39 @@
-// Shape contract for the buyer-invitation email. SCAFFOLD — expand once the design is provided.
+// Shape contract for the buyer-invitation email. Kept separate from the data (content.ts) so the
+// schema can be reviewed independently; the inferred type documents the content model.
 import { z } from 'zod';
 
 export const contentSchema = z.object({
   document: z.object({ title: z.string(), preview: z.string() }),
 
-  // Assets needed by the shared signature block. Add hero/section images here from the design.
   assets: z.object({
+    logo: z.string(),
+    /** Hero composite: browser mock + "Comacpro.net" pill, pre-flattened (see README). */
+    heroBrowser: z.string(),
     avatar: z.string(),
     whatsappIcon: z.string(),
     emailIcon: z.string(),
   }),
 
-  // TODO(design): replace `placeholder` with the real body fields (hero, features, CTA, …).
-  placeholder: z.object({ note: z.string() }),
+  hero: z.object({ heading: z.string(), subline: z.string() }),
 
+  /**
+   * Market chips — `flag` is a hosted flag image, `label` the market name.
+   * `focus` shifts the circular crop when the flag's emblem is off-centre (CSS object-position).
+   */
+  markets: z.array(
+    z.object({ flag: z.string(), label: z.string(), focus: z.string().optional() }),
+  ),
+
+  /** Headline proof numbers: white icon on an orange disc + value + caption. */
+  stats: z.array(z.object({ icon: z.string(), value: z.string(), label: z.string() })),
+
+  /** Inset benefit strip: orange line icon + short uppercase title. */
+  benefits: z.array(z.object({ icon: z.string(), title: z.string() })),
+
+  /** The two CTA button labels; their links are separate merge keys. */
+  ctas: z.object({ primary: z.string(), secondary: z.string() }),
+
+  // --- consumed by the shared blocks (src/blocks/) ---
   company: z.object({
     legalName: z.string(),
     uen: z.string(),

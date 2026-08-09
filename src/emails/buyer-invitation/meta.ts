@@ -1,14 +1,16 @@
 import type { EmailMeta } from '../../../build/schema.ts';
 
-// SCAFFOLD — adjust subject + requiredKeys once the design's body is implemented.
+// Build/ops metadata (content lives in content.ts). Validated against emailMetaSchema.
 export const meta: EmailMeta = {
   category: 'marketing',
-  subject: 'You are invited to source equipment on COMACPRO', // TODO(design): final subject
+  subject: 'Find reliable used construction equipment for your upcoming projects',
 
-  // Keys currently rendered by the scaffold (greeting + shared signature/footer). Update as the
-  // body grows — the build fails if a rendered {{key}} is not declared here.
+  // Merge keys the sending system must provide. The build reconciles this list against the
+  // {{keys}} actually rendered — an undeclared key fails the build.
   requiredKeys: [
-    'buyer_name',
+    'company_name',
+    'explore_equipment_url',
+    'register_url',
     'sender_name',
     'sender_title',
     'sender_phone',
@@ -17,4 +19,9 @@ export const meta: EmailMeta = {
     'sender_avatar',
     'unsubscribe',
   ],
+
+  // Preview-only overrides (real avatar so dist/*.preview.html looks like a sent email).
+  previewSamples: {
+    sender_avatar: '../src/emails/buyer-invitation/assets/anna-avatar.png',
+  },
 };

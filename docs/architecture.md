@@ -1,7 +1,7 @@
 # Email Templates — Architecture & Scaling Design
 
 Trạng thái: **GĐ 0-1 đã triển khai** (module hoá build + colocation 3 tầng). GĐ 2-4 khi cần.
-Bối cảnh: hiện có 1 email (`supplier-onboarding`). Mục tiêu: scale lên **nhiều email khác loại nhau**
+Bối cảnh: hiện có 2 email (`supplier-onboarding`, `buyer-invitation`). Mục tiêu: scale lên **nhiều email khác loại nhau**
 (marketing, transactional, lifecycle…) mà vẫn sạch, ít trùng lặp, an toàn khi nhiều người sửa.
 
 > Mục 1 (review) mô tả code **trước** refactor để làm chứng lý do; các coupling P1-P4 nêu ở đó
@@ -70,6 +70,7 @@ src/
 
   blocks/                       # TẦNG 2 — opt-in, chia sẻ giữa các email cùng nhóm
     signature.njk  company-legal.njk  footer.njk
+    shared-content.ts           #   data dùng chung cho block (company legal name / UEN / offices)
 
   emails/                       # TẦNG 3 — mỗi email 1 folder colocation
     supplier-onboarding/
@@ -163,7 +164,20 @@ Giữ template hiện tại chạy suốt quá trình.
 - ✅ **Giai đoạn 2 (DONE cùng GĐ1):** tách 3 tầng `design-system/` + `blocks/` + `emails/`.
 - 🟡 **Giai đoạn 3 (một phần):** đã có **key reconciliation** (`requiredKeys` vs `{{keys}}` — fail build)
   + **asset/placeholder warn** trong `build/main.ts`. Còn lại: **zod schema cho data** + size-budget fail.
-- ⬜ **Giai đoạn 4 (khi cần):** i18n, snapshot test, CMS content — chỉ khi có yêu cầu thật.
+- ⬜ **Giai đoạn 4 (khi cần):** i18n, CMS content — chỉ khi có yêu cầu thật. (snapshot test: DONE)
+
+**Cập nhật khi thêm `buyer-invitation` (email #2):** ban đầu tưởng "EQUIPMENT WE COVER → footer"
+dùng chung nên đã nâng `equipment.njk` + `secondary-cta.njk` lên `blocks/`; chốt lại thì
+buyer-invitation **không** dùng 2 section đó (không có lưới equipment, không có closing CTA
+"BECOME AN OFFICIAL SUPPLIER", không có QR trong signature) → đã trả cả hai về
+`emails/supplier-onboarding/sections/`.
+
+Bài học, đúng với P3 ở mục 1: **chỉ đưa lên `blocks/` khi ≥2 email thật sự render**, không đưa lên
+vì "chắc sẽ dùng chung". `secondary-cta.njk` còn chứa copy riêng của supplier ("BECOME AN OFFICIAL
+SUPPLIER") — nằm ở `blocks/` sẽ tái tạo đúng cái bẫy "partial giả-global".
+
+Phần thực sự chung giữa 2 email: `signature` · `company-legal` · `footer`, dữ liệu company/offices
+gom về `blocks/shared-content.ts` (trước đó bị copy-paste ở cả 2 `content.ts`).
 
 **Nguyên tắc chống over-engineer:** GĐ 0-1 làm ngay (trả nợ coupling P1-P4). GĐ 3 làm khi có
 template thứ 2-3 (governance mới đáng). GĐ 4 chỉ khi nghiệp vụ yêu cầu.

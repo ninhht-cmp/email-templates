@@ -1,7 +1,9 @@
 {#
-  COMACPRO — Buyer Invitation (entry). SCAFFOLD.
-  Head + placeholder body + shared chrome. Replace the placeholder with real sections/*.njk
-  once the design is provided. Context: `tokens` · `content` · `meta`.
+  COMACPRO — Buyer Invitation (entry).
+  Composes the shared head + this email's body sections + the shared bottom blocks
+  (EQUIPMENT WE COVER -> footer, identical to supplier-onboarding).
+  {$ … $} = build-time (Nunjucks) · {{ … }} = send-time merge fields (untouched).
+  Context: `tokens` (design system) · `content` (this email) · `meta` (build/ops).
 #}
 {% set here = "emails/buyer-invitation/sections" %}
 <mjml lang="en" dir="ltr">
@@ -9,11 +11,49 @@
     {% include "design-system/head.njk" %}
     <mj-title>{$ content.document.title $}</mj-title>
     <mj-preview>{$ content.document.preview $}</mj-preview>
+
+    {# Styles for sections that only this email has — kept here rather than in the shared head
+       so other emails do not carry rules they never use. #}
+    <mj-style>
+      @media only screen and (max-width:479px) {
+        /* Keep the two stats SIDE BY SIDE on mobile instead of letting MJML stack them: each stat
+           is a column (number above label) and the pair stays one row at every width.
+           MJML only applies its 50% width above 480px, falling back to the inline width:100% that
+           causes stacking — so the width has to be re-asserted here (same trick as .eq-col). */
+        .stat-col { width: 50% !important; max-width: 50% !important; }
+        /* Half of a phone screen is ~120px of usable column, so the desktop sizes no longer fit:
+           the number was breaking mid-digit ("200,00 / 0+" at 320px) and only ONE label wrapped,
+           leaving the pair lopsided. Shrink both, reclaim the column gutters, and pin the number
+           to a single line — MJML puts `word-break: break-word` on the cell, which is what let a
+           run of digits break in the first place. */
+        .stat-col td { padding-left: 2px !important; padding-right: 2px !important; }
+        .stat-num div { font-size: 21px !important; white-space: nowrap !important; }
+        .stat-lbl div { font-size: 11px !important; letter-spacing: 0 !important; }
+        /* Paired CTAs: stack full-width with a gap. The side gutters live on the inner td
+           (MJML puts column padding there), so both have to be cleared. */
+        .cta-col { padding: 0 0 12px 0 !important; }
+        .cta-col td { padding-left: 0 !important; padding-right: 0 !important; }
+      }
+
+      /* Sub-360px (iPhone SE 1st gen and similar). At 11px "EQUIPMENT LISTINGS" no longer fits one
+         line while the shorter "VERIFIED SUPPLIERS" still does, leaving the pair lopsided. One step
+         smaller keeps both on a single line rather than reserving two lines at every width. */
+      @media only screen and (max-width:359px) {
+        .stat-num div { font-size: 19px !important; }
+        .stat-lbl div { font-size: 10px !important; }
+      }
+    </mj-style>
   </mj-head>
 
   <mj-body background-color="{$ tokens.color.canvas $}" width="{$ tokens.layout.width $}">
-    {% include here + "/placeholder.njk" %}
+    {% include here + "/hero.njk" %}
+    {% include here + "/intro.njk" %}
+    {% include here + "/markets.njk" %}
+    {% include here + "/proof.njk" %}
+    {% include here + "/cta-pair.njk" %}
 
+    {# Shared closing blocks. This campaign has NO equipment grid and NO closing
+       "BECOME AN OFFICIAL SUPPLIER" section — it ends on the button pair above. #}
     {% include "blocks/signature.njk" %}
     {% include "blocks/company-legal.njk" %}
     {% include "blocks/footer.njk" %}

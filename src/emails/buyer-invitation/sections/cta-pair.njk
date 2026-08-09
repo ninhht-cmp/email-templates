@@ -1,0 +1,19 @@
+{% from "design-system/components/button.njk" import button %}
+{# Two side-by-side CTAs (they stack on mobile via .cta-col in the entry styles) + divider.
+   Each has its own merge key, so the sending system decides which one is the tracked CTA.
+   Fills use orangeStrong / navyDeep — orangeStrong instead of the decorative orange so the
+   white label keeps usable contrast (see tokens.ts).
+   width='100%' + padding='0' are required: mj-button defaults to 10px 25px padding and
+   shrink-to-fit, which makes the two buttons unequal and wraps the longer label. #}
+<mj-section padding="22px 32px 0 32px">
+  <mj-column css-class="cta-col" width="50%" padding="0 7px 0 0">
+    {$ button(content.ctas.primary, '{{explore_equipment_url}}', tokens.color.orangeStrong, width='100%', padding='0') $}
+  </mj-column>
+  <mj-column css-class="cta-col" width="50%" padding="0 0 0 7px">
+    {$ button(content.ctas.secondary, '{{register_url}}', tokens.color.navyDeep, width='100%', padding='0') $}
+  </mj-column>
+</mj-section>
+
+<mj-section padding="24px 32px 0 32px">
+  <mj-column><mj-divider border-width="1px" border-color="{$ tokens.color.divider $}" padding="0" /></mj-column>
+</mj-section>

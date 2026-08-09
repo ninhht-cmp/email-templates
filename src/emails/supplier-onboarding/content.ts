@@ -8,6 +8,8 @@ import {
   contentSchema,
   type SupplierOnboardingContent,
 } from "./content.schema.ts";
+// Content for the shared legal-footer block — same in every campaign.
+import { company } from "../../blocks/shared-content.ts";
 
 const ICONS = "../src/emails/supplier-onboarding/assets/icons";
 
@@ -95,22 +97,5 @@ export const content: SupplierOnboardingContent = contentSchema.parse({
     },
   ],
 
-  company: {
-    // Fixed legal facts — static (never change per campaign).
-    legalName: "COMACPRO GLOBAL PTE. LTD.",
-    uen: "202630381C",
-    offices: [
-      {
-        badge: "Head Office",
-        tone: "solid",
-        address: "7500A Beach Road #04-326, The Plaza Singapore 199591",
-      },
-      {
-        badge: "Vietnam Office",
-        tone: "gray",
-        address:
-          "ACCI Building 210 Le Trong Tan St., Phuong Liet, Hanoi, Vietnam",
-      },
-    ],
-  },
+  company,
 });

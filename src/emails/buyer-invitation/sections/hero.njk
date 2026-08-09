@@ -1,0 +1,23 @@
+{#
+  Hero: flat light-blue band, text left / product shot right.
+  No background image + gradient trick here (unlike supplier-onboarding) — a solid
+  background-color renders identically in EVERY client, Outlook included.
+  The "Comacpro.net" pill is baked into content.assets.heroBrowser because email clients
+  cannot overlap two elements.
+#}
+<mj-section background-color="{$ tokens.color.skyBg $}" padding="0">
+  <mj-column width="42%" vertical-align="middle" padding="30px 6px 30px 32px">
+    <mj-image align="left" width="180px" src="{$ content.assets.logo $}" alt="COMACPRO" padding="0 0 20px 0" />
+    <mj-text color="{$ tokens.color.heroTitle $}" font-size="22px" font-weight="700" line-height="1.2" padding="0">
+      {$ content.hero.heading | safe $}
+    </mj-text>
+    <mj-divider border-width="4px" border-color="{$ tokens.color.orange $}" width="58px" align="left" padding="12px 0 12px 0" />
+    <mj-text color="{$ tokens.color.heading $}" font-size="14px" font-weight="600" line-height="1.4" padding="0">
+      {$ content.hero.subline $}
+    </mj-text>
+  </mj-column>
+  <mj-column width="58%" vertical-align="bottom" padding="30px 18px 0 0">
+    <mj-image src="{$ content.assets.heroBrowser $}" alt="The COMACPRO marketplace at comacpro.net"
+              width="330px" align="right" padding="0" />
+  </mj-column>
+</mj-section>

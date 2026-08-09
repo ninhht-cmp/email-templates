@@ -18,7 +18,8 @@ Chosen for brand vibrancy over strict AA-normal on small links (a common, accept
 | Orange strong (text) | `#E5641F` | CTA button, links, callout text, `.brand` emphasis, solid badge |
 | Orange soft (bg) | `#FEF1EB` | Feature icon chip, soft badge background |
 | Orange soft (border) | `#F6C6A6` | Callout border |
-| Navy (secondary) | `#143E69` | "Become a supplier" button, logo mark |
+| Navy (secondary) | `#143E69` | Section titles, logo mark, "Become a supplier" button (supplier-onboarding) |
+| Navy deep | `#001942` | "Register free" button (buyer-invitation) — the design's darker CTA fill |
 | Heading / dark text | `#122941` | Headings, greeting, overlines, card labels, company name |
 | Body text | `#4A4A4A` | Paragraph copy, addresses |
 | Muted text | `#4E5A64` | Feature descriptions |
@@ -31,6 +32,9 @@ Chosen for brand vibrancy over strict AA-normal on small links (a common, accept
 | WhatsApp green | `#25D366` | Phone icon |
 | Hero fallback (Outlook) | `#10233F` | Behind hero image when blocked |
 | Canvas | `#F4F5F7` | Email background outside the 600px card |
+| Sky bg | `#F1F8FF` | Light-blue hero band (buyer-invitation) |
+| Panel bg | `#EDF0FF` | Inset benefit strip |
+| Panel border | `#CBD7FF` | Vertical rules inside the benefit strip |
 
 ## Typography
 

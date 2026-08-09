@@ -1,0 +1,65 @@
+{% from "design-system/components/section-title.njk" import sectionTitle %}
+{#
+  Proof panel — the single answer to "WHY BUYERS CHOOSE COMACPRO?".
+
+  Two tiers in ONE container: the quantitative numbers on top, a hairline, then the qualitative
+  benefits. Previously these were two separate blocks (centered white stats + left-aligned lavender
+  strip), which read as two unrelated answers to the same question and cost ~285px.
+
+  MJML has no "panel with several rows" primitive: mj-section IS a row and mj-wrapper cannot nest.
+  So the panel is three sibling sections sharing the same background — the radius is split across
+  the first and last so the seams between them are invisible. The wrapper supplies the white
+  side-gutter that insets the panel.
+
+  The orange discs that used to sit above each number are gone on purpose: they were decorative
+  (a forklift says nothing "EQUIPMENT LISTINGS" doesn't), they were the heaviest elements in the
+  whole email — outweighing the CTA — and they stacked 9 orange items directly above an orange
+  button. Icons now appear once, in the benefits tier.
+#}
+{$ sectionTitle('WHY BUYERS CHOOSE COMACPRO?', tokens) $}
+
+<mj-wrapper background-color="{$ tokens.color.white $}" padding="6px 32px 0 32px">
+
+  {# Tier 1 — the numbers. #}
+  <mj-section background-color="{$ tokens.color.panelBg $}" border-radius="12px 12px 0 0"
+              padding="20px 6px 6px 6px">
+    {# Each stat is a COLUMN (number above its label) at every width; the two stats sit side by
+       side on desktop and stack into two rows on mobile. #}
+    {% for stat in content.stats %}
+    <mj-column css-class="stat-col" width="50%" padding="0 6px">
+      <mj-text css-class="stat-num" align="center" color="{$ tokens.color.orangeStrong $}" font-size="26px" font-weight="800" line-height="1.1" padding="0 0 5px 0">{$ stat.value $}</mj-text>
+      <mj-text css-class="stat-lbl" align="center" color="{$ tokens.color.heading $}" font-size="12px" font-weight="700" letter-spacing="0.4px" line-height="1.3" padding="0">{$ stat.label $}</mj-text>
+    </mj-column>
+    {% endfor %}
+  </mj-section>
+
+  {# Hairline between the tiers. #}
+  <mj-section background-color="{$ tokens.color.panelBg $}" padding="16px 18px 0 18px">
+    <mj-column>
+      <mj-divider border-width="1px" border-color="{$ tokens.color.panelBorder $}" padding="0" />
+    </mj-column>
+  </mj-section>
+
+  {# Tier 2 — the benefits. No vertical rules between columns: the hairline above already groups
+     the tiers, and adding rules too made the panel busy. #}
+  <mj-section background-color="{$ tokens.color.panelBg $}" border-radius="0 0 12px 12px"
+              padding="12px 6px 16px 6px">
+    {% for benefit in content.benefits %}
+    <mj-column width="33.33%" vertical-align="middle" padding="6px 8px">
+      {# padding="0" is required: mj-table defaults to 10px 25px, which would leave the label
+         ~60px and break words mid-word inside a column this narrow. #}
+      <mj-table width="100%" padding="0" role="presentation" cellpadding="0" cellspacing="0">
+        <tr>
+          <td valign="middle" style="width:26px;padding-right:8px;">
+            <img src="{$ benefit.icon $}" alt="" width="26" height="26" style="display:block;border:0;" />
+          </td>
+          <td valign="middle" style="font-family:{$ tokens.font.stack $};font-size:12px;font-weight:700;line-height:1.35;color:{$ tokens.color.heading $};">
+            {$ benefit.title $}
+          </td>
+        </tr>
+      </mj-table>
+    </mj-column>
+    {% endfor %}
+  </mj-section>
+
+</mj-wrapper>
