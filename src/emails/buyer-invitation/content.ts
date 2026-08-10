@@ -24,9 +24,9 @@ export const content: BuyerInvitationContent = contentSchema.parse({
 
   assets: {
     logo: `${ASSETS}/comacpro-logo.png`,
-    // Browser mock + "Comacpro.net" pill composited into ONE image: email clients cannot overlap
-    // two elements, so the overlap from the design is baked in. Masters kept alongside
-    // (whole-browser.png + search-comacpro.png) — re-composite if either changes.
+    // Browser mock + frosted "Comacpro.net" pill + cursor composited into ONE image: email clients
+    // cannot overlap elements, so the overlap from the design is baked in. Vector sources kept
+    // alongside (whole-browser.svg + search.svg + mouse.png) — re-composite if any changes.
     heroBrowser: `${ASSETS}/hero-browser.png`,
     avatar: '{{sender_avatar}}', // per-sender, filled at send time
     whatsappIcon: `${ASSETS}/icons/whatsapp.svg`,

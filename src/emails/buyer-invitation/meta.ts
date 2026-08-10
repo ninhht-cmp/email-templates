@@ -8,7 +8,7 @@ export const meta: EmailMeta = {
   // Merge keys the sending system must provide. The build reconciles this list against the
   // {{keys}} actually rendered — an undeclared key fails the build.
   requiredKeys: [
-    'company_name',
+    'buyer_name',
     'explore_equipment_url',
     'register_url',
     'sender_name',
