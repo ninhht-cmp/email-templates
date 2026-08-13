@@ -12,6 +12,21 @@ export function validateMeta(rawMeta: unknown, emailName: string): EmailMeta {
 }
 
 /**
+ * Non-fatal compliance advisories for `meta.ts`. A marketing email with no `adLabel` isn't an error
+ * (a global/international audience may not require one), but we surface it so the omission is always
+ * a conscious choice — never a silent one — for any campaign that does reach a jurisdiction requiring
+ * an advertising label (e.g. VN Nghị định 91).
+ */
+export function metaAdvisories(meta: EmailMeta): string[] {
+  if (meta.category === 'marketing' && !meta.adLabel) {
+    return [
+      'marketing email has no meta.adLabel — confirm the audience needs no advertising label. Set adLabel ("[QC]"/"[AD]") for VN-facing campaigns (NĐ91), or let the sending system prepend a per-segment label.',
+    ];
+  }
+  return [];
+}
+
+/**
  * Reconcile the merge keys actually rendered against `meta.requiredKeys`.
  * Returns errors (fail the build) and warnings (informational).
  */

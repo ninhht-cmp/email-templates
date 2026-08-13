@@ -3,7 +3,7 @@ import type { Environment } from 'nunjucks';
 import { EMAILS_DIR } from './config.ts';
 import { tokensSchema } from './schema.ts';
 import { renderEmail, findUnhostedAssets } from './render-email.ts';
-import { validateMeta, reconcileMergeKeys } from './validate-email.ts';
+import { validateMeta, reconcileMergeKeys, metaAdvisories } from './validate-email.ts';
 import { previewSamples, fillSamples } from './preview-samples.ts';
 
 export interface EmailBuildResult {
@@ -17,6 +17,7 @@ export interface EmailBuildResult {
   mjmlErrors: string[];
   keyErrors: string[];
   keyWarnings: string[];
+  metaWarnings: string[];
   unhostedAssets: string[];
 }
 
@@ -67,6 +68,7 @@ export async function buildEmail(
     mjmlErrors: errors.map((error) => error.formattedMessage ?? error.message),
     keyErrors,
     keyWarnings,
+    metaWarnings: metaAdvisories(meta),
     unhostedAssets: [...relative, ...placeholder],
   };
 }

@@ -43,6 +43,7 @@ async function main(): Promise<void> {
         console.error(`✗ ${name}: ${message}`);
       }
       for (const message of result.keyWarnings) console.warn(`  ⚠ ${name}: ${message}`);
+      for (const message of result.metaWarnings) console.warn(`  ⚠ ${name}: ${message}`);
 
       if (result.unhostedAssets.length > 0) {
         console.warn(

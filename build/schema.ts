@@ -3,27 +3,34 @@
 import { z } from 'zod';
 
 /**
- * Nghị định 91/2020: advertising (marketing) email must carry this label at the FIRST position of
- * the subject, so the recipient sees it in the inbox. `[QC]` = "quảng cáo"; the decree also permits
- * `[AD]`. Single source of truth — switch the label here.
- * TODO(legal): confirm `[QC]` vs `[AD]` for this campaign's audience.
+ * Advertising labels an email may declare (Nghị định 91/2020 Điều 18, Vietnam): the label sits at
+ * the FIRST position of the subject. `[QC]` = "quảng cáo" (Vietnamese), `[AD]` = English; both are
+ * legally equivalent. The label is a per-recipient / per-jurisdiction concern, so it is OPT-IN per
+ * campaign (`meta.adLabel`), NOT forced on every marketing send — a global/international list is not
+ * uniformly subject to the VN rule. See docs/advertising-labels.md.
  */
-export const AD_SUBJECT_LABEL = '[QC]';
+export const AD_LABELS = ['[QC]', '[AD]'] as const;
 
 /** Uniform build/ops contract every email must satisfy (`meta.ts`). */
 export const emailMetaSchema = z
   .object({
     category: z.enum(['marketing', 'transactional', 'lifecycle']),
     subject: z.string().min(1),
+    /**
+     * Advertising label to enforce at the FIRST position of the subject, for campaigns subject to a
+     * labelling rule (e.g. VN NĐ91). Omit when the audience/jurisdiction doesn't require one; the
+     * sending system may still prepend a per-segment label at send time. When set, the build fails
+     * if the subject doesn't start with it — so a labelled campaign can't get the placement wrong.
+     */
+    adLabel: z.enum(AD_LABELS).optional(),
     requiredKeys: z.array(z.string()),
     // Per-email sample values for the preview build (override/extend the shared defaults).
     previewSamples: z.record(z.string(), z.string()).optional(),
   })
-  // Enforced here (not auto-prepended) so the label is present in the meta.ts source however the
-  // sending system reads the subject — parsed value, copy-paste, or grep.
-  .refine((m) => m.category !== 'marketing' || m.subject.startsWith(AD_SUBJECT_LABEL), {
+  .refine((m) => !m.adLabel || m.subject.startsWith(m.adLabel), {
     path: ['subject'],
-    error: `marketing emails must start the subject with "${AD_SUBJECT_LABEL}" (Nghị định 91/2020 advertising label). Prepend it in meta.ts, e.g. "${AD_SUBJECT_LABEL} <subject>".`,
+    error:
+      'when meta.adLabel is set, the subject must start with it (advertising label at position 0). Prepend it, e.g. "[QC] <subject>".',
   });
 export type EmailMeta = z.infer<typeof emailMetaSchema>;
 
