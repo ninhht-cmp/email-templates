@@ -15,7 +15,10 @@
 
 <mj-section padding="0 32px 16px 32px">
   {% for office in content.company.offices %}
-  <mj-column css-class="office-col" width="50%" vertical-align="top" padding="{$ '0 12px 0 0' if loop.first else '0 0 0 12px' $}">
+  {# Symmetric side padding (not a first/last split) so the 24px inter-column gutter is preserved on
+     desktop AND the block stays symmetric when columns stack on style-stripped clients (GANGA),
+     where the max-width:479 flush-reset below cannot reach. #}
+  <mj-column css-class="office-col" width="50%" vertical-align="top" padding="0 12px">
     <mj-text padding="0 0 8px 0">{$ badge(office.badge, office.tone, tokens) $}</mj-text>
     <mj-text font-size="13px" line-height="1.55" color="{$ tokens.color.body $}" padding="0">
       {$ office.address $}

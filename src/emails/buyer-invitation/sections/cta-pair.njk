@@ -1,5 +1,8 @@
 {% from "design-system/components/button.njk" import button %}
-{# Two side-by-side CTAs (they stack on mobile via .cta-col in the entry styles) + divider.
+{# Two side-by-side CTAs + divider. They stack on mobile automatically: MJML's min-width:480 rule
+   (which sets each column to 50%) drops away, so each column falls back to its inline width:100%.
+   That also covers style-stripping clients (Gmail app on non-Google accounts). The .cta-col class
+   is a styling hook only — there is NO rule on it today.
    Each has its own merge key, so the sending system decides which one is the tracked CTA.
    Fills use orangeStrong / navyDeep — orangeStrong instead of the decorative orange so the
    white label keeps usable contrast (see tokens.ts).

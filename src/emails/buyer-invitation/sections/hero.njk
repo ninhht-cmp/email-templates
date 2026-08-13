@@ -17,7 +17,10 @@
     </mj-text>
   </mj-column>
   <mj-column width="58%" vertical-align="bottom" padding="30px 18px 0 0">
+    {# fluid-on-mobile: on style-capable mobile the image fills the stacked column instead of a fixed
+       330px, so it can't overflow a narrower-than-330px column (e.g. a 320px viewport). GANGA at
+       ≤320px keeps the fixed 330px — a known, accepted edge (media-query-only, unreachable there). #}
     <mj-image src="{$ content.assets.heroBrowser $}" alt="The COMACPRO marketplace at comacpro.net"
-              width="330px" align="right" padding="0" />
+              width="330px" fluid-on-mobile="true" align="right" padding="0" />
   </mj-column>
 </mj-section>
