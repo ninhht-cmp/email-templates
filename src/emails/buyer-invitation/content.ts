@@ -9,7 +9,7 @@ import {
   type BuyerInvitationContent,
 } from "./content.schema.ts";
 // Content for the shared legal footer block — same in every campaign.
-import { company } from "../../blocks/shared-content.ts";
+import { company, compliance } from "../../blocks/shared-content.ts";
 
 const ASSETS = "../src/emails/buyer-invitation/assets";
 const ICONS = `${ASSETS}/icons`;
@@ -87,4 +87,5 @@ export const content: BuyerInvitationContent = contentSchema.parse({
   },
 
   company,
+  compliance,
 });

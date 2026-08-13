@@ -9,7 +9,7 @@ import {
   type SupplierOnboardingContent,
 } from "./content.schema.ts";
 // Content for the shared legal-footer block — same in every campaign.
-import { company } from "../../blocks/shared-content.ts";
+import { company, compliance } from "../../blocks/shared-content.ts";
 
 const ICONS = "../src/emails/supplier-onboarding/assets/icons";
 
@@ -95,4 +95,5 @@ export const content: SupplierOnboardingContent = contentSchema.parse({
   ],
 
   company,
+  compliance,
 });

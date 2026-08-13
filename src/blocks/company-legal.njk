@@ -7,6 +7,8 @@
     </mj-text>
     <mj-text font-size="12px" color="{$ tokens.color.mutedLight $}" padding="0 0 16px 0">
       UEN: <span style="color:{$ tokens.color.body $};font-weight:600;">{$ content.company.uen $}</span>
+      &nbsp;·&nbsp;
+      <a href="{$ content.company.website $}" style="color:{$ tokens.color.body $};font-weight:600;text-decoration:none;">{$ content.company.website | replace("https://", "") | replace("http://", "") $}</a>
     </mj-text>
   </mj-column>
 </mj-section>

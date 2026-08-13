@@ -37,9 +37,18 @@ export const contentSchema = z.object({
   company: z.object({
     legalName: z.string(),
     uen: z.string(),
+    /** Advertiser website — part of the NĐ91 advertiser-identity set (name/address/website). */
+    website: z.string(),
     offices: z.array(
       z.object({ badge: z.string(), tone: z.enum(['solid', 'gray']), address: z.string() }),
     ),
+  }),
+
+  // Regulatory footer disclosure (Nghị định 91/2020). Cold-sourced list → no opt-in consent exists
+  // to record; this carries the source-basis text shown right before the opt-out, not a consent
+  // record. Supplied by blocks/shared-content.ts (same every campaign).
+  compliance: z.object({
+    sourceBasis: z.string(),
   }),
 });
 
