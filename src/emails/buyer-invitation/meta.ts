@@ -3,7 +3,8 @@ import type { EmailMeta } from '../../../build/schema.ts';
 // Build/ops metadata (content lives in content.ts). Validated against emailMetaSchema.
 export const meta: EmailMeta = {
   category: 'marketing',
-  subject: 'Find reliable used construction equipment for your upcoming projects',
+  // [QC] = Nghị định 91/2020 advertising label; must stay at position 0 (enforced by emailMetaSchema).
+  subject: '[QC] Find reliable used construction equipment for your upcoming projects',
 
   // Merge keys the sending system must provide. The build reconciles this list against the
   // {{keys}} actually rendered — an undeclared key fails the build.
