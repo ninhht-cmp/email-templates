@@ -50,9 +50,15 @@ npm install          # once
 npm run build        # discover + build every email -> dist/*.html + dist/index.html
 npm run build:min    # minified output
 npm run typecheck    # tsc --noEmit (types + zod contracts)
+npm run lint:email   # client-compatibility lint of dist/*.html (build first)
 npm test             # snapshot tests (UPDATE_SNAPSHOTS=1 npm test to accept intended changes)
-npm run validate     # typecheck + build + test (what CI runs)
+npm run validate     # typecheck + build + lint:email + test (what CI runs)
 ```
+
+Every build also writes **`dist/simulator.html`** — a local, offline multi-client viewer that
+renders each email in Gmail / Apple Mail / Outlook-preview-pane / mobile widths side-by-side
+(`open dist/simulator.html`). Full testing workflow — lint → simulator → real send (Litmus / self
+test in a real Outlook) — is in **`docs/email-testing.md`**.
 
 Requires Node ≥ 20. The build is the quality gate — invalid `meta`, MJML errors, or undeclared
 merge keys all fail it (and CI).
@@ -171,6 +177,52 @@ sizes (retina):
 >   -strip PNG32:hero-browser.png
 > ```
 
+> **Baking the hero scrim (supplier-onboarding).** The hero text sits over the machinery photo, so
+> the left side must be lightened for the dark-blue copy to read. A CSS gradient overlay does NOT
+> survive Gmail (it strips the `<style>` rule) or Outlook (ignores CSS gradients), so the white
+> left→right fade is **baked into the asset**: `comacpro-machinery-scrim.png` is generated from the
+> raw `comacpro-machinery.png`. If the raw photo changes, regenerate it (Python + Pillow — no
+> ImageMagick needed):
+>
+> ```bash
+> cd src/emails/supplier-onboarding/assets
+> python3 - <<'PY'
+> from PIL import Image
+> SRC, OUT = "comacpro-machinery.png", "comacpro-machinery-scrim.png"
+> # white left→right: opaque 0–30%, fading to transparent by 66% (matches the old CSS stops)
+> STOPS = [(0.00,1.0),(0.30,1.0),(0.48,0.72),(0.66,0.0),(1.00,0.0)]
+> def a(t):
+>     for (x0,a0),(x1,a1) in zip(STOPS,STOPS[1:]):
+>         if t<=x1: return a0 if x1==x0 else a0+(a1-a0)*(t-x0)/(x1-x0)
+>     return STOPS[-1][1]
+> img = Image.open(SRC).convert("RGB"); w,h = img.size
+> ov = Image.new("RGBA",(w,1),(255,255,255,0)); px = ov.load()
+> for x in range(w): px[x,0] = (255,255,255,int(round(a(x/(w-1))*255)))
+> c = img.convert("RGBA"); c.alpha_composite(ov.resize((w,h)))
+> c.convert("RGB").save(OUT,"PNG")
+> PY
+> ```
+>
+> Then host `comacpro-machinery-scrim.png` on the CDN and paste its URL into `content.ts`
+> (`assets.hero`) — the same swap as every other asset.
+>
+> **Mobile variant.** The desktop scrim fades left→right, but under 480px the photo's busier
+> CENTRE shows behind full-width stacked text. So `assets.heroMobile`
+> (`comacpro-machinery-scrim-mobile.png`) is a heavy near-uniform white wash — regenerate it the
+> same way, replacing the `STOPS`/overlay loop with a vertical `.95→.85` white wash:
+>
+> ```python
+> TOP, BOT = 0.95, 0.85
+> ov = Image.new("RGBA", (1, h), (255,255,255,0)); px = ov.load()
+> for y in range(h): px[0, y] = (255,255,255, int(round((TOP+(BOT-TOP)*y/(h-1))*255)))
+> c = img.convert("RGBA"); c.alpha_composite(ov.resize((w, h)))
+> ```
+>
+> `index.mjml.njk` swaps it in via a `@media (max-width:479px)` background-image override on
+> `.hero-bg`. This is **progressive enhancement**: Apple Mail / iOS honour the swap; Gmail's apps
+> strip `<style>` and keep the desktop asset (still readable via its left-pinned scrim). Host this
+> file on the CDN and paste its URL into `content.ts` (`assets.heroMobile`) too.
+
 Every image has `alt` + explicit `width`/`height` so blocked-image inboxes stay readable.
 
 ## Client compatibility
@@ -197,14 +249,16 @@ Every image has `alt` + explicit `width`/`height` so blocked-image inboxes stay 
   longer label does not wrap alone and leave the pair lopsided.
   > `mj-table` and `mj-button` default to `padding: 10px 25px`. Inside a narrow column that silently
   > eats 50px and breaks labels mid-word — both are explicitly set to `padding="0"` here.
-- supplier-onboarding hero = raw 2:1 machinery image (`mj-section background-url`, VML for Outlook) + a white
-  left→right gradient **CSS layer** over it, with the logo + text on the light left. The gradient
-  override targets `.hero-bg table[background]` — the background-painting table — since MJML nests
-  an extra wrapper div that breaks `>` child selectors. Apple Mail / iOS / Gmail / Yahoo render the
-  gradient; **Outlook ignores CSS gradients and shows the bare photo** (text over image) — the
-  trade-off of keeping the gradient as a layer instead of baking it into the asset.
-  > On mobile the columns stack and the gradient switches to a top-down scrim. Tighten that scrim
-  > if narrow-screen readability needs more.
+- supplier-onboarding hero = 2:1 machinery image (`mj-section background-url`, VML for Outlook) with
+  the logo + copy over its light left. The white left→right fade that keeps the dark-blue text
+  legible is **baked into the hero asset** (`comacpro-machinery-scrim.png`), not a CSS overlay — so
+  it renders in **every** client, Gmail and Outlook included, with a soft fade instead of a hard
+  seam. The section `background-color` is white to match, so an image-blocked inbox still reads
+  dark text on light.
+  > An earlier version layered the fade as a white left→right **gradient in `<style>`**. Gmail
+  > dropped that `<style>` rule and Outlook ignores CSS gradients, so both dumped the text onto the
+  > bare photo (unreadable). Baking the scrim into the pixels is the only way to get the fade in
+  > Gmail — see "Baking the hero scrim" below.
 - Buttons are MJML bulletproof buttons (VML-backed).
 - Equipment grid: 6-across desktop → 2-across mobile via the `.eq-col` media query. Clients that
   strip `<style>` fall back to a single stacked column — still readable.

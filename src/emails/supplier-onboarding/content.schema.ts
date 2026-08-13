@@ -7,6 +7,7 @@ export const contentSchema = z.object({
   assets: z.object({
     logo: z.string(),
     hero: z.string(),
+    heroMobile: z.string(), // heavy white-wash variant, swapped in on mobile (see hero.njk)
     avatar: z.string(),
     whatsappIcon: z.string(),
     emailIcon: z.string(),

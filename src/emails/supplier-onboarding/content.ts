@@ -17,26 +17,23 @@ export const content: SupplierOnboardingContent = contentSchema.parse({
   document: {
     title:
       "Reach qualified construction equipment buyers across Southeast Asia",
-    // Inbox preheader (shown after the subject). Static text — reliable in every sending system.
-    // (A {{preview_text}} merge tag needs the engine to support it; the Mustache-fallback version
-    //  broke because the engine only does simple {{key}} replacement, not sections.)
     preview:
       "No listing fee. Reach qualified buyers across Southeast Asia — we prepare your listings.",
   },
 
   assets: {
-    logo: "../src/emails/supplier-onboarding/assets/comacpro-logo.png",
-    // Raw machinery photo (2:1); the light left gradient is a CSS layer in the entry head.
-    hero: "../src/emails/supplier-onboarding/assets/comacpro-machinery.png",
+    logo: "https://storage.dev.cmpup.com/global-statics/marketing/assets/comacpro-logo-qKnF2nRg-1786604844566.webp",
+    hero: "https://storage.dev.cmpup.com/global-statics/marketing/assets/comacpro-machinery-D7bX02DP-1786604328309.webp",
+    heroMobile:
+      "https://storage.dev.cmpup.com/global-statics/marketing/assets/comacpro-machinery-mobile-16jl6Buv-1786610865276.webp",
     avatar: "{{sender_avatar}}", // per-sender, filled at send time
-    whatsappIcon: `${ICONS}/whatsapp.svg`,
-    emailIcon: `${ICONS}/email.svg`,
+    whatsappIcon: `https://storage.dev.cmpup.com/global-statics/marketing/assets/whatsapp-F2v5jPMj-1786604562320.webp`,
+    emailIcon: `https://storage.dev.cmpup.com/global-statics/marketing/assets/email-9jnI2dXw-1786604531986.webp`,
   },
 
   hero: {
     heading:
       "Reach qualified construction equipment buyers across Southeast Asia",
-    // "COMACPRO" is emphasised in orange via the {brand} marker, replaced in the template.
     subline:
       "Launch your {brand} supplier store with dedicated onboarding and listing support.",
   },
@@ -44,29 +41,29 @@ export const content: SupplierOnboardingContent = contentSchema.parse({
   // icon = plain icon image (the pastel chip is a CSS container in the template).
   features: [
     {
-      icon: `${ICONS}/no-fee.svg`,
+      icon: `https://storage.dev.cmpup.com/global-statics/marketing/assets/no-fee-OvDYxeUR-1786603849258.webp`,
       title: "No listing fee",
       desc: "Showcase your inventory with no upfront listing cost.",
     },
     {
-      icon: `${ICONS}/buyers.svg`,
+      icon: `https://storage.dev.cmpup.com/global-statics/marketing/assets/buyers-rAjqn9sb-1786604021401.webp`,
       title: "Qualified buyers",
       desc: "Reach contractors, dealers and importers across Vietnam and Southeast Asia.",
     },
     {
-      icon: `${ICONS}/sync.svg`,
+      icon: `https://storage.dev.cmpup.com/global-statics/marketing/assets/sync-9D4aIGlY-1786604063608.webp`,
       title: "Easy sync",
       desc: "We can prepare product listings from your existing website, catalog or inventory file.",
     },
     {
-      icon: `${ICONS}/support.svg`,
+      icon: `https://storage.dev.cmpup.com/global-statics/marketing/assets/support-NHP7BHzy-1786604092504.webp`,
       title: "Dedicated support",
       desc: "Get help with onboarding, listing optimization and buyer inquiries.",
     },
   ],
 
   reassurance: {
-    icon: `${ICONS}/shield.svg`,
+    icon: `https://storage.dev.cmpup.com/global-statics/marketing/assets/shield-HK2ti3iE-1786604467393.webp`,
     text: "Your current sales channels stay unchanged.",
   },
 

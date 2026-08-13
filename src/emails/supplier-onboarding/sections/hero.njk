@@ -1,7 +1,17 @@
-{# Hero: image + gradient CSS layer (defined in the entry's mj-head) + logo/text on the light left. #}
+{# Hero: full-bleed machinery photo (mj-section background-url, VML for Outlook) with the logo +
+   copy over its light left. The white left→right fade that keeps the dark-blue text legible is
+   BAKED INTO the hero asset (see README → "Baking the hero scrim"), not a CSS overlay — so it
+   renders in EVERY client (Gmail + Outlook included), which a `<style>` gradient did not. The
+   section background-color is white to match the baked scrim, so an image-blocked inbox still
+   reads dark text on light. #}
+{# background-position is LEFT, not center: cover crops the sides on a narrow screen, and Gmail's
+   apps strip the <style> media query that would otherwise stack/retarget — so the base layout is
+   all we control on mobile. Pinning the image's left edge keeps the BAKED white scrim (left third)
+   behind the left-aligned text when the photo is cropped narrow, instead of the busy centre. On
+   the 600px desktop the scaled image is exactly 600 wide, so horizontal position is a no-op there. #}
 <mj-section css-class="hero-bg" background-url="{$ content.assets.hero $}" background-size="cover"
-            background-position="center center" background-repeat="no-repeat"
-            background-color="#FFFFFF" padding="0">
+            background-position="left center" background-repeat="no-repeat"
+            background-color="{$ tokens.color.white $}" padding="0">
   <mj-column width="56%" vertical-align="middle" padding="24px 8px 24px 32px">
     <mj-image align="left" width="128px" height="auto" src="{$ content.assets.logo $}" alt="COMACPRO" padding="0 0 14px 0" />
     <mj-text color="{$ tokens.color.heroTitle $}" font-size="24px" font-weight="600" line-height="1.25" padding="0">
