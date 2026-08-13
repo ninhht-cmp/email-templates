@@ -10,6 +10,7 @@ import { createEnv } from './create-env.ts';
 import { discoverEmails } from './discover-emails.ts';
 import { buildEmail } from './build-email.ts';
 import { writeGallery, type BuiltEmail } from './write-gallery.ts';
+import { writeSimulator } from './write-simulator.ts';
 import { writeKeysDoc, type KeysDocEmail } from './write-keys-doc.ts';
 import { tokens } from '../src/design-system/tokens.ts';
 
@@ -65,6 +66,8 @@ async function main(): Promise<void> {
   const builtAt = new Date().toISOString().slice(0, 16).replace('T', ' ');
   writeGallery(OUT_DIR, built, builtAt);
   console.log(`✓ ${OUT_DIR}/index.html  (preview gallery)`);
+  writeSimulator(OUT_DIR, built, builtAt);
+  console.log(`✓ ${OUT_DIR}/simulator.html  (inbox simulator)`);
   writeKeysDoc(OUT_DIR, keysDoc, builtAt);
   console.log(`✓ ${OUT_DIR}/KEYS.md  (merge-key reference)`);
 

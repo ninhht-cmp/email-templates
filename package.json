@@ -10,7 +10,8 @@
     "watch": "tsx watch build/main.ts",
     "typecheck": "tsc --noEmit",
     "test": "tsx --test test/*.test.ts",
-    "validate": "tsc --noEmit && tsx build/main.ts && tsx --test test/*.test.ts"
+    "lint:email": "tsx build/lint-compat.ts",
+    "validate": "tsc --noEmit && tsx build/main.ts && tsx build/lint-compat.ts && tsx --test test/*.test.ts"
   },
   "engines": {
     "node": ">=20"
