@@ -24,8 +24,8 @@ export const contentSchema = z.object({
     z.object({ flag: z.string(), label: z.string(), focus: z.string().optional() }),
   ),
 
-  /** Headline proof numbers: white icon on an orange disc + value + caption. */
-  stats: z.array(z.object({ icon: z.string(), value: z.string(), label: z.string() })),
+  /** Headline proof numbers: value + caption (no icon — the proof panel dropped the discs). */
+  stats: z.array(z.object({ value: z.string(), label: z.string() })),
 
   /** Inset benefit strip: orange line icon + short uppercase title. */
   benefits: z.array(z.object({ icon: z.string(), title: z.string() })),
