@@ -39,7 +39,7 @@ function withoutMsoOnly(html: string): string {
   return html.replace(/<!--\[if[^\]]*mso[^\]]*\]>[\s\S]*?<!\[endif\]-->/gi, '');
 }
 
-function lintOne(name: string, filePath: string): Finding[] {
+function lintOne(filePath: string): Finding[] {
   const html = readFileSync(filePath, 'utf8');
   const kb = statSync(filePath).size / 1024;
   const nonOutlook = withoutMsoOnly(html);
@@ -152,7 +152,7 @@ function main(): void {
   let warns = 0;
   for (const file of files) {
     const name = file.replace(/\.html$/, '');
-    const findings = lintOne(name, `${OUT_DIR}/${file}`).sort((a, b) => RANK[a.severity] - RANK[b.severity]);
+    const findings = lintOne(`${OUT_DIR}/${file}`).sort((a, b) => RANK[a.severity] - RANK[b.severity]);
     console.log(`\n${name}`);
     for (const f of findings) {
       if (f.severity === 'error') errors++;

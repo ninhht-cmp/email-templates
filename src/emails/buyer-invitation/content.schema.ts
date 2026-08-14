@@ -1,6 +1,7 @@
 // Shape contract for the buyer-invitation email. Kept separate from the data (content.ts) so the
 // schema can be reviewed independently; the inferred type documents the content model.
 import { z } from 'zod';
+import { companySchema, complianceSchema } from '../../blocks/shared-content.schema.ts';
 
 export const contentSchema = z.object({
   document: z.object({ title: z.string(), preview: z.string() }),
@@ -33,23 +34,9 @@ export const contentSchema = z.object({
   /** The two CTA button labels; their links are separate merge keys. */
   ctas: z.object({ primary: z.string(), secondary: z.string() }),
 
-  // --- consumed by the shared blocks (src/blocks/) ---
-  company: z.object({
-    legalName: z.string(),
-    uen: z.string(),
-    /** Advertiser website — part of the NĐ91 advertiser-identity set (name/address/website). */
-    website: z.string(),
-    offices: z.array(
-      z.object({ badge: z.string(), tone: z.enum(['solid', 'gray']), address: z.string() }),
-    ),
-  }),
-
-  // Regulatory footer disclosure (Nghị định 91/2020). Cold-sourced list → no opt-in consent exists
-  // to record; this carries the source-basis text shown right before the opt-out, not a consent
-  // record. Supplied by blocks/shared-content.ts (same every campaign).
-  compliance: z.object({
-    sourceBasis: z.string(),
-  }),
+  // Shared footer blocks (same every campaign) — shape defined once in shared-content.schema.ts.
+  company: companySchema,
+  compliance: complianceSchema,
 });
 
 export type BuyerInvitationContent = z.infer<typeof contentSchema>;

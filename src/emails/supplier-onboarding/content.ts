@@ -11,8 +11,6 @@ import {
 // Content for the shared legal-footer block — same in every campaign.
 import { company, compliance } from "../../blocks/shared-content.ts";
 
-const ICONS = "../src/emails/supplier-onboarding/assets/icons";
-
 export const content: SupplierOnboardingContent = contentSchema.parse({
   document: {
     title:

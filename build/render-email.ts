@@ -37,7 +37,7 @@ export function extractMergeKeys(html: string): string[] {
 
 /** Assets that will NOT load in a real inbox (repo-relative paths or placeholders). */
 export function findUnhostedAssets(html: string): { relative: string[]; placeholder: string[] } {
-  const relative = [...new Set(html.match(/\.\.\/[^"')]+\.(?:png|jpe?g|gif|svg)/gi) ?? [])];
+  const relative = [...new Set(html.match(/\.\.\/[^"')]+\.(?:png|jpe?g|gif|svg|webp)/gi) ?? [])];
   const placeholder = [...new Set(html.match(/https?:\/\/placehold\.co\/[^"')\s]+/gi) ?? [])];
   return { relative, placeholder };
 }

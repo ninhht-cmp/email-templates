@@ -11,8 +11,6 @@ import {
 // Content for the shared legal footer block — same in every campaign.
 import { company, compliance } from "../../blocks/shared-content.ts";
 
-const ASSETS = "../src/emails/buyer-invitation/assets";
-const ICONS = `${ASSETS}/icons`;
 // Flags come straight from flagcdn (already hosted — nothing to upload). `h40` is 60×40, i.e. 2×
 // for the 20×20 badge, so it stays crisp on retina. The circle is CSS (see sections/markets.njk).
 const FLAG = "https://flagcdn.com/h40";

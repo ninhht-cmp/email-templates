@@ -44,8 +44,6 @@ export function writeSimulator(outDir: string, built: BuiltEmail[], builtAt: str
       </figure>`,
   ).join('\n');
 
-  const firstName = built[0]?.name ?? '';
-
   writeFileSync(
     `${outDir}/simulator.html`,
     `<!doctype html>
