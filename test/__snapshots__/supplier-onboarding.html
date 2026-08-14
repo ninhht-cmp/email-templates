@@ -196,6 +196,19 @@
     /* Responsive */
     @media only screen and (max-width:479px) {
 
+      /* Section titles: drop the side rules + spacers, leaving just the centered, full-width title
+       text — a long title no longer squeezes the rules to nothing. */
+      .st-rule,
+      .st-side {
+        display: none !important;
+      }
+
+      .st-text {
+        white-space: normal !important;
+        width: 100% !important;
+        padding: 0 !important;
+      }
+
       /* Equipment 6-across and features 4-across both collapse to 2-across */
       .eq-col,
       .feat-col {
@@ -433,15 +446,15 @@
                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                         <table cellpadding="0" cellspacing="0" role="presentation" width="100%" border="0" style="color:#000000;font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:13px;line-height:22px;table-layout:auto;width:100%;border:none;">
                           <tr>
-                            <td>&nbsp;</td>
-                            <td width="34" valign="middle" style="font-size:0;line-height:0;">
+                            <td class="st-side">&nbsp;</td>
+                            <td class="st-rule" width="34" valign="middle" style="font-size:0;line-height:0;">
                               <div style="border-top:2px solid #F37134;font-size:0;line-height:0;">&#8202;</div>
                             </td>
-                            <td style="width:1%;white-space:nowrap;padding:0 14px;font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:16px;font-weight:700;letter-spacing:0.5px;color:#143E69;">WHY PARTNER WITH COMACPRO?</td>
-                            <td width="34" valign="middle" style="font-size:0;line-height:0;">
+                            <td class="st-text" style="width:1%;white-space:nowrap;padding:0 14px;font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:16px;font-weight:700;letter-spacing:0.5px;color:#143E69;text-align:center;">WHY PARTNER WITH COMACPRO?</td>
+                            <td class="st-rule" width="34" valign="middle" style="font-size:0;line-height:0;">
                               <div style="border-top:2px solid #F37134;font-size:0;line-height:0;">&#8202;</div>
                             </td>
-                            <td>&nbsp;</td>
+                            <td class="st-side">&nbsp;</td>
                           </tr>
                         </table>
                       </td>
@@ -691,15 +704,15 @@
                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                         <table cellpadding="0" cellspacing="0" role="presentation" width="100%" border="0" style="color:#000000;font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:13px;line-height:22px;table-layout:auto;width:100%;border:none;">
                           <tr>
-                            <td>&nbsp;</td>
-                            <td width="34" valign="middle" style="font-size:0;line-height:0;">
+                            <td class="st-side">&nbsp;</td>
+                            <td class="st-rule" width="34" valign="middle" style="font-size:0;line-height:0;">
                               <div style="border-top:2px solid #F37134;font-size:0;line-height:0;">&#8202;</div>
                             </td>
-                            <td style="width:1%;white-space:nowrap;padding:0 14px;font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:16px;font-weight:700;letter-spacing:0.5px;color:#143E69;">EQUIPMENT WE COVER</td>
-                            <td width="34" valign="middle" style="font-size:0;line-height:0;">
+                            <td class="st-text" style="width:1%;white-space:nowrap;padding:0 14px;font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:16px;font-weight:700;letter-spacing:0.5px;color:#143E69;text-align:center;">EQUIPMENT WE COVER</td>
+                            <td class="st-rule" width="34" valign="middle" style="font-size:0;line-height:0;">
                               <div style="border-top:2px solid #F37134;font-size:0;line-height:0;">&#8202;</div>
                             </td>
-                            <td>&nbsp;</td>
+                            <td class="st-side">&nbsp;</td>
                           </tr>
                         </table>
                       </td>
