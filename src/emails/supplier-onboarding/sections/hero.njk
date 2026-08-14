@@ -1,11 +1,13 @@
 {# Hero: full-bleed machinery photo (mj-section background-url, VML for Outlook) with logo + copy
-   over it. Legibility comes from a white WASH baked into a SINGLE hero asset (content.assets.hero) —
-   not a CSS overlay and not a media-query image swap. Gmail (app + web) ignores CSS background-image
-   swaps and strips <style> on non-Google accounts, so one wash-baked image is used for every client
-   and every width: the dark-blue text stays legible whether it sits in the 56% desktop column or
-   stacks full-width on mobile. The section background-color is white to match the wash, so an
-   image-blocked inbox still reads dark text on light. (A lighter left→right-fade desktop crop looked
-   sharper on desktop but was unreadable on Gmail mobile, where text stacks full-width — see git.) #}
+   over it. Legibility comes from a white scrim BAKED into a SINGLE desktop-crop asset
+   (content.assets.hero) — no CSS overlay and no media-query image swap (Gmail ignores CSS
+   background-image swaps and strips <style> on non-Google accounts, so a per-width swap can't be
+   relied on). The scrim fades left→right, so it's crisp on DESKTOP where the copy sits in the left
+   56% column. KNOWN TRADE-OFF: on mobile the columns stack and the text spans FULL width over the
+   desktop scrim, so the right of long lines can fall over the busier photo — weaker legibility,
+   Gmail especially. The only real fix is in the asset: re-bake a wider/heavier scrim on a
+   desktop-ratio image and point content.assets.hero at it (option A). Section background-color is
+   white to match the scrim, so an image-blocked inbox still reads dark text on light. #}
 <mj-section css-class="hero-bg" background-url="{$ content.assets.hero $}" background-size="cover"
             background-position="left center" background-repeat="no-repeat"
             background-color="{$ tokens.color.white $}" padding="0">
