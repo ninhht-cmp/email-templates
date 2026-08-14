@@ -1,14 +1,14 @@
 // Snapshot tests: every email must build without MJML errors or undeclared merge keys, and its
 // HTML must match the committed snapshot. Regenerate snapshots after an intended change with:
 //   UPDATE_SNAPSHOTS=1 npm test
-import { test } from 'node:test';
-import assert from 'node:assert/strict';
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 
+import assert from 'node:assert/strict';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { test } from 'node:test';
+import { buildEmail } from '../build/build-email.ts';
 import { EMAILS_DIR } from '../build/config.ts';
 import { createEnv } from '../build/create-env.ts';
 import { discoverEmails } from '../build/discover-emails.ts';
-import { buildEmail } from '../build/build-email.ts';
 import { tokens } from '../src/design-system/tokens.ts';
 
 const env = createEnv();

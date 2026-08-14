@@ -1,4 +1,4 @@
-import { readdirSync, existsSync, statSync } from 'node:fs';
+import { existsSync, readdirSync, statSync } from 'node:fs';
 
 /**
  * Discover emails by folder convention: any `<emailsDir>/<name>/` that contains an

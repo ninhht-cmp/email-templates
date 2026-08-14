@@ -17,7 +17,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      # typecheck + build (MJML + key governance) + snapshot tests — all fail CI on error.
+      # Biome (format + lint) + typecheck + build (MJML + key governance) + snapshot tests.
+      - run: npm run lint
       - run: npm run typecheck
       - run: npm run build
       - run: npm test

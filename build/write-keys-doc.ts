@@ -8,12 +8,14 @@ const keyDescriptions: Record<string, string> = {
   buyer_name: 'Recipient buyer name (greeting)',
   create_store_url: 'Primary CTA button link — use a tracked / per-send URL',
   become_supplier_url: 'Secondary CTA button link — tracked / per-send',
-  explore_equipment_url: 'Buyer button link, "Explore equipment" (browse listings) — tracked / per-send',
+  explore_equipment_url:
+    'Buyer button link, "Explore equipment" (browse listings) — tracked / per-send',
   register_url: 'Buyer button link, "Register free" (create account) — tracked / per-send',
   sender_name: 'Sales rep name',
   sender_title: 'Sales rep job title',
   sender_phone: 'Phone as displayed, e.g. (+84)967.442.348',
-  sender_whatsapp: 'Phone in clean international format for wa.me, e.g. 84967442348 (no +, spaces, dots)',
+  sender_whatsapp:
+    'Phone in clean international format for wa.me, e.g. 84967442348 (no +, spaces, dots)',
   sender_email: 'Sales rep email',
   sender_avatar: 'Full HTTPS URL of the rep photo (any ratio — object-fit crops it to a circle)',
   unsubscribe: 'Footer unsubscribe link',

@@ -4,15 +4,14 @@
 //
 // The build is the quality gate: invalid meta, MJML errors, or undeclared merge keys fail it.
 import { mkdirSync, writeFileSync } from 'node:fs';
-
+import { tokens } from '../src/design-system/tokens.ts';
+import { buildEmail } from './build-email.ts';
 import { EMAILS_DIR, GMAIL_CLIP_KB, OUT_DIR } from './config.ts';
 import { createEnv } from './create-env.ts';
 import { discoverEmails } from './discover-emails.ts';
-import { buildEmail } from './build-email.ts';
-import { writeGallery, type BuiltEmail } from './write-gallery.ts';
+import { type BuiltEmail, writeGallery } from './write-gallery.ts';
+import { type KeysDocEmail, writeKeysDoc } from './write-keys-doc.ts';
 import { writeSimulator } from './write-simulator.ts';
-import { writeKeysDoc, type KeysDocEmail } from './write-keys-doc.ts';
-import { tokens } from '../src/design-system/tokens.ts';
 
 const minify = process.env.MINIFY === '1' || process.argv.includes('--minify');
 const env = createEnv();
@@ -57,7 +56,12 @@ async function main(): Promise<void> {
       const clip = Number(result.kb) > GMAIL_CLIP_KB ? '  ⚠ over Gmail 102KB clip limit' : '';
       console.log(`✓ ${OUT_DIR}/${name}.html  (${result.kb} KB · ${result.category})${clip}`);
       built.push({ name, kb: result.kb, category: result.category });
-      keysDoc.push({ name, category: result.category, subject: result.subject, requiredKeys: result.requiredKeys });
+      keysDoc.push({
+        name,
+        category: result.category,
+        subject: result.subject,
+        requiredKeys: result.requiredKeys,
+      });
     } catch (error) {
       failed = true;
       console.error(`✗ ${name}: ${(error as Error).message}`);

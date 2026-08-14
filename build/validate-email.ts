@@ -1,5 +1,5 @@
-import { emailMetaSchema, type EmailMeta } from './schema.ts';
 import { extractMergeKeys } from './render-email.ts';
+import { type EmailMeta, emailMetaSchema } from './schema.ts';
 
 /** Validate `meta.ts` against the uniform contract. Throws (with a readable message) on mismatch. */
 export function validateMeta(rawMeta: unknown, emailName: string): EmailMeta {

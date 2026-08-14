@@ -1,10 +1,10 @@
 import { pathToFileURL } from 'node:url';
 import type { Environment } from 'nunjucks';
 import { EMAILS_DIR } from './config.ts';
+import { fillSamples, previewSamples } from './preview-samples.ts';
+import { findUnhostedAssets, renderEmail } from './render-email.ts';
 import { tokensSchema } from './schema.ts';
-import { renderEmail, findUnhostedAssets } from './render-email.ts';
-import { validateMeta, reconcileMergeKeys, metaAdvisories } from './validate-email.ts';
-import { previewSamples, fillSamples } from './preview-samples.ts';
+import { metaAdvisories, reconcileMergeKeys, validateMeta } from './validate-email.ts';
 
 export interface EmailBuildResult {
   name: string;

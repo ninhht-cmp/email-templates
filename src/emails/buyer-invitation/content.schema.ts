@@ -21,9 +21,7 @@ export const contentSchema = z.object({
    * Market chips — `flag` is a hosted flag image, `label` the market name.
    * `focus` shifts the circular crop when the flag's emblem is off-centre (CSS object-position).
    */
-  markets: z.array(
-    z.object({ flag: z.string(), label: z.string(), focus: z.string().optional() }),
-  ),
+  markets: z.array(z.object({ flag: z.string(), label: z.string(), focus: z.string().optional() })),
 
   /** Headline proof numbers: value + caption (no icon — the proof panel dropped the discs). */
   stats: z.array(z.object({ value: z.string(), label: z.string() })),

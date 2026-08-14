@@ -38,8 +38,10 @@ export const tokens = {
   font: {
     // Inter (loaded web font on supporting clients) with a premium native fallback per
     // platform: SF Pro on Apple, Segoe UI on Windows/Outlook, Roboto on Android, then Arial.
-    stack: "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
-    webFontUrl: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap',
+    stack:
+      "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+    webFontUrl:
+      'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap',
   },
 
   layout: {

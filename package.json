@@ -9,14 +9,17 @@
     "build:min": "tsx build/main.ts --minify",
     "watch": "tsx watch build/main.ts",
     "typecheck": "tsc --noEmit",
+    "lint": "biome check .",
+    "format": "biome format --write .",
     "test": "tsx --test test/*.test.ts",
     "lint:email": "tsx build/lint-compat.ts",
-    "validate": "tsc --noEmit && tsx build/main.ts && tsx build/lint-compat.ts && tsx --test test/*.test.ts"
+    "validate": "biome check . && tsc --noEmit && tsx build/main.ts && tsx build/lint-compat.ts && tsx --test test/*.test.ts"
   },
   "engines": {
     "node": ">=20"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.5.8",
     "@types/node": "^26.1.2",
     "@types/nunjucks": "^3.2.6",
     "mjml": "^5.4.0",

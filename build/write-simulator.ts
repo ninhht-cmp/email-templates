@@ -25,14 +25,22 @@ interface Viewport {
 const VIEWPORTS: Viewport[] = [
   { id: 'desktop', label: 'Desktop webmail', sub: 'Gmail / Outlook.com · full width', width: 700 },
   { id: 'applemail', label: 'Apple Mail', sub: 'macOS reading pane', width: 600 },
-  { id: 'preview-pane', label: 'Preview pane', sub: 'Outlook desktop · narrow list+reading split', width: 480 },
+  {
+    id: 'preview-pane',
+    label: 'Preview pane',
+    sub: 'Outlook desktop · narrow list+reading split',
+    width: 480,
+  },
   { id: 'mobile', label: 'Mobile', sub: 'iPhone · Gmail/Apple Mail app', width: 375 },
   { id: 'mobile-sm', label: 'Small mobile', sub: '320px · smallest common width', width: 320 },
 ];
 
 export function writeSimulator(outDir: string, built: BuiltEmail[], builtAt: string): void {
   const templateOptions = built
-    .map((e, i) => `<option value="${e.name}"${i === 0 ? ' selected' : ''}>${e.name} · ${e.kb} KB</option>`)
+    .map(
+      (e, i) =>
+        `<option value="${e.name}"${i === 0 ? ' selected' : ''}>${e.name} · ${e.kb} KB</option>`,
+    )
     .join('\n        ');
 
   const frames = VIEWPORTS.map(

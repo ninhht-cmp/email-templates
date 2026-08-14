@@ -1,5 +1,5 @@
 import nunjucks from 'nunjucks';
-import { SRC_ROOT, NUNJUCKS_TAGS } from './config.ts';
+import { NUNJUCKS_TAGS, SRC_ROOT } from './config.ts';
 
 /** Configure the Nunjucks environment used for every render (build and tests share this). */
 export function createEnv(): nunjucks.Environment {
