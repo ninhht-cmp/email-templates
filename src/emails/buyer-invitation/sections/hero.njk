@@ -6,7 +6,9 @@
   cannot overlap two elements.
 #}
 <mj-section background-color="{$ tokens.color.skyBg $}" padding="0">
-  <mj-column width="42%" vertical-align="middle" padding="30px 6px 30px 32px">
+  {# padding-bottom 0 (was 30): on desktop the text is vertical-centered so it's invisible there,
+     but when the columns STACK on mobile it removes half of the ~60px sky-blue gap above the shot. #}
+  <mj-column width="42%" vertical-align="middle" padding="30px 6px 0 32px">
     <mj-image align="left" width="180px" src="{$ content.assets.logo $}" alt="COMACPRO" padding="0 0 20px 0" />
     <mj-text color="{$ tokens.color.heroTitle $}" font-size="22px" font-weight="700" line-height="1.2" padding="0">
       {$ content.hero.heading | safe $}
@@ -16,7 +18,9 @@
       {$ content.hero.subline $}
     </mj-text>
   </mj-column>
-  <mj-column width="58%" vertical-align="bottom" padding="30px 18px 0 0">
+  {# padding-top 16 (was 30): the browser shot bottom-aligns, so this is just the gap under the
+     subline when stacked on mobile — trimmed so the shot sits closer to the copy. #}
+  <mj-column width="58%" vertical-align="bottom" padding="16px 18px 0 0">
     {# fluid-on-mobile: on style-capable mobile the image fills the stacked column instead of a fixed
        330px, so it can't overflow a narrower-than-330px column (e.g. a 320px viewport). GANGA at
        ≤320px keeps the fixed 330px — a known, accepted edge (media-query-only, unreachable there). #}
