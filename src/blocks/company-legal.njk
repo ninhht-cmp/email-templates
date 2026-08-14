@@ -15,10 +15,11 @@
 
 <mj-section padding="0 32px 16px 32px">
   {% for office in content.company.offices %}
-  {# Symmetric side padding (not a first/last split) so the 24px inter-column gutter is preserved on
-     desktop AND the block stays symmetric when columns stack on style-stripped clients (GANGA),
-     where the max-width:479 flush-reset below cannot reach. #}
-  <mj-column css-class="office-col" width="50%" vertical-align="top" padding="0 12px">
+  {# Gutter as the FIRST column's right padding only, both columns 0 on the left. Desktop keeps a
+     24px inter-column gap; on style-stripped clients (GANGA) the columns stack and both stay flush
+     to the left edge — same as the legal name / footer above and below — because the max-width:479
+     flush-reset can't reach there. (A left pad on the 2nd column would indent it on GANGA.) #}
+  <mj-column css-class="office-col" width="50%" vertical-align="top" padding="{$ '0 24px 0 0' if loop.first else '0' $}">
     <mj-text padding="0 0 8px 0">{$ badge(office.badge, office.tone, tokens) $}</mj-text>
     <mj-text font-size="13px" line-height="1.55" color="{$ tokens.color.body $}" padding="0">
       {$ office.address $}

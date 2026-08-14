@@ -5,8 +5,10 @@
   {% for feature in content.features %}
   <mj-column css-class="feat-col" width="25%" padding="0 6px">
     <mj-text align="center" padding="0 0 12px 0">
-      <table role="presentation" cellpadding="0" cellspacing="0" align="center" style="margin:0 auto;">
-        <tr><td style="width:52px;height:52px;background-color:{$ tokens.color.orangeSoftBg $};border-radius:14px;text-align:center;vertical-align:middle;">
+      {# width/height as HTML ATTRIBUTES (not CSS-only): Gmail app ignores CSS width/height on a
+         <td> with no attribute and shrinks the pastel chip to the icon. Attributes are honored. #}
+      <table role="presentation" cellpadding="0" cellspacing="0" align="center" width="52" style="margin:0 auto;width:52px;">
+        <tr><td width="52" height="52" style="width:52px;height:52px;background-color:{$ tokens.color.orangeSoftBg $};border-radius:14px;text-align:center;vertical-align:middle;">
           <img src="{$ feature.icon $}" alt="" width="26" height="26" style="display:inline-block;vertical-align:middle;border:0;" />
         </td></tr>
       </table>

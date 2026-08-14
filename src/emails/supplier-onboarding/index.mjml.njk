@@ -10,23 +10,6 @@
     {% include "design-system/head.njk" %}
     <mj-title>{$ content.document.title $}</mj-title>
     <mj-preview>{$ content.document.preview $}</mj-preview>
-
-    {# Hero legibility comes from a white scrim BAKED INTO the image (not a CSS gradient — Gmail
-       dropped that, Outlook ignored it). The desktop asset fades left→right; on mobile the busier
-       CENTRE of the photo shows behind full-width stacked text, so under 480px we swap to a
-       heavy near-uniform white-wash variant (assets.heroMobile). This is progressive enhancement:
-       clients that keep <style> + honour a background-image swap (Apple Mail, iOS) get it; Gmail's
-       apps strip <style> and keep the desktop asset, still readable via its left-pinned scrim.
-       MJML paints the section background on the wrapper div AND the inner table[background], so the
-       swap targets both. #}
-    <mj-style>
-      @media only screen and (max-width:479px) {
-        .hero-bg, .hero-bg table[background] {
-          background-image: url('{$ content.assets.heroMobile $}') !important;
-          background-position: center center !important;
-        }
-      }
-    </mj-style>
   </mj-head>
 
   <mj-body background-color="{$ tokens.color.canvas $}" width="{$ tokens.layout.width $}">

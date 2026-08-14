@@ -23,9 +23,9 @@ export const content: SupplierOnboardingContent = contentSchema.parse({
 
   assets: {
     logo: "https://storage.dev.cmpup.com/global-statics/marketing/assets/comacpro-logo-qKnF2nRg-1786604844566.webp",
-    hero: "https://storage.dev.cmpup.com/global-statics/marketing/assets/comacpro-machinery-D7bX02DP-1786604328309.webp",
-    heroMobile:
-      "https://storage.dev.cmpup.com/global-statics/marketing/assets/comacpro-machinery-mobile-16jl6Buv-1786610865276.webp",
+    // Single wash-baked asset used for EVERY client and width — Gmail ignores CSS background-image
+    // swaps, so a per-width swap can't be relied on; the wash keeps text legible full-width. See hero.njk.
+    hero: "https://storage.dev.cmpup.com/global-statics/marketing/assets/comacpro-machinery-mobile-16jl6Buv-1786610865276.webp",
     avatar: "{{sender_avatar}}", // per-sender, filled at send time
     whatsappIcon: `https://storage.dev.cmpup.com/global-statics/marketing/assets/whatsapp-F2v5jPMj-1786604562320.webp`,
     emailIcon: `https://storage.dev.cmpup.com/global-statics/marketing/assets/email-9jnI2dXw-1786604531986.webp`,

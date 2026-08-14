@@ -1,18 +1,11 @@
-{# Hero: full-bleed machinery photo (mj-section background-url, VML for Outlook) with the logo +
-   copy over its light left. The white left→right fade that keeps the dark-blue text legible is
-   BAKED INTO the hero asset (see README → "Baking the hero scrim"), not a CSS overlay — so it
-   renders in EVERY client (Gmail + Outlook included), which a `<style>` gradient did not. The
-   section background-color is white to match the baked scrim, so an image-blocked inbox still
-   reads dark text on light. #}
-{# background-position is LEFT, not center: cover crops the sides on a narrow screen. On clients
-   that strip <style> (Gmail app on non-Google accounts, "GANGA"), BOTH the min-width:480 layout
-   rule and the max-width:479 mobile-scrim swap drop away — so the two columns fall back to inline
-   width:100% and STACK, and the text column then spans the FULL width over the DESKTOP hero asset.
-   Pinning the image left keeps the baked white scrim (left third) under at least the start of each
-   line; the right of long wrapped lines can still land over the busier centre. That residual
-   legibility case is fixable only in the asset (bake a wider scrim), not in CSS — verify on a real
-   GANGA render before deciding. On the 600px desktop the image is exactly 600 wide, so position is
-   a no-op there. #}
+{# Hero: full-bleed machinery photo (mj-section background-url, VML for Outlook) with logo + copy
+   over it. Legibility comes from a white WASH baked into a SINGLE hero asset (content.assets.hero) —
+   not a CSS overlay and not a media-query image swap. Gmail (app + web) ignores CSS background-image
+   swaps and strips <style> on non-Google accounts, so one wash-baked image is used for every client
+   and every width: the dark-blue text stays legible whether it sits in the 56% desktop column or
+   stacks full-width on mobile. The section background-color is white to match the wash, so an
+   image-blocked inbox still reads dark text on light. (A lighter left→right-fade desktop crop looked
+   sharper on desktop but was unreadable on Gmail mobile, where text stacks full-width — see git.) #}
 <mj-section css-class="hero-bg" background-url="{$ content.assets.hero $}" background-size="cover"
             background-position="left center" background-repeat="no-repeat"
             background-color="{$ tokens.color.white $}" padding="0">
