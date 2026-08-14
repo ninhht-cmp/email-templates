@@ -7,7 +7,7 @@ export const tokens = {
     // Brand
     orange: '#F37134', // decorative only (accent bar, section rules, chip) — fails text contrast
     orangeStrong: '#E5641F', // vibrant, AA-large 3.4:1 — text, links, buttons, badges
-    orangeSoftBg: '#FEF1EB',
+    orangeSoftBg: '#FCE0CE', // feature-chip / soft accent bg — deeper than a 5% tint so the pastel chip reads on phones
     orangeSoftBorder: '#F6C6A6',
     navy: '#143E69',
     navyDeep: '#001942', // high-emphasis CTA fill (darker than navy)
