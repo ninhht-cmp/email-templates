@@ -20,7 +20,10 @@
       {$ content.hero.subline $}
     </mj-text>
   </mj-column>
-  <mj-column width="58%" vertical-align="middle" padding="24px 18px 0 0">
+  {# Symmetric top/bottom (12/12): keeps the shot vertically centred against the copy on desktop
+     (this is the taller column, so equal padding puts its centre on the row centre), and on mobile
+     the stacked gap above the shot is just this 12px top — trimmed from 24. #}
+  <mj-column width="58%" vertical-align="middle" padding="12px 18px 12px 0">
     {# fluid-on-mobile: on style-capable mobile the image fills the stacked column instead of a fixed
        330px, so it can't overflow a narrower-than-330px column (e.g. a 320px viewport). GANGA at
        ≤320px keeps the fixed 330px — a known, accepted edge (media-query-only, unreachable there). #}
