@@ -30,7 +30,10 @@ export const content: BuyerInvitationContent = contentSchema.parse({
   },
 
   hero: {
-    heading: 'Find Reliable Used<br />Construction Equipment',
+    // No forced <br>: on desktop it made "Construction Equipment" one line wider than the 42%
+    // column, and Outlook's Word engine expanded the cell past 600px, dropping the image column
+    // below. Let it wrap naturally to fit the column instead.
+    heading: 'Find Reliable Used Construction Equipment',
     subline: 'For your upcoming projects',
   },
 
