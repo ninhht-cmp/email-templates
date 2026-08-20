@@ -7,14 +7,12 @@
    without a media query; the .cta-col rule (head.njk, max-width:479) restacks on real mobile.
    width='100%' + padding='0' keep the two buttons equal (mj-button otherwise shrinks to its label). #}
 <mj-section padding="22px 32px 0 32px">
-  <mj-group>
-    <mj-column css-class="cta-col" width="50%" padding="0 7px 0 0">
-      {$ button(content.ctas.primary, '{{explore_equipment_url}}', tokens.color.orangeStrong, width='100%', padding='0') $}
-    </mj-column>
-    <mj-column css-class="cta-col" width="50%" padding="0 0 0 7px">
-      {$ button(content.ctas.secondary, '{{register_url}}', tokens.color.navyDeep, width='100%', padding='0') $}
-    </mj-column>
-  </mj-group>
+  <mj-column css-class="cta-col mw-261" width="50%" padding="0 7px 0 0">
+    {$ button(content.ctas.primary, '{{explore_equipment_url}}', tokens.color.orangeStrong, width='100%', padding='0') $}
+  </mj-column>
+  <mj-column css-class="cta-col mw-261" width="50%" padding="0 0 0 7px">
+    {$ button(content.ctas.secondary, '{{register_url}}', tokens.color.navyDeep, width='100%', padding='0') $}
+  </mj-column>
 </mj-section>
 
 <mj-section padding="24px 32px 0 32px">

@@ -66,11 +66,6 @@
   <!--<![endif]-->
   <style type="text/css">
     @media only screen and (min-width:480px) {
-      .mj-column-per-100 {
-        width: 100% !important;
-        max-width: 100%;
-      }
-
       .mj-column-per-42 {
         width: 42% !important;
         max-width: 42%;
@@ -79,6 +74,11 @@
       .mj-column-per-58 {
         width: 58% !important;
         max-width: 58%;
+      }
+
+      .mj-column-per-100 {
+        width: 100% !important;
+        max-width: 100%;
       }
 
       .mj-column-per-50 {
@@ -103,11 +103,6 @@
     }
   </style>
   <style media="screen and (min-width:480px)">
-    .moz-text-html .mj-column-per-100 {
-      width: 100% !important;
-      max-width: 100%;
-    }
-
     .moz-text-html .mj-column-per-42 {
       width: 42% !important;
       max-width: 42%;
@@ -116,6 +111,11 @@
     .moz-text-html .mj-column-per-58 {
       width: 58% !important;
       max-width: 58%;
+    }
+
+    .moz-text-html .mj-column-per-100 {
+      width: 100% !important;
+      max-width: 100%;
     }
 
     .moz-text-html .mj-column-per-50 {
@@ -186,14 +186,14 @@
     /* Responsive */
     @media only screen and (max-width:479px) {
 
-      /* mj-group columns are inline-block with a fixed % (so New Outlook / Outlook webml keep them
-       side-by-side); these restack them to full-width rows on real mobile. Stats stay 2-across
-       (no rule) as short numbers; the CTA pair, hero, and benefit rows drop to one column. */
+      /* Fluid-hybrid columns: on real mobile (media-query clients) drop the injected max-width cap and
+       go full-width so hero / CTA / benefits stack cleanly. Stats stay 2-across (mj-group, no rule). */
       .cta-col,
       .hero-col,
       .benefit-col {
         display: block !important;
         width: 100% !important;
+        max-width: none !important;
       }
 
       .cta-col {
@@ -312,83 +312,79 @@
         <tbody>
           <tr>
             <td style="direction:ltr;font-size:0px;padding:0;text-align:center;">
-              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="width:600px;" ><![endif]-->
-              <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0;line-height:0;text-align:left;display:inline-block;width:100%;direction:ltr;">
-                <!--[if mso | IE]><table border="0" cellpadding="0" cellspacing="0" role="presentation" ><tr><td style="vertical-align:middle;width:252px;" ><![endif]-->
-                <div class="mj-column-per-42 mj-outlook-group-fix hero-col" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:middle;width:42%;">
-                  <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
-                    <tbody>
-                      <tr>
-                        <td style="vertical-align:middle;padding:24px 6px 0 32px;">
-                          <table border="0" cellpadding="0" cellspacing="0" role="presentation" style width="100%">
-                            <tbody>
-                              <tr>
-                                <td align="left" style="font-size:0px;padding:0 0 20px 0;word-break:break-word;">
-                                  <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;border-spacing:0px;">
-                                    <tbody>
-                                      <tr>
-                                        <td style="width:180px;">
-                                          <img alt="COMACPRO" src="https://storage.dev.cmpup.com/global-statics/marketing/assets/comacpro-logo-qKnF2nRg-1786604844566.webp" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="180" height="auto">
-                                        </td>
-                                      </tr>
-                                    </tbody>
-                                  </table>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td align="left" style="font-size:0px;padding:0;word-break:break-word;">
-                                  <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:22px;font-weight:700;line-height:1.2;text-align:left;color:#003B79;">Find Reliable Used Construction Equipment</div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td align="left" style="font-size:0px;padding:12px 0 12px 0;word-break:break-word;">
-                                  <p style="border-top:solid 4px #F37134;font-size:1px;margin:0px;width:58px;">
-                                  </p>
-                                  <!--[if mso | IE]><table align="left" border="0" cellpadding="0" cellspacing="0" style="border-top:solid 4px #F37134;font-size:1px;margin:0px;width:58px;" role="presentation" width="58px" ><tr><td style="height:0;line-height:0;"> &nbsp;
+              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="hero-col-outlook mw-250-outlook" style="vertical-align:middle;width:252px;" ><![endif]-->
+              <div class="mj-column-per-42 mj-outlook-group-fix hero-col mw-250" style="max-width:250px;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:middle;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                  <tbody>
+                    <tr>
+                      <td style="vertical-align:middle;padding:24px 6px 0 32px;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style width="100%">
+                          <tbody>
+                            <tr>
+                              <td align="left" style="font-size:0px;padding:0 0 20px 0;word-break:break-word;">
+                                <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;border-spacing:0px;">
+                                  <tbody>
+                                    <tr>
+                                      <td style="width:180px;">
+                                        <img alt="COMACPRO" src="https://storage.dev.cmpup.com/global-statics/marketing/assets/comacpro-logo-qKnF2nRg-1786604844566.webp" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="180" height="auto">
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td align="left" style="font-size:0px;padding:0;word-break:break-word;">
+                                <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:22px;font-weight:700;line-height:1.2;text-align:left;color:#003B79;">Find Reliable Used Construction Equipment</div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td align="left" style="font-size:0px;padding:12px 0 12px 0;word-break:break-word;">
+                                <p style="border-top:solid 4px #F37134;font-size:1px;margin:0px;width:58px;">
+                                </p>
+                                <!--[if mso | IE]><table align="left" border="0" cellpadding="0" cellspacing="0" style="border-top:solid 4px #F37134;font-size:1px;margin:0px;width:58px;" role="presentation" width="58px" ><tr><td style="height:0;line-height:0;"> &nbsp;
 </td></tr></table><![endif]-->
-                                </td>
-                              </tr>
-                              <tr>
-                                <td align="left" style="font-size:0px;padding:0;word-break:break-word;">
-                                  <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:14px;font-weight:600;line-height:1.4;text-align:left;color:#122941;">For your upcoming projects</div>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                <!--[if mso | IE]></td><td style="vertical-align:middle;width:348px;" ><![endif]-->
-                <div class="mj-column-per-58 mj-outlook-group-fix hero-col" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:middle;width:58%;">
-                  <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
-                    <tbody>
-                      <tr>
-                        <td style="vertical-align:middle;padding:12px 18px 12px 0;">
-                          <table border="0" cellpadding="0" cellspacing="0" role="presentation" style width="100%">
-                            <tbody>
-                              <tr>
-                                <td align="right" style="font-size:0px;padding:0;word-break:break-word;">
-                                  <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;border-spacing:0px;" class="mj-full-width-mobile">
-                                    <tbody>
-                                      <tr>
-                                        <td style="width:330px;" class="mj-full-width-mobile">
-                                          <img alt="The COMACPRO marketplace at comacpro.net" src="https://storage.dev.cmpup.com/global-statics/marketing/assets/hero-browser-gNe6cERE-1786605448346.webp" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="330" height="auto">
-                                        </td>
-                                      </tr>
-                                    </tbody>
-                                  </table>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                <!--[if mso | IE]></td></tr></table><![endif]-->
+                              </td>
+                            </tr>
+                            <tr>
+                              <td align="left" style="font-size:0px;padding:0;word-break:break-word;">
+                                <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:14px;font-weight:600;line-height:1.4;text-align:left;color:#122941;">For your upcoming projects</div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td><td class="hero-col-outlook mw-344-outlook" style="vertical-align:middle;width:348px;" ><![endif]-->
+              <div class="mj-column-per-58 mj-outlook-group-fix hero-col mw-344" style="max-width:344px;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:middle;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                  <tbody>
+                    <tr>
+                      <td style="vertical-align:middle;padding:12px 18px 12px 0;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style width="100%">
+                          <tbody>
+                            <tr>
+                              <td align="right" style="font-size:0px;padding:0;word-break:break-word;">
+                                <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;border-spacing:0px;" class="mj-full-width-mobile">
+                                  <tbody>
+                                    <tr>
+                                      <td style="width:330px;" class="mj-full-width-mobile">
+                                        <img alt="The COMACPRO marketplace at comacpro.net" src="https://storage.dev.cmpup.com/global-statics/marketing/assets/hero-browser-gNe6cERE-1786605448346.webp" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="330" height="auto">
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
               <!--[if mso | IE]></td></tr></table><![endif]-->
             </td>
@@ -657,90 +653,86 @@
                   <tbody>
                     <tr>
                       <td style="border-radius:0 0 12px 12px;direction:ltr;font-size:0px;padding:12px 6px 16px 6px;text-align:center;">
-                        <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="width:524px;" ><![endif]-->
-                        <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0;line-height:0;text-align:left;display:inline-block;width:100%;direction:ltr;">
-                          <!--[if mso | IE]><table border="0" cellpadding="0" cellspacing="0" role="presentation" ><tr><td style="vertical-align:middle;width:175px;" ><![endif]-->
-                          <div class="mj-column-per-33-33 mj-outlook-group-fix benefit-col" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:middle;width:33.33%;">
-                            <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
-                              <tbody>
-                                <tr>
-                                  <td style="vertical-align:middle;padding:6px 8px;">
-                                    <table border="0" cellpadding="0" cellspacing="0" role="presentation" style width="100%">
-                                      <tbody>
-                                        <tr>
-                                          <td align="left" style="font-size:0px;padding:0;word-break:break-word;">
-                                            <table cellpadding="0" cellspacing="0" role="presentation" width="100%" border="0" style="color:#000000;font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:13px;line-height:22px;table-layout:auto;width:100%;border:none;">
-                                              <tr>
-                                                <td valign="middle" style="width:26px;padding-right:8px;">
-                                                  <img src="https://storage.dev.cmpup.com/global-statics/marketing/assets/find-devti0dX-1786606154467.webp" alt width="26" height="26" style="display:block;border:0;">
-                                                </td>
-                                                <td valign="middle" style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:12px;font-weight:700;line-height:1.35;color:#122941;"> FIND THE RIGHT MACHINE FAST </td>
-                                              </tr>
-                                            </table>
-                                          </td>
-                                        </tr>
-                                      </tbody>
-                                    </table>
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </div>
-                          <!--[if mso | IE]></td><td style="vertical-align:middle;width:175px;" ><![endif]-->
-                          <div class="mj-column-per-33-33 mj-outlook-group-fix benefit-col" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:middle;width:33.33%;">
-                            <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
-                              <tbody>
-                                <tr>
-                                  <td style="vertical-align:middle;padding:6px 8px;">
-                                    <table border="0" cellpadding="0" cellspacing="0" role="presentation" style width="100%">
-                                      <tbody>
-                                        <tr>
-                                          <td align="left" style="font-size:0px;padding:0;word-break:break-word;">
-                                            <table cellpadding="0" cellspacing="0" role="presentation" width="100%" border="0" style="color:#000000;font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:13px;line-height:22px;table-layout:auto;width:100%;border:none;">
-                                              <tr>
-                                                <td valign="middle" style="width:26px;padding-right:8px;">
-                                                  <img src="https://storage.dev.cmpup.com/global-statics/marketing/assets/shipping-z5fJa9mp-1786606187296.webp" alt width="26" height="26" style="display:block;border:0;">
-                                                </td>
-                                                <td valign="middle" style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:12px;font-weight:700;line-height:1.35;color:#122941;"> GLOBAL SHIPPING SUPPORT </td>
-                                              </tr>
-                                            </table>
-                                          </td>
-                                        </tr>
-                                      </tbody>
-                                    </table>
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </div>
-                          <!--[if mso | IE]></td><td style="vertical-align:middle;width:175px;" ><![endif]-->
-                          <div class="mj-column-per-33-33 mj-outlook-group-fix benefit-col" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:middle;width:33.33%;">
-                            <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
-                              <tbody>
-                                <tr>
-                                  <td style="vertical-align:middle;padding:6px 8px;">
-                                    <table border="0" cellpadding="0" cellspacing="0" role="presentation" style width="100%">
-                                      <tbody>
-                                        <tr>
-                                          <td align="left" style="font-size:0px;padding:0;word-break:break-word;">
-                                            <table cellpadding="0" cellspacing="0" role="presentation" width="100%" border="0" style="color:#000000;font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:13px;line-height:22px;table-layout:auto;width:100%;border:none;">
-                                              <tr>
-                                                <td valign="middle" style="width:26px;padding-right:8px;">
-                                                  <img src="https://storage.dev.cmpup.com/global-statics/marketing/assets/assistance-dRDdRFtY-1786606117526.webp" alt width="26" height="26" style="display:block;border:0;">
-                                                </td>
-                                                <td valign="middle" style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:12px;font-weight:700;line-height:1.35;color:#122941;"> DEDICATED BUYER ASSISTANCE </td>
-                                              </tr>
-                                            </table>
-                                          </td>
-                                        </tr>
-                                      </tbody>
-                                    </table>
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </div>
-                          <!--[if mso | IE]></td></tr></table><![endif]-->
+                        <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="benefit-col-outlook mw-170-outlook" style="vertical-align:middle;width:175px;" ><![endif]-->
+                        <div class="mj-column-per-33-33 mj-outlook-group-fix benefit-col mw-170" style="max-width:170px;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:middle;width:100%;">
+                          <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                            <tbody>
+                              <tr>
+                                <td style="vertical-align:middle;padding:6px 8px;">
+                                  <table border="0" cellpadding="0" cellspacing="0" role="presentation" style width="100%">
+                                    <tbody>
+                                      <tr>
+                                        <td align="left" style="font-size:0px;padding:0;word-break:break-word;">
+                                          <table cellpadding="0" cellspacing="0" role="presentation" width="100%" border="0" style="color:#000000;font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:13px;line-height:22px;table-layout:auto;width:100%;border:none;">
+                                            <tr>
+                                              <td valign="middle" style="width:26px;padding-right:8px;">
+                                                <img src="https://storage.dev.cmpup.com/global-statics/marketing/assets/find-devti0dX-1786606154467.webp" alt width="26" height="26" style="display:block;border:0;">
+                                              </td>
+                                              <td valign="middle" style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:12px;font-weight:700;line-height:1.35;color:#122941;"> FIND THE RIGHT MACHINE FAST </td>
+                                            </tr>
+                                          </table>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        <!--[if mso | IE]></td><td class="benefit-col-outlook mw-170-outlook" style="vertical-align:middle;width:175px;" ><![endif]-->
+                        <div class="mj-column-per-33-33 mj-outlook-group-fix benefit-col mw-170" style="max-width:170px;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:middle;width:100%;">
+                          <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                            <tbody>
+                              <tr>
+                                <td style="vertical-align:middle;padding:6px 8px;">
+                                  <table border="0" cellpadding="0" cellspacing="0" role="presentation" style width="100%">
+                                    <tbody>
+                                      <tr>
+                                        <td align="left" style="font-size:0px;padding:0;word-break:break-word;">
+                                          <table cellpadding="0" cellspacing="0" role="presentation" width="100%" border="0" style="color:#000000;font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:13px;line-height:22px;table-layout:auto;width:100%;border:none;">
+                                            <tr>
+                                              <td valign="middle" style="width:26px;padding-right:8px;">
+                                                <img src="https://storage.dev.cmpup.com/global-statics/marketing/assets/shipping-z5fJa9mp-1786606187296.webp" alt width="26" height="26" style="display:block;border:0;">
+                                              </td>
+                                              <td valign="middle" style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:12px;font-weight:700;line-height:1.35;color:#122941;"> GLOBAL SHIPPING SUPPORT </td>
+                                            </tr>
+                                          </table>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        <!--[if mso | IE]></td><td class="benefit-col-outlook mw-170-outlook" style="vertical-align:middle;width:175px;" ><![endif]-->
+                        <div class="mj-column-per-33-33 mj-outlook-group-fix benefit-col mw-170" style="max-width:170px;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:middle;width:100%;">
+                          <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                            <tbody>
+                              <tr>
+                                <td style="vertical-align:middle;padding:6px 8px;">
+                                  <table border="0" cellpadding="0" cellspacing="0" role="presentation" style width="100%">
+                                    <tbody>
+                                      <tr>
+                                        <td align="left" style="font-size:0px;padding:0;word-break:break-word;">
+                                          <table cellpadding="0" cellspacing="0" role="presentation" width="100%" border="0" style="color:#000000;font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:13px;line-height:22px;table-layout:auto;width:100%;border:none;">
+                                            <tr>
+                                              <td valign="middle" style="width:26px;padding-right:8px;">
+                                                <img src="https://storage.dev.cmpup.com/global-statics/marketing/assets/assistance-dRDdRFtY-1786606117526.webp" alt width="26" height="26" style="display:block;border:0;">
+                                              </td>
+                                              <td valign="middle" style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:12px;font-weight:700;line-height:1.35;color:#122941;"> DEDICATED BUYER ASSISTANCE </td>
+                                            </tr>
+                                          </table>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
                         </div>
                         <!--[if mso | IE]></td></tr></table><![endif]-->
                       </td>
@@ -760,65 +752,61 @@
         <tbody>
           <tr>
             <td style="direction:ltr;font-size:0px;padding:22px 32px 0 32px;text-align:center;">
-              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="width:536px;" ><![endif]-->
-              <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0;line-height:0;text-align:left;display:inline-block;width:100%;direction:ltr;">
-                <!--[if mso | IE]><table border="0" cellpadding="0" cellspacing="0" role="presentation" ><tr><td style="vertical-align:top;width:268px;" ><![endif]-->
-                <div class="mj-column-per-50 mj-outlook-group-fix cta-col" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:50%;">
-                  <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
-                    <tbody>
-                      <tr>
-                        <td style="vertical-align:top;padding:0 7px 0 0;">
-                          <table border="0" cellpadding="0" cellspacing="0" role="presentation" style width="100%">
-                            <tbody>
-                              <tr>
-                                <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
-                                  <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;width:100%;line-height:100%;">
-                                    <tbody>
-                                      <tr>
-                                        <td align="center" bgcolor="#E5641F" role="presentation" style="border:none;border-radius:14px;cursor:auto;mso-padding-alt:12px 30px;background:#E5641F;" valign="middle">
-                                          <a href="{{explore_equipment_url}}" style="display:inline-block;background:#E5641F;color:#FFFFFF;font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:15px;font-weight:700;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:12px 30px;mso-padding-alt:0px;border-radius:14px;" target="_blank"> EXPLORE EQUIPMENT </a>
-                                        </td>
-                                      </tr>
-                                    </tbody>
-                                  </table>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                <!--[if mso | IE]></td><td style="vertical-align:top;width:268px;" ><![endif]-->
-                <div class="mj-column-per-50 mj-outlook-group-fix cta-col" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:50%;">
-                  <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
-                    <tbody>
-                      <tr>
-                        <td style="vertical-align:top;padding:0 0 0 7px;">
-                          <table border="0" cellpadding="0" cellspacing="0" role="presentation" style width="100%">
-                            <tbody>
-                              <tr>
-                                <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
-                                  <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;width:100%;line-height:100%;">
-                                    <tbody>
-                                      <tr>
-                                        <td align="center" bgcolor="#001942" role="presentation" style="border:none;border-radius:14px;cursor:auto;mso-padding-alt:12px 30px;background:#001942;" valign="middle">
-                                          <a href="{{register_url}}" style="display:inline-block;background:#001942;color:#FFFFFF;font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:15px;font-weight:700;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:12px 30px;mso-padding-alt:0px;border-radius:14px;" target="_blank"> REGISTER FREE </a>
-                                        </td>
-                                      </tr>
-                                    </tbody>
-                                  </table>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                <!--[if mso | IE]></td></tr></table><![endif]-->
+              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="cta-col-outlook mw-261-outlook" style="vertical-align:top;width:268px;" ><![endif]-->
+              <div class="mj-column-per-50 mj-outlook-group-fix cta-col mw-261" style="max-width:261px;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                  <tbody>
+                    <tr>
+                      <td style="vertical-align:top;padding:0 7px 0 0;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style width="100%">
+                          <tbody>
+                            <tr>
+                              <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
+                                <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;width:100%;line-height:100%;">
+                                  <tbody>
+                                    <tr>
+                                      <td align="center" bgcolor="#E5641F" role="presentation" style="border:none;border-radius:14px;cursor:auto;mso-padding-alt:12px 30px;background:#E5641F;" valign="middle">
+                                        <a href="{{explore_equipment_url}}" style="display:inline-block;background:#E5641F;color:#FFFFFF;font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:15px;font-weight:700;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:12px 30px;mso-padding-alt:0px;border-radius:14px;" target="_blank"> EXPLORE EQUIPMENT </a>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td><td class="cta-col-outlook mw-261-outlook" style="vertical-align:top;width:268px;" ><![endif]-->
+              <div class="mj-column-per-50 mj-outlook-group-fix cta-col mw-261" style="max-width:261px;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                  <tbody>
+                    <tr>
+                      <td style="vertical-align:top;padding:0 0 0 7px;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style width="100%">
+                          <tbody>
+                            <tr>
+                              <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
+                                <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;width:100%;line-height:100%;">
+                                  <tbody>
+                                    <tr>
+                                      <td align="center" bgcolor="#001942" role="presentation" style="border:none;border-radius:14px;cursor:auto;mso-padding-alt:12px 30px;background:#001942;" valign="middle">
+                                        <a href="{{register_url}}" style="display:inline-block;background:#001942;color:#FFFFFF;font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:15px;font-weight:700;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:12px 30px;mso-padding-alt:0px;border-radius:14px;" target="_blank"> REGISTER FREE </a>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
               <!--[if mso | IE]></td></tr></table><![endif]-->
             </td>

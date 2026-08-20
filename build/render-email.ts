@@ -41,3 +41,19 @@ export function findUnhostedAssets(html: string): { relative: string[]; placehol
   const placeholder = [...new Set(html.match(/https?:\/\/placehold\.co\/[^"')\s]+/gi) ?? [])];
   return { relative, placeholder };
 }
+
+/**
+ * Fluid-hybrid columns. MJML can't inline `max-width` (mj-style inline drops it), so inject it here:
+ * a column div carrying class `mw-<px>` gets that max-width prepended to its inline style. Combined
+ * with MJML's inline `width:100%`, the column is side-by-side on a wide viewport and stacks on a
+ * narrow one WITHOUT a media query — so it survives clients that strip <style> (New Outlook webml,
+ * Gmail on non-Google accounts). A max-width:479 rule (head.njk) removes the cap on real mobile so
+ * media-query clients still stack full-width.
+ */
+export function applyFluidMaxWidth(html: string): string {
+  return html.replace(/<div\b([^>]*\bmw-(\d+)\b[^>]*)>/g, (full, attrs: string, px: string) =>
+    attrs.includes('style="')
+      ? `<div${attrs.replace('style="', `style="max-width:${px}px;`)}>`
+      : full,
+  );
+}

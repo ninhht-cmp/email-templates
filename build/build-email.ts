@@ -2,7 +2,7 @@ import { pathToFileURL } from 'node:url';
 import type { Environment } from 'nunjucks';
 import { EMAILS_DIR } from './config.ts';
 import { fillSamples, previewSamples } from './preview-samples.ts';
-import { findUnhostedAssets, renderEmail } from './render-email.ts';
+import { applyFluidMaxWidth, findUnhostedAssets, renderEmail } from './render-email.ts';
 import { tokensSchema } from './schema.ts';
 import { metaAdvisories, reconcileMergeKeys, validateMeta } from './validate-email.ts';
 
@@ -45,12 +45,15 @@ export async function buildEmail(
   const content = await loadExport<unknown>(`${dir}/content.ts`, 'content');
   const meta = validateMeta(await loadExport<unknown>(`${dir}/meta.ts`, 'meta'), name);
 
-  const { html, errors } = await renderEmail(
+  const { html: rawHtml, errors } = await renderEmail(
     env,
     `emails/${name}/index.mjml.njk`,
     { tokens, content, meta },
     options,
   );
+  // Inject inline max-width onto fluid-hybrid columns (see applyFluidMaxWidth) — must run before
+  // key reconciliation / preview fill so every downstream copy has it.
+  const html = applyFluidMaxWidth(rawHtml);
 
   const { errors: keyErrors, warnings: keyWarnings } = reconcileMergeKeys(html, meta.requiredKeys);
   const { relative, placeholder } = findUnhostedAssets(html);
