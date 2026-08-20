@@ -215,8 +215,7 @@ export function writeGallery(
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h10M4 12h16M4 17h10"/><path d="M18 5l2 2-2 2"/></svg>
             <span>Merge keys</span>
           </button>
-          <a class="btn ghost" id="openPreview" target="_blank" rel="noopener">Preview ↗</a>
-          <a class="btn ghost" id="openRaw" target="_blank" rel="noopener">Raw ↗</a>
+          <a class="btn ghost" id="openRaw" target="_blank" rel="noopener" title="Open the shippable HTML with raw {{keys}}">Raw ↗</a>
         </div>
       </div>
       <div class="stage">
@@ -266,7 +265,6 @@ export function writeGallery(
       $('devUrl').textContent=name+'.preview.html';
       $('crumbName').textContent=name;
       $('crumbMeta').textContent=data[name].kb+' KB · '+data[name].category;
-      $('openPreview').href='./'+name+'.preview.html';
       $('openRaw').href='./'+name+'.html';
       Array.prototype.forEach.call(document.querySelectorAll('.card'),function(b){
         var on=b.getAttribute('data-name')===name; b.classList.toggle('active',on); b.setAttribute('aria-selected',on);
