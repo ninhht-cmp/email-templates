@@ -2,10 +2,10 @@
    Uses orangeStrong (AA) so both white-on-orange and orange-on-pastel stay legible. #}
 {% macro badge(label, tone, tokens) %}
 {% if tone == 'solid' %}
-<span style="display:inline-block;background-color:{$ tokens.color.orangeStrong $};color:#FFFFFF;font-size:11px;font-weight:700;padding:4px 12px;border-radius:12px;">{$ label $}</span>
+<span style="display:inline-block;background-color:{$ tokens.color.orangeStrong $};color:#FFFFFF;font-size:11px;font-weight:700;padding:4px 12px;border-radius:{$ tokens.radius.md $};">{$ label $}</span>
 {% elif tone == 'soft' %}
-<span style="display:inline-block;background-color:{$ tokens.color.orangeSoftBg $};color:{$ tokens.color.orangeStrong $};font-size:11px;font-weight:700;padding:4px 12px;border-radius:12px;">{$ label $}</span>
+<span style="display:inline-block;background-color:{$ tokens.color.orangeSoftBg $};color:{$ tokens.color.orangeStrong $};font-size:11px;font-weight:700;padding:4px 12px;border-radius:{$ tokens.radius.md $};">{$ label $}</span>
 {% else %}
-<span style="display:inline-block;background-color:{$ tokens.color.badgeGrayBg $};color:{$ tokens.color.badgeGrayText $};font-size:11px;font-weight:700;padding:4px 12px;border-radius:12px;">{$ label $}</span>
+<span style="display:inline-block;background-color:{$ tokens.color.badgeGrayBg $};color:{$ tokens.color.badgeGrayText $};font-size:11px;font-weight:700;padding:4px 12px;border-radius:{$ tokens.radius.md $};">{$ label $}</span>
 {% endif %}
 {% endmacro %}

@@ -44,6 +44,18 @@ export const tokens = {
       'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap',
   },
 
+  // Corner-radius scale — the single source for rounding. Consumed by the design-system components
+  // (button, badge) and head defaults; sections should reference these rather than literal px.
+  // (Spacing follows a 4px rhythm and the type sizes their own scale — documented in docs/tokens.md
+  // as conventions rather than tokens, since with two emails a spacing/type token map would be
+  // config with no real consumer. Promote them to tokens here once a third template needs them.)
+  radius: {
+    sm: '8px', // small images / inputs
+    md: '12px', // badges, pills-ish chips, inset panels
+    lg: '14px', // buttons, feature chips
+    pill: '999px', // fully rounded
+  },
+
   layout: {
     width: '600px',
     padX: '32px',

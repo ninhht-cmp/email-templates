@@ -60,3 +60,14 @@ Chosen for brand vibrancy over strict AA-normal on small links (a common, accept
 
 > Sampled from the design PNG (coordinate-free color extraction). If the Figma file is later shared
 > with edit access, pull exact `get_variable_defs` tokens and reconcile any drift here.
+
+## Scales & conventions
+
+- **Radius** — a real token scale in `tokens.radius` (`sm 8 · md 12 · lg 14 · pill 999`). The
+  design-system components (button → `lg`, badge → `md`) and the `mj-button` head default consume it;
+  new sections should reference `tokens.radius.*` instead of literal px.
+- **Spacing** — follows a **4px rhythm** (4/8/12/16/20/24/32…). Kept as a convention, not a token map:
+  with two emails a spacing scale would be config with no real consumer. Promote to `tokens.space`
+  once a third template needs shared spacing.
+- **Type** — sizes are per-role (body 15, small 13, meta 12, section title 16, intro 17, hero 22–24).
+  Same rationale as spacing — documented here, promote to `tokens.type` when a third template shares them.
