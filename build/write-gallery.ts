@@ -59,31 +59,34 @@ export function writeGallery(
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>COMACPRO — Email templates</title>
 <style>
+  /* Quiet / editorial: warm-neutral chrome, brand orange as a thin accent only (active rail, focus,
+     key text), a single ink primary action — not orange fills. Hairlines over shadows, small radii. */
   :root{
-    --brand:#e5641f; --brand-ink:#fff;
-    --bg:#f5f6f8; --panel:#ffffff; --panel-2:#fbfbfc; --stage:#eceef1;
-    --ink:#12263a; --muted:#64748b; --border:#e6e9ee; --border-strong:#d3d8e0;
-    --brand-soft:rgba(229,100,31,.10); --ok:#1a9d5a;
-    --shadow-sm:0 1px 2px rgba(16,32,58,.06),0 1px 3px rgba(16,32,58,.05);
-    --shadow-lg:0 12px 34px rgba(16,32,58,.14);
-    --r-lg:16px; --r-md:12px; --r-sm:9px; --r-pill:999px;
-    --sp:8px; --ease:cubic-bezier(.2,.7,.3,1);
+    --brand:#e5641f; --brand-soft:rgba(229,100,31,.09);
+    --bg:#f4f3f1; --panel:#ffffff; --panel-2:#f6f5f2; --stage:#ecebe7;
+    --ink:#1b1a18; --muted:#76736c; --border:#e7e4df; --border-strong:#dad6ce;
+    --primary:#1b1a18; --primary-ink:#faf9f7; --ok:#1f8a4c;
+    --shadow-sm:0 1px 2px rgba(28,26,22,.05);
+    --shadow-lg:0 18px 48px -12px rgba(28,26,22,.22);
+    --r-lg:12px; --r-md:9px; --r-sm:7px; --r-pill:999px;
+    --ease:cubic-bezier(.2,.7,.3,1);
     color-scheme:light;
   }
-  /* Dark palette applies when the OS prefers dark (unless the user forced light via the toggle),
-     and always when the toggle set data-theme=dark. Same declarations, two triggers. */
+  /* Dark applies on OS-dark (unless the user forced light) and always when the toggle set dark. */
   @media (prefers-color-scheme:dark){ :root:not([data-theme=light]){
-    --bg:#0d0f12; --panel:#16191f; --panel-2:#1b1f26; --stage:#0a0c0f;
-    --ink:#eef2f7; --muted:#8b95a4; --border:#262b33; --border-strong:#333a44;
-    --brand-soft:rgba(229,100,31,.16);
-    --shadow-sm:0 1px 2px rgba(0,0,0,.4); --shadow-lg:0 14px 40px rgba(0,0,0,.5);
+    --brand:#ff7a3d; --brand-soft:rgba(255,122,61,.13);
+    --bg:#0d0d0e; --panel:#161615; --panel-2:#1c1c1a; --stage:#0a0a0a;
+    --ink:#eeece7; --muted:#8f8c85; --border:#262521; --border-strong:#34322d;
+    --primary:#eeece7; --primary-ink:#161615; --ok:#3fbf72;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.5); --shadow-lg:0 20px 52px -12px rgba(0,0,0,.7);
     color-scheme:dark;
   }}
   :root[data-theme=dark]{
-    --bg:#0d0f12; --panel:#16191f; --panel-2:#1b1f26; --stage:#0a0c0f;
-    --ink:#eef2f7; --muted:#8b95a4; --border:#262b33; --border-strong:#333a44;
-    --brand-soft:rgba(229,100,31,.16);
-    --shadow-sm:0 1px 2px rgba(0,0,0,.4); --shadow-lg:0 14px 40px rgba(0,0,0,.5);
+    --brand:#ff7a3d; --brand-soft:rgba(255,122,61,.13);
+    --bg:#0d0d0e; --panel:#161615; --panel-2:#1c1c1a; --stage:#0a0a0a;
+    --ink:#eeece7; --muted:#8f8c85; --border:#262521; --border-strong:#34322d;
+    --primary:#eeece7; --primary-ink:#161615; --ok:#3fbf72;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.5); --shadow-lg:0 20px 52px -12px rgba(0,0,0,.7);
     color-scheme:dark;
   }
   *{box-sizing:border-box;}
@@ -93,61 +96,65 @@ export function writeGallery(
   button{font:inherit;color:inherit;cursor:pointer;}
 
   /* Header */
-  header{display:flex;align-items:center;gap:16px;padding:14px 22px;background:var(--panel);border-bottom:1px solid var(--border);}
-  .h-txt h1{margin:0;font-size:15px;font-weight:700;letter-spacing:-.01em;}
-  .h-txt .sub{color:var(--muted);font-size:12px;margin-top:1px;}
+  header{display:flex;align-items:center;gap:14px;padding:15px 22px;background:var(--panel);border-bottom:1px solid var(--border);}
+  .brandmark{display:flex;align-items:center;gap:11px;}
+  .brandmark .rail{width:3px;height:22px;border-radius:2px;background:var(--brand);flex:none;}
+  .h-txt h1{margin:0;font-size:14px;font-weight:400;letter-spacing:.01em;color:var(--muted);}
+  .h-txt h1 b{font-weight:650;letter-spacing:-.01em;color:var(--ink);margin-right:5px;}
+  .h-txt .sub{color:var(--muted);font-size:11px;margin-top:2px;font-variant-numeric:tabular-nums;}
   .h-spacer{flex:1;}
-  .icon-btn{width:38px;height:38px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--panel-2);
-            display:grid;place-items:center;transition:.15s var(--ease);}
-  .icon-btn:hover{border-color:var(--border-strong);transform:translateY(-1px);}
-  .icon-btn svg{width:18px;height:18px;}
+  .tlink{color:var(--muted);text-decoration:none;font-size:12.5px;font-weight:500;transition:color .15s var(--ease);}
+  .tlink:hover{color:var(--ink);}
+  .icon-btn{width:34px;height:34px;border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;
+            display:grid;place-items:center;color:var(--muted);transition:.15s var(--ease);}
+  .icon-btn:hover{border-color:var(--border-strong);color:var(--ink);}
+  .icon-btn svg{width:17px;height:17px;}
   .icon-btn .moon{display:none;} :root[data-theme=dark] .icon-btn .sun{display:none;}
   :root[data-theme=dark] .icon-btn .moon{display:block;}
 
   /* Layout */
   .layout{display:flex;height:calc(100vh - 61px);}
-  .sidebar{width:266px;flex:none;border-right:1px solid var(--border);background:var(--panel);
-           padding:14px;display:flex;flex-direction:column;gap:8px;overflow-y:auto;}
-  .side-label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:2px 6px 4px;}
-  .card{display:flex;flex-direction:column;gap:7px;text-align:left;padding:13px 14px;border-radius:var(--r-md);
-        border:1px solid var(--border);background:var(--panel-2);transition:.16s var(--ease);}
-  .card:hover{border-color:var(--border-strong);transform:translateY(-1px);box-shadow:var(--shadow-sm);}
-  .card.active{border-color:var(--brand);background:var(--brand-soft);box-shadow:none;}
-  .card-top{display:flex;align-items:center;gap:8px;justify-content:space-between;}
-  .card-name{font-weight:700;font-size:14px;letter-spacing:-.01em;}
-  .card-kb{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums;}
-  .chip{font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:var(--r-pill);white-space:nowrap;}
-  .chip-marketing{background:var(--brand-soft);color:var(--brand);}
-  .chip-transactional{background:rgba(26,157,90,.14);color:var(--ok);}
-  .chip-lifecycle{background:rgba(100,116,139,.16);color:var(--muted);}
+  .sidebar{width:250px;flex:none;border-right:1px solid var(--border);background:var(--panel);
+           padding:16px 12px;display:flex;flex-direction:column;gap:2px;overflow-y:auto;}
+  .side-label{font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:2px 12px 10px;}
+  /* Rows, not cards: quiet, with a left orange rail marking the active one (brand as thin accent). */
+  .card{position:relative;display:flex;flex-direction:column;gap:3px;text-align:left;padding:9px 12px;
+        border-radius:var(--r-sm);border:0;background:transparent;transition:background .14s var(--ease);}
+  .card:hover{background:var(--panel-2);}
+  .card.active{background:var(--brand-soft);}
+  .card.active::before{content:"";position:absolute;left:0;top:8px;bottom:8px;width:2px;border-radius:2px;background:var(--brand);}
+  .card-top{display:flex;align-items:baseline;gap:8px;justify-content:space-between;}
+  .card-name{font-weight:550;font-size:13.5px;letter-spacing:-.01em;color:var(--ink);}
+  .card-kb{color:var(--muted);font-size:11.5px;font-variant-numeric:tabular-nums;flex:none;}
+  .chip{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);white-space:nowrap;}
 
   /* Viewer */
   .viewer{flex:1;display:flex;flex-direction:column;min-width:0;}
   .toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:12px 20px;background:var(--panel);border-bottom:1px solid var(--border);}
   .crumb{display:flex;align-items:baseline;gap:9px;min-width:0;}
-  .crumb .name{font-weight:700;font-size:14px;}
-  .crumb .meta{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums;}
+  .crumb .name{font-weight:600;font-size:14px;letter-spacing:-.01em;}
+  .crumb .meta{color:var(--muted);font-size:11.5px;font-variant-numeric:tabular-nums;}
   .controls{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
-  .seg{display:inline-flex;background:var(--panel-2);border:1px solid var(--border);border-radius:var(--r-sm);padding:3px;gap:2px;}
-  .seg button{border:0;background:transparent;border-radius:6px;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted);transition:.14s var(--ease);}
-  .seg button.active{background:var(--brand);color:var(--brand-ink);box-shadow:var(--shadow-sm);}
-  .btn{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:var(--r-sm);font-size:13px;font-weight:600;white-space:nowrap;
-       border:1px solid var(--brand);background:var(--brand);color:var(--brand-ink);transition:.15s var(--ease);text-decoration:none;}
-  .btn:hover{filter:brightness(1.05);transform:translateY(-1px);}
-  .btn.ghost{background:var(--panel-2);color:var(--ink);border-color:var(--border);}
-  .btn.ghost:hover{border-color:var(--border-strong);filter:none;}
+  .seg{display:inline-flex;border:1px solid var(--border);border-radius:var(--r-sm);padding:2px;gap:2px;}
+  .seg button{border:0;background:transparent;border-radius:5px;padding:6px 12px;font-size:12.5px;font-weight:500;color:var(--muted);transition:.14s var(--ease);}
+  .seg button:hover{color:var(--ink);}
+  .seg button.active{background:var(--ink);color:var(--panel);font-weight:550;}
+  /* Primary = ink (one confident action). Ghost = hairline. No orange fills. */
+  .btn{display:inline-flex;align-items:center;gap:7px;padding:8px 13px;border-radius:var(--r-sm);font-size:12.5px;font-weight:550;white-space:nowrap;
+       border:1px solid var(--primary);background:var(--primary);color:var(--primary-ink);transition:.15s var(--ease);text-decoration:none;}
+  .btn:hover{opacity:.88;}
+  .btn.ghost{background:transparent;color:var(--ink);border-color:var(--border);font-weight:500;}
+  .btn.ghost:hover{border-color:var(--border-strong);opacity:1;background:var(--panel-2);}
   .btn.ok{background:var(--ok);border-color:var(--ok);color:#fff;}
   .btn svg{width:15px;height:15px;}
 
-  /* Stage + device frame */
-  .stage{flex:1;overflow:auto;background:
-          radial-gradient(circle at 1px 1px,var(--border) 1px,transparent 0) 0 0/22px 22px,var(--stage);
-          display:flex;justify-content:center;padding:30px 24px;}
-  .device{background:var(--panel);border:1px solid var(--border-strong);border-radius:var(--r-lg);
+  /* Stage: flat neutral (no decorative grid) — the framed email is the only object. */
+  .stage{flex:1;overflow:auto;background:var(--stage);display:flex;justify-content:center;padding:34px 24px;}
+  .device{background:#fff;border:1px solid var(--border-strong);border-radius:var(--r-lg);
            box-shadow:var(--shadow-lg);overflow:hidden;height:fit-content;transition:width .28s var(--ease);}
-  .device-bar{height:34px;display:flex;align-items:center;gap:6px;padding:0 13px;background:var(--panel-2);border-bottom:1px solid var(--border);}
-  .dot{width:10px;height:10px;border-radius:50%;background:var(--border-strong);}
-  .device-url{margin-left:8px;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;}
+  .device-bar{height:32px;display:flex;align-items:center;gap:6px;padding:0 13px;background:#f3f2ef;border-bottom:1px solid #e7e4df;}
+  .dot{width:9px;height:9px;border-radius:50%;background:#cfcbc3;}
+  .device-url{margin-left:8px;font:11px ui-monospace,SFMono-Regular,Menlo,monospace;color:#8a877f;}
   iframe{display:block;border:0;width:100%;height:78vh;background:#fff;}
 
   /* Toast */
@@ -207,9 +214,12 @@ export function writeGallery(
 </style></head>
 <body>
   <header>
-    <div class="h-txt"><h1>COMACPRO — Email templates</h1><div class="sub">Preview gallery · built ${builtAt} · ${built.length} template(s)</div></div>
+    <div class="brandmark">
+      <span class="rail"></span>
+      <div class="h-txt"><h1><b>COMACPRO</b>Email templates</h1><div class="sub">Preview gallery · built ${builtAt} · ${built.length} template(s)</div></div>
+    </div>
     <div class="h-spacer"></div>
-    <a class="btn ghost" href="./tokens.html" style="margin-right:4px;">Design tokens ↗</a>
+    <a class="tlink" href="./tokens.html" style="margin-right:6px;">Design tokens ↗</a>
     <button class="icon-btn" id="theme" title="Toggle theme" aria-label="Toggle light / dark theme">
       <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M4.5 12h-2M21.5 12h-2M6 6l-1.4-1.4M19.4 19.4 18 18M18 6l1.4-1.4M4.6 19.4 6 18"/></svg>
       <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.3 6.3 0 0 0 10.5 10.5Z"/></svg>

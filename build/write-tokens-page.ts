@@ -46,10 +46,10 @@ export function writeTokensPage(outDir: string, tokens: Tokens, builtAt: string)
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>COMACPRO — Design tokens</title>
 <style>
-  :root{--brand:#e5641f;--bg:#f5f6f8;--panel:#fff;--ink:#12263a;--muted:#64748b;--border:#e6e9ee;
-        --shadow:0 1px 2px rgba(16,32,58,.06),0 1px 3px rgba(16,32,58,.05);--r:14px;color-scheme:light;}
-  @media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0d0f12;--panel:#16191f;--ink:#eef2f7;--muted:#8b95a4;--border:#262b33;color-scheme:dark;}}
-  :root[data-theme=dark]{--bg:#0d0f12;--panel:#16191f;--ink:#eef2f7;--muted:#8b95a4;--border:#262b33;color-scheme:dark;}
+  :root{--brand:#e5641f;--bg:#f4f3f1;--panel:#fff;--ink:#1b1a18;--muted:#76736c;--border:#e7e4df;
+        --shadow:0 1px 2px rgba(28,26,22,.05);--r:10px;color-scheme:light;}
+  @media (prefers-color-scheme:dark){:root:not([data-theme=light]){--brand:#ff7a3d;--bg:#0d0d0e;--panel:#161615;--ink:#eeece7;--muted:#8f8c85;--border:#262521;color-scheme:dark;}}
+  :root[data-theme=dark]{--brand:#ff7a3d;--bg:#0d0d0e;--panel:#161615;--ink:#eeece7;--muted:#8f8c85;--border:#262521;color-scheme:dark;}
   *{box-sizing:border-box;}
   body{margin:0;font:15px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;}
   header{display:flex;align-items:center;gap:14px;padding:16px 26px;background:var(--panel);border-bottom:1px solid var(--border);}
