@@ -132,7 +132,7 @@ export function writeGallery(
   .seg{display:inline-flex;background:var(--panel-2);border:1px solid var(--border);border-radius:var(--r-sm);padding:3px;gap:2px;}
   .seg button{border:0;background:transparent;border-radius:6px;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted);transition:.14s var(--ease);}
   .seg button.active{background:var(--brand);color:var(--brand-ink);box-shadow:var(--shadow-sm);}
-  .btn{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:var(--r-sm);font-size:13px;font-weight:600;
+  .btn{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:var(--r-sm);font-size:13px;font-weight:600;white-space:nowrap;
        border:1px solid var(--brand);background:var(--brand);color:var(--brand-ink);transition:.15s var(--ease);text-decoration:none;}
   .btn:hover{filter:brightness(1.05);transform:translateY(-1px);}
   .btn.ghost{background:var(--panel-2);color:var(--ink);border-color:var(--border);}
