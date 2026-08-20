@@ -24,6 +24,6 @@ export const meta: EmailMeta = {
 
   // Preview-only overrides (real avatar so dist/*.preview.html looks like a sent email).
   previewSamples: {
-    sender_avatar: '../src/emails/supplier-onboarding/assets/anna-avatar.png',
+    sender_avatar: '../src/emails/supplier-onboarding/assets/avatar-sample.png',
   },
 };

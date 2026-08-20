@@ -20,7 +20,7 @@ export const content: SupplierOnboardingContent = contentSchema.parse({
     logo: '../src/emails/supplier-onboarding/assets/comacpro-logo.png',
     // Single wash-baked asset used for EVERY client and width — Gmail ignores CSS background-image
     // swaps, so a per-width swap can't be relied on; the wash keeps text legible full-width. See hero.njk.
-    hero: '../src/emails/supplier-onboarding/assets/comacpro-machinery-scrim.png',
+    hero: '../src/emails/supplier-onboarding/assets/comacpro-machinery.png',
     avatar: '{{sender_avatar}}', // per-sender, filled at send time
     whatsappIcon: `../src/emails/supplier-onboarding/assets/icons/whatsapp.svg`,
     emailIcon: `../src/emails/supplier-onboarding/assets/icons/email.svg`,
