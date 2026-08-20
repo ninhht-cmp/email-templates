@@ -18,7 +18,8 @@ export const keyDescriptions: Record<string, string> = {
     'Phone in clean international format for wa.me, e.g. 84967442348 (no +, spaces, dots)',
   sender_email: 'Sales rep email',
   sender_avatar: 'Full HTTPS URL of the rep photo (any ratio — object-fit crops it to a circle)',
-  unsubscribe: 'Footer unsubscribe link',
+  unsubscribe:
+    "Footer unsubscribe link — provided by the sending system's built-in unsubscribe toggle, NOT a custom variable. Just enable that toggle; only declare it manually if you host your own unsubscribe URL.",
 };
 
 export interface KeysDocEmail {
