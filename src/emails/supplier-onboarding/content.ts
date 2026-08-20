@@ -17,13 +17,13 @@ export const content: SupplierOnboardingContent = contentSchema.parse({
   },
 
   assets: {
-    logo: 'https://storage.dev.cmpup.com/global-statics/marketing/assets/comacpro-logo-qKnF2nRg-1786604844566.webp',
+    logo: '../src/emails/supplier-onboarding/assets/comacpro-logo.png',
     // Single wash-baked asset used for EVERY client and width — Gmail ignores CSS background-image
     // swaps, so a per-width swap can't be relied on; the wash keeps text legible full-width. See hero.njk.
-    hero: 'https://storage.dev.cmpup.com/global-statics/marketing/assets/comacpro-machinery-D7bX02DP-1786604328309.webp',
+    hero: '../src/emails/supplier-onboarding/assets/comacpro-machinery-scrim.png',
     avatar: '{{sender_avatar}}', // per-sender, filled at send time
-    whatsappIcon: `https://storage.dev.cmpup.com/global-statics/marketing/assets/whatsapp-F2v5jPMj-1786604562320.webp`,
-    emailIcon: `https://storage.dev.cmpup.com/global-statics/marketing/assets/email-9jnI2dXw-1786604531986.webp`,
+    whatsappIcon: `../src/emails/supplier-onboarding/assets/icons/whatsapp.svg`,
+    emailIcon: `../src/emails/supplier-onboarding/assets/icons/email.svg`,
   },
 
   hero: {
@@ -34,29 +34,29 @@ export const content: SupplierOnboardingContent = contentSchema.parse({
   // icon = plain icon image (the pastel chip is a CSS container in the template).
   features: [
     {
-      icon: `https://storage.dev.cmpup.com/global-statics/marketing/assets/no-fee-OvDYxeUR-1786603849258.webp`,
+      icon: `../src/emails/supplier-onboarding/assets/icons/no-fee.svg`,
       title: 'No listing fee',
       desc: 'Showcase your inventory with no upfront listing cost.',
     },
     {
-      icon: `https://storage.dev.cmpup.com/global-statics/marketing/assets/buyers-rAjqn9sb-1786604021401.webp`,
+      icon: `../src/emails/supplier-onboarding/assets/icons/buyers.svg`,
       title: 'Qualified buyers',
       desc: 'Reach contractors, dealers and importers across Vietnam and Southeast Asia.',
     },
     {
-      icon: `https://storage.dev.cmpup.com/global-statics/marketing/assets/sync-9D4aIGlY-1786604063608.webp`,
+      icon: `../src/emails/supplier-onboarding/assets/icons/sync.svg`,
       title: 'Easy sync',
       desc: 'We can prepare product listings from your existing website, catalog or inventory file.',
     },
     {
-      icon: `https://storage.dev.cmpup.com/global-statics/marketing/assets/support-NHP7BHzy-1786604092504.webp`,
+      icon: `../src/emails/supplier-onboarding/assets/icons/support.svg`,
       title: 'Dedicated support',
       desc: 'Get help with onboarding, listing optimization and buyer inquiries.',
     },
   ],
 
   reassurance: {
-    icon: `https://storage.dev.cmpup.com/global-statics/marketing/assets/shield-HK2ti3iE-1786604467393.webp`,
+    icon: `../src/emails/supplier-onboarding/assets/icons/shield.svg`,
     text: 'Your current sales channels stay unchanged.',
   },
 

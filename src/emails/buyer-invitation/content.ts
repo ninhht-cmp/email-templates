@@ -22,11 +22,11 @@ export const content: BuyerInvitationContent = contentSchema.parse({
   },
 
   assets: {
-    logo: `https://storage.dev.cmpup.com/global-statics/marketing/assets/comacpro-logo-qKnF2nRg-1786604844566.webp`,
-    heroBrowser: `https://storage.dev.cmpup.com/global-statics/marketing/assets/hero-browser-gNe6cERE-1786605448346.webp`,
+    logo: `../src/emails/buyer-invitation/assets/comacpro-logo.png`,
+    heroBrowser: `../src/emails/buyer-invitation/assets/hero-browser.png`,
     avatar: '{{sender_avatar}}', // per-sender, filled at send time
-    whatsappIcon: `https://storage.dev.cmpup.com/global-statics/marketing/assets/whatsapp-F2v5jPMj-1786604562320.webp`,
-    emailIcon: `https://storage.dev.cmpup.com/global-statics/marketing/assets/email-9jnI2dXw-1786604531986.webp`,
+    whatsappIcon: `../src/emails/buyer-invitation/assets/icons/whatsapp.svg`,
+    emailIcon: `../src/emails/buyer-invitation/assets/icons/email.svg`,
   },
 
   hero: {
@@ -44,7 +44,7 @@ export const content: BuyerInvitationContent = contentSchema.parse({
     { flag: `${FLAG}/eu.png`, label: 'European Union' },
     { flag: `${FLAG}/vn.png`, label: 'Vietnam' },
     {
-      flag: `https://storage.dev.cmpup.com/global-statics/marketing/assets/global-I6LwYp1O-1786606263153.webp`,
+      flag: `../src/emails/buyer-invitation/assets/icons/global.svg`,
       label: 'Global market',
     },
   ],
@@ -64,15 +64,15 @@ export const content: BuyerInvitationContent = contentSchema.parse({
 
   benefits: [
     {
-      icon: `https://storage.dev.cmpup.com/global-statics/marketing/assets/find-devti0dX-1786606154467.webp`,
+      icon: `../src/emails/buyer-invitation/assets/icons/find.svg`,
       title: 'FIND THE RIGHT MACHINE FAST',
     },
     {
-      icon: `https://storage.dev.cmpup.com/global-statics/marketing/assets/shipping-z5fJa9mp-1786606187296.webp`,
+      icon: `../src/emails/buyer-invitation/assets/icons/shipping.svg`,
       title: 'GLOBAL SHIPPING SUPPORT',
     },
     {
-      icon: `https://storage.dev.cmpup.com/global-statics/marketing/assets/assistance-dRDdRFtY-1786606117526.webp`,
+      icon: `../src/emails/buyer-invitation/assets/icons/assistance.svg`,
       title: 'DEDICATED BUYER ASSISTANCE',
     },
   ],

@@ -23,6 +23,7 @@ export function writeGallery(
   built: BuiltEmail[],
   builtAt: string,
   keysByEmail: Record<string, KeyInfo[]>,
+  minByEmail: Record<string, string>,
 ): void {
   const cards = built
     .map(
@@ -39,6 +40,16 @@ export function writeGallery(
   );
   const names = JSON.stringify(built.map((e) => e.name));
   const keys = JSON.stringify(keysByEmail);
+  // Ship the minified HTML base64-encoded so the gallery can read/customize/copy it with no fetch
+  // (works identically from file:// locally and from GitHub Pages — no CORS).
+  const minB64 = JSON.stringify(
+    Object.fromEntries(
+      Object.entries(minByEmail).map(([name, html]) => [
+        name,
+        Buffer.from(html).toString('base64'),
+      ]),
+    ),
+  );
   const first = built[0]?.name ?? '';
 
   writeFileSync(
@@ -171,6 +182,16 @@ export function writeGallery(
   .k-copy svg{width:15px;height:15px;}
   .modal-foot{padding:12px 18px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:center;}
   .modal-foot .note{color:var(--muted);font-size:12px;}
+  .modal-foot .spacer{flex:1;}
+  /* Customize-assets rows */
+  .arow{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:var(--r-md);border:1px solid transparent;}
+  .arow:hover{background:var(--panel-2);border-color:var(--border);}
+  .a-thumb{width:40px;height:40px;flex:none;border-radius:var(--r-sm);border:1px solid var(--border);background:#fff center/contain no-repeat;background-size:70%;}
+  .a-main{flex:1;min-width:0;}
+  .a-name{font:11px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--muted);margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .a-input{width:100%;font:12px ui-monospace,SFMono-Regular,Menlo,monospace;padding:7px 9px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--panel);color:var(--ink);}
+  .a-input:focus{outline:none;border-color:var(--brand);}
+  .a-input.local{border-color:#d9a441;} /* still a repo-relative / non-hosted path */
   .hint{color:var(--muted);font-size:11px;padding:6px 8px 2px;}
   kbd{font:inherit;font-size:10px;background:var(--panel-2);border:1px solid var(--border);border-bottom-width:2px;border-radius:5px;padding:1px 5px;}
 
@@ -207,7 +228,7 @@ export function writeGallery(
             <button data-w="700" class="active">Desktop</button>
             <button data-w="390">Mobile</button>
           </div>
-          <button class="btn" id="copymin" title="Copy the minified, production-ready HTML (merge keys intact)">
+          <button class="btn" id="assetbtn" title="Set hosted asset URLs, then copy the HTML">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
             <span>Copy HTML</span>
           </button>
@@ -238,9 +259,29 @@ export function writeGallery(
       <div class="modal-foot"><span class="note">Click a row's icon to copy that key name (without <code>{{ }}</code>) for your sending system.</span></div>
     </div>
   </div>
+  <div class="overlay" id="overlay2">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Customize assets">
+      <div class="modal-head">
+        <div><h2>Customize assets</h2><div class="m-sub" id="aSub"></div></div>
+        <button class="close" id="aClose" aria-label="Close">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
+      <div class="klist" id="alist"></div>
+      <div class="modal-foot">
+        <span class="note">Paste your hosted URL for each asset (amber = still a local path — won't load in an inbox).</span>
+        <span class="spacer"></span>
+        <button class="btn" id="acopy">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+          <span>Copy HTML</span>
+        </button>
+      </div>
+    </div>
+  </div>
   <div class="toast" id="toast"></div>
   <script>
-    var names = ${names}, data = ${data}, keys = ${keys};
+    var names = ${names}, data = ${data}, keys = ${keys}, minB64 = ${minB64};
+    function minHtml(name){ return new TextDecoder().decode(Uint8Array.from(atob(minB64[name]), function(c){return c.charCodeAt(0);})); }
     var $ = function(id){return document.getElementById(id);};
     var frame=$('frame'), device=$('device'), toastEl=$('toast'), toastT, current='';
 
@@ -280,21 +321,6 @@ export function writeGallery(
         b.classList.add('active'); device.style.width=b.getAttribute('data-w')+'px';
       });
     });
-    function copyFile(btn,file,label){
-      fetch('./'+current+file).then(function(r){return r.text();}).then(function(t){
-        if(navigator.clipboard&&navigator.clipboard.writeText) return navigator.clipboard.writeText(t);
-        throw new Error('no clipboard');
-      }).then(function(){
-        var span=btn.querySelector('span'), old=span.textContent;
-        btn.classList.add('ok'); span.textContent='Copied '+label;
-        toast('Copied '+label+' HTML — '+current);
-        setTimeout(function(){btn.classList.remove('ok'); span.textContent=old;},1500);
-      }).catch(function(){
-        window.open('./'+current+file,'_blank'); toast('Clipboard blocked — opened '+file);
-      });
-    }
-    $('copymin').addEventListener('click',function(){copyFile(this,'.min.html','HTML');});
-
     // Merge-keys modal
     var COPY='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
     function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
@@ -321,10 +347,50 @@ export function writeGallery(
     $('keysbtn').addEventListener('click',openKeys);
     $('mClose').addEventListener('click',closeKeys);
     $('overlay').addEventListener('click',function(e){ if(e.target===$('overlay')) closeKeys(); });
+
+    // Customize-assets modal: list every asset URL in the built HTML, let the user paste a hosted
+    // URL for each, then copy the HTML with those substitutions applied (all client-side).
+    var assetSrc=''; // cached min HTML for the current template
+    function isLocal(u){ return /^\\.\\.\\//.test(u) || (!/^https?:/.test(u) && !/^\\{\\{/.test(u)); }
+    function markInput(inp){ inp.classList.toggle('local', isLocal(inp.value)); }
+    function openAssets(){
+      assetSrc=minHtml(current);
+      var re=/(?:src=|background=|url\\()["']?((?:https?:\\/\\/|\\.\\.\\/)[^"')\\s]+\\.(?:png|jpe?g|gif|svg|webp)(?:\\?[^"')\\s]*)?)/gi;
+      var seen={}, urls=[], m;
+      while((m=re.exec(assetSrc))){ if(!seen[m[1]]){ seen[m[1]]=1; urls.push(m[1]); } }
+      $('aSub').textContent=current+' · '+urls.length+' asset'+(urls.length===1?'':'s');
+      $('alist').innerHTML=urls.map(function(u,i){
+        var name=u.split('/').pop();
+        return '<div class="arow"><span class="a-thumb" style="background-image:url(\\''+u+'\\')"></span>'+
+          '<div class="a-main"><div class="a-name" title="'+esc(u)+'">'+esc(name)+'</div>'+
+          '<input class="a-input" data-orig="'+esc(u)+'" value="'+esc(u)+'" id="ain'+i+'"></div></div>';
+      }).join('');
+      Array.prototype.forEach.call($('alist').querySelectorAll('.a-input'),function(inp){
+        markInput(inp); inp.addEventListener('input',function(){markInput(inp);});
+      });
+      $('overlay2').classList.add('open');
+    }
+    function closeAssets(){ $('overlay2').classList.remove('open'); }
+    $('assetbtn').addEventListener('click',openAssets);
+    $('aClose').addEventListener('click',closeAssets);
+    $('overlay2').addEventListener('click',function(e){ if(e.target===$('overlay2')) closeAssets(); });
+    $('acopy').addEventListener('click',function(){
+      var out=assetSrc, changed=0;
+      Array.prototype.forEach.call($('alist').querySelectorAll('.a-input'),function(inp){
+        var orig=inp.getAttribute('data-orig'), val=inp.value.trim();
+        if(val && val!==orig){ out=out.split(orig).join(val); changed++; }
+      });
+      var btn=this, span=btn.querySelector('span'), old=span.textContent;
+      function done(){ btn.classList.add('ok'); span.textContent='Copied';
+        toast('Copied HTML — '+current+(changed?' ('+changed+' asset'+(changed===1?'':'s')+' overridden)':' (no overrides)'));
+        setTimeout(function(){btn.classList.remove('ok'); span.textContent=old;},1500); }
+      if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(out).then(done).catch(done);
+      else done();
+    });
     document.addEventListener('keydown',function(e){
       if(e.target.tagName==='INPUT'||e.metaKey||e.ctrlKey) return;
-      if(e.key==='Escape'){ closeKeys(); return; }
-      if($('overlay').classList.contains('open')) return;
+      if(e.key==='Escape'){ closeKeys(); closeAssets(); return; }
+      if($('overlay').classList.contains('open')||$('overlay2').classList.contains('open')) return;
       if(e.key==='ArrowDown'||e.key==='ArrowUp'){
         e.preventDefault();
         var i=names.indexOf(current), d=e.key==='ArrowDown'?1:-1;

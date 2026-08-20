@@ -30,6 +30,7 @@ async function main(): Promise<void> {
   let failed = false;
   const built: BuiltEmail[] = [];
   const keysDoc: KeysDocEmail[] = [];
+  const minByEmail: Record<string, string> = {}; // shippable minified HTML, for the gallery copy/customize
 
   for (const name of emailNames) {
     try {
@@ -59,6 +60,7 @@ async function main(): Promise<void> {
       const clip = Number(result.kb) > GMAIL_CLIP_KB ? '  ⚠ over Gmail 102KB clip limit' : '';
       console.log(`✓ ${OUT_DIR}/${name}.html  (${result.kb} KB · ${result.category})${clip}`);
       built.push({ name, kb: result.kb, category: result.category });
+      minByEmail[name] = result.minHtml;
       keysDoc.push({
         name,
         category: result.category,
@@ -79,7 +81,7 @@ async function main(): Promise<void> {
       e.requiredKeys.map((key) => ({ key, description: keyDescriptions[key] ?? '' })),
     ]),
   );
-  writeGallery(OUT_DIR, built, builtAt, keysByEmail);
+  writeGallery(OUT_DIR, built, builtAt, keysByEmail, minByEmail);
   console.log(`✓ ${OUT_DIR}/index.html  (preview gallery)`);
   writeSimulator(OUT_DIR, built, builtAt);
   console.log(`✓ ${OUT_DIR}/simulator.html  (inbox simulator)`);
