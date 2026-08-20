@@ -77,6 +77,7 @@ export function writeGallery(outDir: string, built: BuiltEmail[], builtAt: strin
             <button data-w="390">Mobile</button>
           </div>
           <button class="btn" id="copymin">⧉ Copy minified</button>
+          <button class="btn ghost" id="copyraw">⧉ Copy raw</button>
           <a class="btn ghost" id="openPreview" target="_blank" rel="noopener">Preview ↗</a>
           <a class="btn ghost" id="openRaw" target="_blank" rel="noopener">Raw ↗</a>
         </div>
@@ -100,6 +101,7 @@ export function writeGallery(outDir: string, built: BuiltEmail[], builtAt: strin
       document.getElementById('openPreview').href='./'+name+'.preview.html';
       document.getElementById('openRaw').href='./'+name+'.html';
       document.getElementById('copymin').setAttribute('data-name',name);
+      document.getElementById('copyraw').setAttribute('data-name',name);
       Array.prototype.forEach.call(document.querySelectorAll('.nav'),function(b){b.classList.toggle('active',b.getAttribute('data-name')===name);});
       if(location.hash.slice(1)!==name) history.replaceState(null,'','#'+name);
     }
@@ -108,15 +110,17 @@ export function writeGallery(outDir: string, built: BuiltEmail[], builtAt: strin
       Array.prototype.forEach.call(document.querySelectorAll('#wseg button'),function(x){x.classList.remove('active');});
       b.classList.add('active'); wrap.style.width=b.getAttribute('data-w')+'px';
     });});
-    document.getElementById('copymin').addEventListener('click',function(){
-      var name=this.getAttribute('data-name');
-      fetch('./'+name+'.min.html').then(function(r){return r.text();}).then(function(t){
+    function copyFile(file,label){
+      var name=document.getElementById('copymin').getAttribute('data-name');
+      fetch('./'+name+file).then(function(r){return r.text();}).then(function(t){
         if(navigator.clipboard&&navigator.clipboard.writeText) return navigator.clipboard.writeText(t);
         throw new Error('no clipboard');
-      }).then(function(){toast('Copied minified HTML — '+name);}).catch(function(){
-        window.open('./'+name+'.min.html','_blank'); toast('Clipboard blocked — opened .min.html (select all, copy)');
+      }).then(function(){toast('Copied '+label+' HTML — '+name);}).catch(function(){
+        window.open('./'+name+file,'_blank'); toast('Clipboard blocked — opened '+file+' (select all, copy)');
       });
-    });
+    }
+    document.getElementById('copymin').addEventListener('click',function(){copyFile('.min.html','minified');});
+    document.getElementById('copyraw').addEventListener('click',function(){copyFile('.html','raw');});
     window.addEventListener('hashchange',function(){select(location.hash.slice(1));});
     select(location.hash.slice(1)||'${first}');
   </script>

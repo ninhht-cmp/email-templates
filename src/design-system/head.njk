@@ -1,12 +1,22 @@
 {#
   Shared <mj-head>: meta, brand defaults, styles, responsive rules.
-  Light-only — color-scheme pinned to light so dark-mode clients render as designed.
+  Colour-scheme is driven by meta.colorScheme ('light' default | 'auto') — see schema.ts.
   Colours/fonts come from `tokens`.
 #}
+{% if meta.colorScheme == 'auto' %}
+{# Opt-in: advertise both schemes so supporting clients (Apple Mail/iOS) apply the dark treatment
+   below instead of force-inverting. Needs a dark-safe logo per email to look right. #}
+<mj-raw>
+  <meta name="color-scheme" content="light dark">
+  <meta name="supported-color-schemes" content="light dark">
+</mj-raw>
+{% else %}
+{# Default: pin light so dark-mode clients render the brand as designed (no auto-invert). #}
 <mj-raw>
   <meta name="color-scheme" content="light">
   <meta name="supported-color-schemes" content="light">
 </mj-raw>
+{% endif %}
 
 {# Load the brand web font for clients that support it (Apple Mail, iOS…). Outlook/Gmail
    ignore it and fall back to the native system stack in tokens.font.stack. #}

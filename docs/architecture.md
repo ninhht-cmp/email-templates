@@ -193,3 +193,29 @@ template thứ 2-3 (governance mới đáng). GĐ 4 chỉ khi nghiệp vụ yêu
 
 Những cái này trả hết nợ coupling và biến "quản trị key" từ thủ công → tự động.
 ```
+
+---
+
+## 9. Responsive columns — two mechanisms, on purpose
+
+Multi-column sections must lay out side-by-side on desktop and stack on mobile, across clients that
+handle CSS very differently. MJML's default is **mobile-first**: each column is inline `width:100%`
+and a `@media(min-width:480px)` rule widens it. That breaks in clients that drop `<style>`/media
+queries — **New Outlook / Outlook webview** and **Gmail on non-Google accounts (GANGA)** — where the
+columns stay `width:100%` and collapse to one stack even on desktop. Two patterns fix this:
+
+- **Fluid-hybrid (`mw-<px>`)** — the default for real columns (hero, CTA pair, benefits, feature/
+  equipment grids). The column keeps inline `width:100%` and gets an inline `max-width:<px>` injected
+  at build time (`applyFluidMaxWidth` in `build/html-transforms.ts`, triggered by an `mw-<px>` css-
+  class). With no media query, a wide viewport sits columns side-by-side and a narrow one reflows —
+  correct in New Outlook *and* GANGA. A `max-width:479` rule in `head.njk` drops the cap for clean
+  full-width stacking on media-query mobile clients. `<px>` = round(width% × section content width);
+  it's coupled to the column's width/padding — `npm run simulate` is the guard.
+
+- **`mj-group`** — used only where columns must stay side-by-side at *every* width (the proof-panel
+  stats: two short numbers that read fine as 2-across on mobile). mj-group emits an inline `width:%`,
+  so it never stacks. Don't use it for anything that must reflow on mobile.
+
+Rule of thumb: **reach for `mw-<px>` (fluid-hybrid) by default; use `mj-group` only for
+never-stack pairs.** Verify both New Outlook and GANGA via `npm run simulate` (docs/email-testing.md
+§2b) whenever you touch a column's width, padding, or `mw-` value.
