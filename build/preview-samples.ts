@@ -17,10 +17,17 @@ export const previewSamples: Record<string, string> = {
   unsubscribe: 'https://comacpro.net/unsubscribe',
 };
 
-/** Replace {{key}} with its sample value; keys with no sample are left literal. */
+/**
+ * Render the preview: evaluate Handlebars `{{#if key}}…{{/if}}` blocks (kept only when a sample for
+ * `key` exists — mirroring how the sending system shows the block only when it provides that value),
+ * then replace `{{key}}` with its sample (keys with no sample are left literal). PREVIEW ONLY — the
+ * shippable HTML keeps the raw `{{#if}}` / `{{key}}` for the sending system to evaluate.
+ */
 export function fillSamples(html: string, samples: Record<string, string>): string {
-  return html.replace(
-    /\{\{\s*([a-z0-9_]+)\s*\}\}/gi,
-    (match, key: string) => samples[key] ?? match,
-  );
+  return html
+    .replace(
+      /\{\{#if\s+([a-z0-9_]+)\s*\}\}([\s\S]*?)\{\{\/if\}\}/gi,
+      (_m, key: string, inner: string) => (samples[key] ? inner : ''),
+    )
+    .replace(/\{\{\s*([a-z0-9_]+)\s*\}\}/gi, (match, key: string) => samples[key] ?? match);
 }

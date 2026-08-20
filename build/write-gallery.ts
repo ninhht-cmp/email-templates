@@ -24,6 +24,7 @@ export function writeGallery(
   builtAt: string,
   keysByEmail: Record<string, KeyInfo[]>,
   minByEmail: Record<string, string>,
+  samples: Record<string, string>,
 ): void {
   const cards = built
     .map(
@@ -50,6 +51,7 @@ export function writeGallery(
       ]),
     ),
   );
+  const sampleJson = JSON.stringify(samples);
   const first = built[0]?.name ?? '';
 
   writeFileSync(
@@ -144,6 +146,8 @@ export function writeGallery(
             background:var(--surface);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow-md);}
   .floatbar .seg button{border-radius:9px;}
   .fb-sep{width:1px;height:20px;background:var(--border);margin:0 3px;flex:none;}
+  .fb-check{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:500;color:var(--muted);cursor:pointer;padding:0 8px;user-select:none;white-space:nowrap;}
+  .fb-check:hover{color:var(--ink);} .fb-check input{accent-color:var(--brand);cursor:pointer;margin:0;}
   .caption{display:flex;align-items:baseline;gap:9px;justify-content:center;margin-bottom:16px;}
   .caption .name{font-weight:600;font-size:14px;letter-spacing:-.01em;}
   .caption .meta{color:var(--muted);font-size:11.5px;font-variant-numeric:tabular-nums;}
@@ -260,6 +264,8 @@ export function writeGallery(
               <span>Merge keys</span>
             </button>
             <a class="btn ghost" id="openRaw" target="_blank" rel="noopener" title="Open the shippable HTML with raw {{keys}}">Raw ↗</a>
+            <span class="fb-sep"></span>
+            <label class="fb-check" title="Simulate the sending system's unsubscribe toggle ({{#if unsubscribe}})"><input type="checkbox" id="unsubSim" checked> Unsubscribe</label>
           </div>
           <div class="caption"><span class="name" id="crumbName"></span><span class="meta" id="crumbMeta"></span></div>
           <div class="device" id="device" style="width:700px">
@@ -303,7 +309,7 @@ export function writeGallery(
   </div>
   <div class="toast" id="toast"></div>
   <script>
-    var names = ${names}, data = ${data}, keys = ${keys}, minB64 = ${minB64};
+    var names = ${names}, data = ${data}, keys = ${keys}, minB64 = ${minB64}, samples = ${sampleJson};
     function minHtml(name){ return new TextDecoder().decode(Uint8Array.from(atob(minB64[name]), function(c){return c.charCodeAt(0);})); }
     var $ = function(id){return document.getElementById(id);};
     var frame=$('frame'), device=$('device'), toastEl=$('toast'), toastT, current='';
@@ -322,10 +328,24 @@ export function writeGallery(
     var CHECK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
     function toast(m){ toastEl.innerHTML=CHECK+'<span>'+m+'</span>'; toastEl.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(function(){toastEl.classList.remove('show');},2000); }
 
+    // Render the preview into the iframe via srcdoc — the sample-filled minified HTML, with
+    // handlebars if-blocks evaluated (kept iff a sample exists; the Unsubscribe checkbox flips
+    // whether unsubscribe counts as present). Client-side + same-document, so it works from file://
+    // and Pages alike, and the unsubscribe toggle is a re-render — no cross-origin iframe access.
+    function fillPreview(html, s){
+      return html
+        .replace(/\\{\\{#if\\s+([a-z0-9_]+)\\s*\\}\\}([\\s\\S]*?)\\{\\{\\/if\\}\\}/gi, function(_m,k,inner){ return s[k]?inner:''; })
+        .replace(/\\{\\{\\s*([a-z0-9_]+)\\s*\\}\\}/gi, function(m,k){ return s[k]!=null?s[k]:m; });
+    }
+    function renderPreview(){
+      if(!current) return;
+      var s = $('unsubSim').checked ? samples : Object.assign({}, samples, {unsubscribe:null});
+      frame.srcdoc = fillPreview(minHtml(current), s);
+    }
     function select(name){
       if(names.indexOf(name)<0) name=names[0];
       current=name;
-      frame.src='./'+name+'.preview.html';
+      renderPreview();
       $('devUrl').textContent=name+'.preview.html';
       $('crumbName').textContent=name;
       $('crumbMeta').textContent=data[name].kb+' KB · '+data[name].category;
@@ -344,6 +364,10 @@ export function writeGallery(
         b.classList.add('active'); device.style.width=b.getAttribute('data-w')+'px';
       });
     });
+    // Unsubscribe checkbox mirrors the sending system's {{#if unsubscribe}} toggle: re-render the
+    // preview with unsubscribe present (clause shown) or absent (clause dropped).
+    $('unsubSim').addEventListener('change', renderPreview);
+
     // Merge-keys modal
     var COPY='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
     function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}

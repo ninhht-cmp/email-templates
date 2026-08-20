@@ -9,6 +9,7 @@ import { buildEmail } from './build-email.ts';
 import { EMAILS_DIR, GMAIL_CLIP_KB, OUT_DIR } from './config.ts';
 import { createEnv } from './create-env.ts';
 import { discoverEmails } from './discover-emails.ts';
+import { previewSamples } from './preview-samples.ts';
 import { tokensSchema } from './schema.ts';
 import { type BuiltEmail, writeGallery } from './write-gallery.ts';
 import { type KeysDocEmail, keyDescriptions, writeKeysDoc } from './write-keys-doc.ts';
@@ -80,7 +81,7 @@ async function main(): Promise<void> {
       e.requiredKeys.map((key) => ({ key, description: keyDescriptions[key] ?? '' })),
     ]),
   );
-  writeGallery(OUT_DIR, built, builtAt, keysByEmail, minByEmail);
+  writeGallery(OUT_DIR, built, builtAt, keysByEmail, minByEmail, previewSamples);
   console.log(`✓ ${OUT_DIR}/index.html  (preview gallery)`);
   writeKeysDoc(OUT_DIR, keysDoc, builtAt);
   console.log(`✓ ${OUT_DIR}/KEYS.md  (merge-key reference)`);
