@@ -7,6 +7,7 @@ real campaign send.
 |---|---|---|---|
 | **1. Compatibility lint** | Structural/CSS breakage (flex, absolute pos, missing VML, Gmail clip, external CSS, a11y tables) | Anything visual | `npm run lint:email` |
 | **2. Inbox simulator** | Reflow & stacking at each width, preview-pane column, mobile break points | Outlook's Word engine quirks (real rendering) | open `dist/simulator.html` |
+| **2b. Client-family sim** | Column collapse in CSS-stripping clients (New Outlook, Gmail GANGA) | Word-engine visuals | `npm run simulate` |
 | **3. Real send** | Everything, exactly — Outlook desktop especially | — | see below |
 
 ## 1. Compatibility lint
@@ -35,6 +36,27 @@ mobile (320). Switch template from the dropdown; "taller frames" to see the whol
 so it reproduces layout *reflow* but not Outlook's Word engine (border-radius, object-fit,
 gradients degrade there — see `README.md` → Client compatibility). Use it to confirm nothing
 stacks or overflows wrong at each width; use layer 3 for true Outlook fidelity.
+
+## 2b. Client-family simulation (New Outlook / Gmail GANGA)
+
+The viewport simulator keeps full CSS. Two clients **strip CSS** before rendering, so they collapse
+multi-column layouts in ways the simulator can't show — this is what broke the columns before:
+
+- **New Outlook / Outlook webview** — drops `@media` queries (and the `[if mso]` ghost table).
+- **Gmail app on a non-Google account (GANGA)** — strips all `<style>`.
+
+Both hold only if the layout survives via *inline* widths (the fluid-hybrid `mw-<px>` approach —
+see `build/render-email.ts`). Reproduce them:
+
+```bash
+npm run build
+npm run simulate     # writes dist/sim/<name>.{newoutlook,ganga}.html
+```
+
+Open `dist/sim/<name>.newoutlook.html` at ~700px and `<name>.ganga.html` at ~390px. Columns must
+stay laid out — side-by-side on desktop, reflowed (not overflowing/collapsed) on mobile. This is the
+**guard for the `mw-<px>` values**: a wrong one makes columns wrap or leave a gap here. It's still
+Blink, so classic Outlook's Word engine needs layer 3.
 
 ## 3. Real send — true fidelity
 
