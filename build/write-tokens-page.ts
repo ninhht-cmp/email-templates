@@ -52,7 +52,7 @@ export function writeTokensPage(outDir: string, tokens: Tokens, builtAt: string)
   :root[data-theme=dark]{--brand:#ff7a3d;--bg:#0d0d0e;--panel:#161615;--ink:#eeece7;--muted:#8f8c85;--border:#262521;color-scheme:dark;}
   *{box-sizing:border-box;}
   body{margin:0;font:15px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;}
-  header{display:flex;align-items:center;gap:14px;padding:16px 26px;background:var(--panel);border-bottom:1px solid var(--border);}
+  header{display:flex;align-items:center;gap:14px;padding:18px 26px 14px;background:transparent;}
   h1{margin:0;font-size:15px;} .sub{color:var(--muted);font-size:12px;}
   a.back{margin-left:auto;color:var(--brand);text-decoration:none;font-weight:600;font-size:13px;}
   main{max-width:1000px;margin:0 auto;padding:28px 26px 60px;}

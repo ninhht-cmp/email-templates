@@ -107,7 +107,6 @@ export function writeGallery(
   /* Header — borderless, sits on the app bg */
   header{display:flex;align-items:center;gap:14px;padding:18px 26px 14px;background:transparent;}
   .brandmark{display:flex;align-items:center;gap:11px;}
-  .brandmark .rail{width:3px;height:22px;border-radius:2px;background:var(--brand);flex:none;}
   .h-txt h1{margin:0;font-size:14px;font-weight:400;letter-spacing:.01em;color:var(--muted);}
   .h-txt h1 b{font-weight:650;letter-spacing:-.01em;color:var(--ink);margin-right:5px;}
   .h-txt .sub{color:var(--muted);font-size:11px;margin-top:2px;font-variant-numeric:tabular-nums;}
@@ -130,7 +129,6 @@ export function writeGallery(
         border-radius:var(--r-sm);border:0;background:transparent;transition:background .14s var(--ease);}
   .card:hover{background:var(--panel-2);}
   .card.active{background:var(--brand-soft);}
-  .card.active::before{content:"";position:absolute;left:0;top:8px;bottom:8px;width:2px;border-radius:2px;background:var(--brand);}
   .card-top{display:flex;align-items:baseline;gap:8px;justify-content:space-between;}
   .card-name{font-weight:550;font-size:13.5px;letter-spacing:-.01em;color:var(--ink);}
   .card-kb{color:var(--muted);font-size:11.5px;font-variant-numeric:tabular-nums;flex:none;}
@@ -140,8 +138,12 @@ export function writeGallery(
   .viewer{flex:1;min-width:0;display:flex;}
   .canvas{flex:1;min-width:0;background:var(--canvas);border-radius:var(--r-lg);box-shadow:inset 0 0 0 1px var(--border);}
   .scroll{height:100%;overflow:auto;display:flex;flex-direction:column;align-items:center;padding:16px 24px 52px;}
-  .floatbar{position:sticky;top:0;z-index:5;display:inline-flex;align-items:center;gap:5px;padding:6px;margin-bottom:22px;
-            background:var(--surface);border:1px solid var(--border);border-radius:var(--r-pill);box-shadow:var(--shadow-md);}
+  /* macOS-style floating toolbar: soft rounded-rectangle (not a full capsule), with rounded-rect
+     controls inside — reads like a macOS command bar / Spotlight. */
+  .floatbar{position:sticky;top:0;z-index:5;display:inline-flex;align-items:center;gap:5px;padding:7px;margin-bottom:22px;
+            background:var(--surface);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow-md);}
+  .floatbar .seg button{border-radius:9px;}
+  .floatbar .btn{border-radius:10px;}
   .fb-sep{width:1px;height:20px;background:var(--border);margin:0 3px;flex:none;}
   .caption{display:flex;align-items:baseline;gap:9px;justify-content:center;margin-bottom:16px;}
   .caption .name{font-weight:600;font-size:14px;letter-spacing:-.01em;}
@@ -218,7 +220,6 @@ export function writeGallery(
     .layout{flex-direction:column;min-height:0;}
     .sidebar{width:auto;flex-direction:row;overflow-x:auto;padding:4px 4px 10px;}
     .card{flex:none;min-width:170px;}
-    .card.active::before{top:auto;bottom:0;left:8px;right:8px;width:auto;height:2px;}
     .canvas{min-height:70vh;}
     .floatbar{flex-wrap:wrap;justify-content:center;border-radius:var(--r-md);}
     .device{width:100%!important;}
@@ -227,7 +228,6 @@ export function writeGallery(
 <body>
   <header>
     <div class="brandmark">
-      <span class="rail"></span>
       <div class="h-txt"><h1><b>COMACPRO</b>Email templates</h1><div class="sub">Preview gallery · built ${builtAt} · ${built.length} template(s)</div></div>
     </div>
     <div class="h-spacer"></div>

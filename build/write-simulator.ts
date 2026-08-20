@@ -59,11 +59,11 @@ export function writeSimulator(outDir: string, built: BuiltEmail[], builtAt: str
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>COMACPRO — Inbox simulator</title>
 <style>
-  :root { color-scheme: light dark; --bg:#f4f5f7; --panel:#fff; --border:#e6e8eb; --ink:#122941; --muted:#6b7280; --brand:#f37134; }
-  @media (prefers-color-scheme: dark) { :root { --bg:#0e1013; --panel:#191c22; --border:#2a2e36; --ink:#fff; --muted:#98a1ad; } }
+  :root { color-scheme: light dark; --bg:#f1eee7; --panel:#fbfaf6; --border:#e8e3d8; --ink:#3a372f; --muted:#8b877b; --brand:#d1774e; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#17161a; --panel:#211f24; --border:#2a2830; --ink:#e4e0d7; --muted:#948f86; --brand:#e0906a; } }
   * { box-sizing:border-box; }
-  body { margin:0; font:15px/1.5 Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif; background:var(--bg); color:var(--ink); }
-  header { position:sticky; top:0; z-index:5; padding:16px 24px; background:var(--panel); border-bottom:1px solid var(--border);
+  body { margin:0; font:15px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif; background:var(--bg); color:var(--ink); }
+  header { position:sticky; top:0; z-index:5; padding:18px 24px 14px; background:var(--bg);
            display:flex; flex-wrap:wrap; gap:16px 24px; align-items:center; }
   h1 { margin:0; font-size:16px; }
   .sub { color:var(--muted); font-size:12px; }
