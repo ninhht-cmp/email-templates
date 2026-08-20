@@ -101,8 +101,10 @@ export function writeGallery(
     color-scheme:dark;
   }
   *{box-sizing:border-box;}
-  html,body{height:100%;}
-  body{margin:0;display:flex;flex-direction:column;font:15px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  /* The page scrolls (window): the header scrolls away with the content; the floating toolbar and
+     the sidebar stay put via position:sticky. The iframe is auto-sized to its content (see fitFrame)
+     so the email never has a second scrollbar and the footer is reachable by scrolling down. */
+  body{margin:0;min-height:100vh;font:15px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
        background:var(--app);color:var(--ink);-webkit-font-smoothing:antialiased;}
   button{font:inherit;color:inherit;cursor:pointer;}
 
@@ -123,8 +125,9 @@ export function writeGallery(
   :root[data-theme=dark] .icon-btn .moon{display:block;}
 
   /* Layout — fills below the header; both columns borderless on the app bg */
-  .layout{flex:1;min-height:0;display:flex;gap:0;padding:0 14px 14px;}
-  .sidebar{width:236px;flex:none;background:transparent;padding:6px 8px;display:flex;flex-direction:column;gap:2px;overflow-y:auto;}
+  .layout{display:flex;gap:0;padding:0 14px 14px;align-items:flex-start;}
+  .sidebar{width:236px;flex:none;background:transparent;padding:6px 8px;display:flex;flex-direction:column;gap:2px;
+           position:sticky;top:12px;max-height:calc(100vh - 24px);overflow-y:auto;}
   .side-label{font-size:10.5px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:var(--faint);padding:2px 12px 12px;}
   /* Rows, not cards: quiet, with a left orange rail marking the active one (brand as thin accent). */
   .card{position:relative;display:flex;flex-direction:column;gap:3px;text-align:left;padding:9px 12px;
@@ -139,15 +142,12 @@ export function writeGallery(
   /* Viewer = a soft rounded preview canvas that is the ONLY scroll region (app shell: header +
      sidebar fixed). min-height:0 lets the flex chain actually bound the canvas height so .scroll
      scrolls instead of the page growing. */
-  .viewer{flex:1;min-width:0;min-height:0;display:flex;}
-  .canvas{flex:1;min-width:0;min-height:0;background:var(--canvas);border-radius:var(--r-lg);box-shadow:inset 0 0 0 1px var(--border);}
-  .scroll{height:100%;overflow:auto;display:flex;flex-direction:column;align-items:center;padding:16px 24px 52px;}
-  /* Children keep their natural height (no flex-shrink) — otherwise the column compresses the device
-     to fit and its overflow:hidden clips the email footer, leaving nothing to scroll to. */
-  .scroll > *{flex:none;}
+  .viewer{flex:1;min-width:0;display:flex;}
+  .canvas{flex:1;min-width:0;background:var(--canvas);border-radius:var(--r-lg);box-shadow:inset 0 0 0 1px var(--border);}
+  .scroll{display:flex;flex-direction:column;align-items:center;padding:16px 24px 52px;}
   /* macOS-style floating toolbar: soft rounded-rectangle (not a full capsule), with rounded-rect
      controls inside — reads like a macOS command bar / Spotlight. */
-  .floatbar{position:sticky;top:0;z-index:5;display:inline-flex;align-items:center;gap:5px;padding:7px;margin-bottom:22px;
+  .floatbar{position:sticky;top:12px;z-index:5;display:inline-flex;align-items:center;gap:5px;padding:7px;margin-bottom:22px;
             background:var(--surface);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow-md);}
   .floatbar .seg button{border-radius:9px;}
   .fb-sep{width:1px;height:20px;background:var(--border);margin:0 3px;flex:none;}
