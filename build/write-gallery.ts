@@ -205,7 +205,6 @@ export function writeGallery(
 </style></head>
 <body>
   <header>
-    <div class="logo">C</div>
     <div class="h-txt"><h1>COMACPRO — Email templates</h1><div class="sub">Preview gallery · built ${builtAt} · ${built.length} template(s)</div></div>
     <div class="h-spacer"></div>
     <a class="btn ghost" href="./tokens.html" style="margin-right:4px;">Design tokens ↗</a>

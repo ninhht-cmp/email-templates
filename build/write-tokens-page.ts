@@ -70,7 +70,6 @@ export function writeTokensPage(outDir: string, tokens: Tokens, builtAt: string)
 </style></head>
 <body>
   <header>
-    <div class="logo">C</div>
     <div><h1>COMACPRO — Design tokens</h1><div class="sub">Generated from tokens.ts · built ${builtAt}</div></div>
     <a class="back" href="./index.html">← Templates</a>
   </header>
