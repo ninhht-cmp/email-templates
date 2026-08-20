@@ -46,30 +46,35 @@ export function writeTokensPage(outDir: string, tokens: Tokens, builtAt: string)
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>COMACPRO — Design tokens</title>
 <style>
-  :root{--brand:#e5641f;--bg:#f4f3f1;--panel:#fff;--ink:#1b1a18;--muted:#76736c;--border:#e7e4df;
-        --shadow:0 1px 2px rgba(28,26,22,.05);--r:10px;color-scheme:light;}
-  @media (prefers-color-scheme:dark){:root:not([data-theme=light]){--brand:#ff7a3d;--bg:#0d0d0e;--panel:#161615;--ink:#eeece7;--muted:#8f8c85;--border:#262521;color-scheme:dark;}}
-  :root[data-theme=dark]{--brand:#ff7a3d;--bg:#0d0d0e;--panel:#161615;--ink:#eeece7;--muted:#8f8c85;--border:#262521;color-scheme:dark;}
+  /* Matches the gallery's soft/paper system: warm-neutral chrome, restrained accent, hairlines. */
+  :root{--brand:#d1774e;--bg:#f1eee7;--panel:#fbfaf6;--panel-2:#f0ede5;--ink:#3a372f;--muted:#8b877b;
+        --border:#e8e3d8;--demo:#cbc5b7;--shadow:0 1px 3px rgba(58,55,47,.06);--r:12px;color-scheme:light;}
+  @media (prefers-color-scheme:dark){:root:not([data-theme=light]){--brand:#e0906a;--bg:#17161a;--panel:#211f24;--panel-2:#2a272d;--ink:#e4e0d7;--muted:#948f86;--border:#2a2830;--demo:#39363f;color-scheme:dark;}}
+  :root[data-theme=dark]{--brand:#e0906a;--bg:#17161a;--panel:#211f24;--panel-2:#2a272d;--ink:#e4e0d7;--muted:#948f86;--border:#2a2830;--demo:#39363f;color-scheme:dark;}
   *{box-sizing:border-box;}
-  body{margin:0;font:15px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;}
+  body{margin:0;font:15px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;}
   header{display:flex;align-items:center;gap:14px;padding:18px 26px 14px;background:transparent;}
-  h1{margin:0;font-size:15px;} .sub{color:var(--muted);font-size:12px;}
-  a.back{margin-left:auto;color:var(--brand);text-decoration:none;font-weight:600;font-size:13px;}
-  main{max-width:1000px;margin:0 auto;padding:28px 26px 60px;}
-  h2{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:30px 0 12px;}
+  h1{margin:0;font-size:14px;font-weight:400;letter-spacing:.01em;color:var(--muted);}
+  h1 b{font-weight:650;letter-spacing:-.01em;color:var(--ink);margin-right:5px;}
+  .sub{color:var(--muted);font-size:11px;margin-top:2px;font-variant-numeric:tabular-nums;}
+  a.back{margin-left:auto;color:var(--muted);text-decoration:none;font-weight:500;font-size:12.5px;transition:color .15s;}
+  a.back:hover{color:var(--ink);}
+  main{max-width:1000px;margin:0 auto;padding:22px 26px 64px;}
+  h2{font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin:34px 0 12px;}
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;}
-  .sw{display:flex;align-items:center;gap:11px;padding:10px;background:var(--panel);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);}
-  .chip-color{width:38px;height:38px;border-radius:9px;border:1px solid rgba(0,0,0,.08);flex:none;}
+  .sw{display:flex;align-items:center;gap:11px;padding:10px;background:var(--panel);border:1px solid var(--border);border-radius:var(--r);}
+  .chip-color{width:38px;height:38px;border-radius:9px;border:1px solid rgba(0,0,0,.06);flex:none;}
   .sw-txt{display:flex;flex-direction:column;gap:1px;min-width:0;}
   code{font:12px ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:600;}
   .hex{color:var(--muted);font:11px ui-monospace,SFMono-Regular,Menlo,monospace;text-transform:uppercase;}
   .radii{display:flex;gap:18px;flex-wrap:wrap;}
-  .radius-item{display:flex;flex-direction:column;align-items:center;gap:6px;}
-  .radius-demo{width:76px;height:56px;background:var(--brand);display:block;}
+  .radius-item{display:flex;flex-direction:column;align-items:center;gap:8px;}
+  /* Neutral demo fill so the RADIUS is the point, not the colour (no orange soup). */
+  .radius-demo{width:76px;height:56px;background:var(--demo);display:block;}
 </style></head>
 <body>
   <header>
-    <div><h1>COMACPRO — Design tokens</h1><div class="sub">Generated from tokens.ts · built ${builtAt}</div></div>
+    <div><h1><b>COMACPRO</b>Design tokens</h1><div class="sub">Generated from tokens.ts · built ${builtAt}</div></div>
     <a class="back" href="./index.html">← Templates</a>
   </header>
   <main>
