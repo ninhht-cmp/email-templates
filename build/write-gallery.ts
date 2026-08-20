@@ -144,7 +144,7 @@ export function writeGallery(
   .toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,18px);opacity:0;pointer-events:none;
          display:flex;align-items:center;gap:8px;background:var(--ink);color:var(--bg);
          padding:11px 18px;border-radius:var(--r-pill);font-size:13px;font-weight:600;box-shadow:var(--shadow-lg);
-         transition:.24s var(--ease);z-index:20;}
+         transition:.24s var(--ease);z-index:40;}
   .toast.show{opacity:1;transform:translate(-50%,0);}
   .toast svg{width:16px;height:16px;}
 
@@ -236,7 +236,7 @@ export function writeGallery(
         </button>
       </div>
       <div class="klist" id="klist"></div>
-      <div class="modal-foot"><span class="note">Click a row's icon to copy that <code>{{key}}</code> into your sending system.</span></div>
+      <div class="modal-foot"><span class="note">Click a row's icon to copy that key name (without <code>{{ }}</code>) for your sending system.</span></div>
     </div>
   </div>
   <div class="toast" id="toast"></div>
@@ -306,14 +306,14 @@ export function writeGallery(
       $('klist').innerHTML=list.map(function(k){
         return '<div class="krow"><div class="k-main"><span class="k-code">{{'+esc(k.key)+'}}</span>'+
           (k.description?'<div class="k-desc">'+esc(k.description)+'</div>':'')+
-          '</div><button class="k-copy" data-key="'+esc(k.key)+'" title="Copy {{'+esc(k.key)+'}}">'+COPY+'</button></div>';
+          '</div><button class="k-copy" data-key="'+esc(k.key)+'" title="Copy '+esc(k.key)+'">'+COPY+'</button></div>';
       }).join('');
       Array.prototype.forEach.call($('klist').querySelectorAll('.k-copy'),function(btn){
         btn.addEventListener('click',function(){
-          var tag='{{'+btn.getAttribute('data-key')+'}}';
-          function done(){ btn.classList.add('ok'); btn.innerHTML=CHECK; toast('Copied '+tag);
+          var key=btn.getAttribute('data-key');
+          function done(){ btn.classList.add('ok'); btn.innerHTML=CHECK; toast('Copied '+key);
             setTimeout(function(){btn.classList.remove('ok'); btn.innerHTML=COPY;},1400); }
-          if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(tag).then(done).catch(done);
+          if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(key).then(done).catch(done);
           else done();
         });
       });
