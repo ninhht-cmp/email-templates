@@ -170,7 +170,9 @@ export function writeGallery(
   .device-bar{height:32px;display:flex;align-items:center;gap:6px;padding:0 13px;background:#f3f2ef;border-bottom:1px solid #e7e4df;}
   .dot{width:9px;height:9px;border-radius:50%;background:#cfcbc3;}
   .device-url{margin-left:8px;font:11px ui-monospace,SFMono-Regular,Menlo,monospace;color:#8a877f;}
-  iframe{display:block;border:0;width:100%;height:78vh;background:#fff;}
+  /* Height is set from the rendered content (see fitFrame) so the iframe doesn't scroll on its own
+     (no scrollbar-inside-a-scrollbar); the email lives in the canvas scroll. 600 is a pre-load min. */
+  iframe{display:block;border:0;width:100%;height:600px;background:#fff;}
 
   /* Toast */
   .toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,18px);opacity:0;pointer-events:none;
@@ -337,10 +339,17 @@ export function writeGallery(
         .replace(/\\{\\{#if\\s+([a-z0-9_]+)\\s*\\}\\}([\\s\\S]*?)\\{\\{\\/if\\}\\}/gi, function(_m,k,inner){ return s[k]?inner:''; })
         .replace(/\\{\\{\\s*([a-z0-9_]+)\\s*\\}\\}/gi, function(m,k){ return s[k]!=null?s[k]:m; });
     }
+    // Size the iframe to its content so it never scrolls internally (the email footer stays reachable
+    // by scrolling the canvas, not a second scrollbar inside the frame). srcdoc is same-origin.
+    function fitFrame(){
+      try{ var d=frame.contentDocument; if(d&&d.body){ frame.style.height=Math.ceil(d.body.scrollHeight)+'px'; } }catch(e){}
+    }
+    frame.addEventListener('load', fitFrame);
     function renderPreview(){
       if(!current) return;
       var s = $('unsubSim').checked ? samples : Object.assign({}, samples, {unsubscribe:null});
       frame.srcdoc = fillPreview(minHtml(current), s);
+      setTimeout(fitFrame,150); setTimeout(fitFrame,600); // retry once images decode
     }
     function select(name){
       if(names.indexOf(name)<0) name=names[0];
