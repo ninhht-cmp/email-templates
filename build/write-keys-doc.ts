@@ -19,7 +19,7 @@ export const keyDescriptions: Record<string, string> = {
   sender_email: 'Sales rep email',
   sender_avatar: 'Full HTTPS URL of the rep photo (any ratio — object-fit crops it to a circle)',
   unsubscribe:
-    "Footer unsubscribe link — provided by the sending system's built-in unsubscribe toggle, NOT a custom variable. Just enable that toggle; only declare it manually if you host your own unsubscribe URL.",
+    'Footer unsubscribe link (href of the "Unsubscribe" text). It MUST hold a real URL at send time or the link breaks — so the sent email matches the preview. Either your ESP\'s unsubscribe toggle populates this {{unsubscribe}} tag, or you map it to your unsubscribe URL like any other variable. Confirm with a real test (Show original → the href is a URL, not literal {{unsubscribe}}).',
 };
 
 export interface KeysDocEmail {
