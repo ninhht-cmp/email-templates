@@ -143,7 +143,6 @@ export function writeGallery(
   .floatbar{position:sticky;top:0;z-index:5;display:inline-flex;align-items:center;gap:5px;padding:7px;margin-bottom:22px;
             background:var(--surface);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow-md);}
   .floatbar .seg button{border-radius:9px;}
-  .floatbar .btn{border-radius:10px;}
   .fb-sep{width:1px;height:20px;background:var(--border);margin:0 3px;flex:none;}
   .caption{display:flex;align-items:baseline;gap:9px;justify-content:center;margin-bottom:16px;}
   .caption .name{font-weight:600;font-size:14px;letter-spacing:-.01em;}
@@ -153,7 +152,7 @@ export function writeGallery(
   .seg button:hover{color:var(--ink);}
   .seg button.active{background:var(--ink);color:var(--surface);font-weight:550;}
   /* Primary = soft ink (one confident action). Ghost = borderless, hover-tint. No orange fills. */
-  .btn{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:var(--r-pill);font-size:12.5px;font-weight:550;white-space:nowrap;
+  .btn{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:10px;font-size:12.5px;font-weight:550;white-space:nowrap;
        border:1px solid var(--primary);background:var(--primary);color:var(--primary-ink);transition:.15s var(--ease);text-decoration:none;}
   .btn:hover{opacity:.9;}
   .btn.ghost{background:transparent;color:var(--ink);border-color:transparent;font-weight:500;}
