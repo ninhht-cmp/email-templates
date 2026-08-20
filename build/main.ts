@@ -52,6 +52,7 @@ async function main(): Promise<void> {
       }
 
       writeFileSync(`${OUT_DIR}/${name}.html`, result.html); // shippable (raw {{keys}})
+      writeFileSync(`${OUT_DIR}/${name}.min.html`, result.minHtml); // shippable, minified (gallery copy)
       writeFileSync(`${OUT_DIR}/${name}.preview.html`, result.previewHtml); // sample-filled preview
       const clip = Number(result.kb) > GMAIL_CLIP_KB ? '  ⚠ over Gmail 102KB clip limit' : '';
       console.log(`✓ ${OUT_DIR}/${name}.html  (${result.kb} KB · ${result.category})${clip}`);

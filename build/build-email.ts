@@ -8,7 +8,8 @@ import { metaAdvisories, reconcileMergeKeys, validateMeta } from './validate-ema
 
 export interface EmailBuildResult {
   name: string;
-  html: string; // shippable — raw {{keys}} intact
+  html: string; // shippable — raw {{keys}} intact, beautified
+  minHtml: string; // shippable, minified — served for the gallery's "copy minified" action
   previewHtml: string; // sample values filled in — for visual review only
   kb: string;
   category: string;
@@ -55,6 +56,15 @@ export async function buildEmail(
   // key reconciliation / preview fill so every downstream copy has it.
   const html = applyFluidMaxWidth(rawHtml);
 
+  // Also emit a minified copy (same source, MJML minify — keeps MSO conditional comments intact).
+  const { html: rawMin } = await renderEmail(
+    env,
+    `emails/${name}/index.mjml.njk`,
+    { tokens, content, meta },
+    { minify: true },
+  );
+  const minHtml = applyFluidMaxWidth(rawMin);
+
   const { errors: keyErrors, warnings: keyWarnings } = reconcileMergeKeys(html, meta.requiredKeys);
   const { relative, placeholder, nonProd } = findUnhostedAssets(html, PROD_ASSET_HOSTS);
 
@@ -63,6 +73,7 @@ export async function buildEmail(
   return {
     name,
     html,
+    minHtml,
     previewHtml,
     kb: (Buffer.byteLength(html) / 1024).toFixed(1),
     category: meta.category,
