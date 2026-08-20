@@ -376,6 +376,8 @@ export function writeGallery(
       b.addEventListener('click',function(){
         Array.prototype.forEach.call(document.querySelectorAll('#wseg button'),function(x){x.classList.remove('active');});
         b.classList.add('active'); device.style.width=b.getAttribute('data-w')+'px';
+        // Narrower width reflows the email taller — re-fit the iframe so it never scrolls on its own.
+        setTimeout(fitFrame,60); setTimeout(fitFrame,300);
       });
     });
     // Unsubscribe checkbox mirrors the sending system's {{#if unsubscribe}} toggle: re-render the
