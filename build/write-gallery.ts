@@ -223,6 +223,14 @@ export function writeGallery(
   .btn[aria-disabled=true]{opacity:.42;pointer-events:none;filter:grayscale(.25);}
   .a-status{font-size:12px;color:var(--muted);}
   .a-status.ready{color:var(--ok);font-weight:600;}
+  /* Back-to-top — floating, appears once you scroll down */
+  .totop{position:fixed;right:22px;bottom:22px;z-index:20;width:42px;height:42px;border-radius:var(--r-md);
+         border:1px solid var(--border);background:var(--surface);color:var(--ink);box-shadow:var(--shadow-md);
+         display:grid;place-items:center;opacity:0;transform:translateY(10px) scale(.92);pointer-events:none;
+         transition:.2s var(--ease);}
+  .totop.show{opacity:1;transform:none;pointer-events:auto;}
+  .totop:hover{border-color:var(--border-strong);transform:translateY(-2px);}
+  .totop svg{width:19px;height:19px;}
   .hint{color:var(--muted);font-size:11px;padding:6px 8px 2px;}
   kbd{font:inherit;font-size:10px;background:var(--panel-2);border:1px solid var(--border);border-bottom-width:2px;border-radius:5px;padding:1px 5px;}
 
@@ -314,6 +322,9 @@ export function writeGallery(
       </div>
     </div>
   </div>
+  <button class="totop" id="totop" title="Back to top" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V6M6 12l6-6 6 6"/></svg>
+  </button>
   <div class="toast" id="toast"></div>
   <script>
     var names = ${names}, data = ${data}, keys = ${keys}, minB64 = ${minB64}, samples = ${sampleJson};
@@ -477,6 +488,12 @@ export function writeGallery(
         select(names[(i+d+names.length)%names.length]);
       }
     });
+    // Back-to-top: show past ~half a screen, smooth-scroll the window up.
+    var totop=$('totop');
+    function onScroll(){ totop.classList.toggle('show', window.scrollY > window.innerHeight*0.5); }
+    window.addEventListener('scroll', onScroll, {passive:true});
+    totop.addEventListener('click', function(){ window.scrollTo({top:0, behavior:'smooth'}); });
+    onScroll();
     window.addEventListener('hashchange',function(){select(location.hash.slice(1));});
     select(location.hash.slice(1)||'${first}');
   </script>
