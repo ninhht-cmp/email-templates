@@ -10,11 +10,12 @@
      desktop the copy and the browser shot share one vertical centre — balanced. Bottom padding is 0
      so that when the columns STACK on mobile the only gap above the shot is the image column's 24px
      top padding (was ~60px from two 30px paddings). #}
-  {# Fluid-hybrid columns: mw-250 / mw-344 inject an inline max-width at build time (see
-     applyFluidMaxWidth). With MJML's inline width:100% that gives side-by-side on wide viewports and
-     stacking on narrow — no media query — so New Outlook and Gmail-GANGA both render it right.
-     .hero-col (head.njk max-width:479) drops the cap for full-width stacking on real mobile. #}
-  <mj-column css-class="hero-col mw-250" width="42%" vertical-align="middle" padding="24px 6px 0 32px">
+  {# Fluid-hybrid columns: mw() derives the inline max-width from width% × content-width (section
+     padding is 0 here, so content = 600). applyFluidMaxWidth injects it; with MJML's inline
+     width:100% that gives side-by-side on wide viewports and stacking on narrow — no media query — so
+     New Outlook and Gmail-GANGA both render it. .hero-col (head.njk max-width:479) drops the cap for
+     full-width stacking on real mobile. #}
+  <mj-column css-class="hero-col {$ mw(42, 600) $}" width="42%" vertical-align="middle" padding="24px 6px 0 32px">
     <mj-image align="left" width="180px" src="{$ content.assets.logo $}" alt="COMACPRO" padding="0 0 20px 0" />
     <mj-text color="{$ tokens.color.heroTitle $}" font-size="22px" font-weight="700" line-height="1.2" padding="0">
       {$ content.hero.heading | safe $}
@@ -27,7 +28,7 @@
   {# Symmetric top/bottom (12/12): keeps the shot vertically centred against the copy on desktop
      (this is the taller column, so equal padding puts its centre on the row centre), and on mobile
      the stacked gap above the shot is just this 12px top — trimmed from 24. #}
-  <mj-column css-class="hero-col mw-344" width="58%" vertical-align="middle" padding="12px 18px 12px 0">
+  <mj-column css-class="hero-col {$ mw(58, 600) $}" width="58%" vertical-align="middle" padding="12px 18px 12px 0">
     {# fluid-on-mobile: on style-capable mobile the image fills the stacked column instead of a fixed
        330px, so it can't overflow a narrower-than-330px column (e.g. a 320px viewport). GANGA at
        ≤320px keeps the fixed 330px — a known, accepted edge (media-query-only, unreachable there). #}
