@@ -1,8 +1,10 @@
 import { pathToFileURL } from 'node:url';
 import type { Environment } from 'nunjucks';
+import { findUnhostedAssets } from './analyze.ts';
 import { EMAILS_DIR, PROD_ASSET_HOSTS } from './config.ts';
+import { applyFluidMaxWidth } from './html-transforms.ts';
 import { fillSamples, previewSamples } from './preview-samples.ts';
-import { applyFluidMaxWidth, findUnhostedAssets, renderEmail } from './render-email.ts';
+import { renderEmail } from './render-email.ts';
 import { tokensSchema } from './schema.ts';
 import { metaAdvisories, reconcileMergeKeys, validateMeta } from './validate-email.ts';
 

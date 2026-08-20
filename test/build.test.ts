@@ -4,13 +4,12 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
+import { extractMergeKeys, findUnhostedAssets } from '../build/analyze.ts';
 import {
   applyFluidMaxWidth,
-  extractMergeKeys,
-  findUnhostedAssets,
   stripMediaQueries,
   stripStyleBlocks,
-} from '../build/render-email.ts';
+} from '../build/html-transforms.ts';
 import { emailMetaSchema } from '../build/schema.ts';
 import { metaAdvisories, reconcileMergeKeys } from '../build/validate-email.ts';
 

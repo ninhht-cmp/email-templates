@@ -14,7 +14,7 @@
 import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 
 import { OUT_DIR } from './config.ts';
-import { stripMediaQueries, stripStyleBlocks } from './render-email.ts';
+import { stripMediaQueries, stripStyleBlocks } from './html-transforms.ts';
 
 function main(): void {
   const simDir = `${OUT_DIR}/sim`;

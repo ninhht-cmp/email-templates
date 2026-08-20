@@ -1,4 +1,4 @@
-import { extractMergeKeys } from './render-email.ts';
+import { extractMergeKeys } from './analyze.ts';
 import { type EmailMeta, emailMetaSchema } from './schema.ts';
 
 /** Validate `meta.ts` against the uniform contract. Throws (with a readable message) on mismatch. */
