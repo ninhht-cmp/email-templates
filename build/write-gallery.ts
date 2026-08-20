@@ -59,44 +59,53 @@ export function writeGallery(
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>COMACPRO — Email templates</title>
 <style>
-  /* Quiet / editorial: warm-neutral chrome, brand orange as a thin accent only (active rail, focus,
-     key text), a single ink primary action — not orange fills. Hairlines over shadows, small radii. */
+  /* Soft / paper: low-contrast warm palette, muted terracotta accent (not the full-strength brand
+     orange), soft ink text. Borderless chrome — surfaces separate by tone + gentle shadow, not lines.
+     A floating sticky toolbar is the only "object" over the preview canvas. */
   :root{
-    --brand:#e5641f; --brand-soft:rgba(229,100,31,.09);
-    --bg:#f4f3f1; --panel:#ffffff; --panel-2:#f6f5f2; --stage:#ecebe7;
-    --ink:#1b1a18; --muted:#76736c; --border:#e7e4df; --border-strong:#dad6ce;
-    --primary:#1b1a18; --primary-ink:#faf9f7; --ok:#1f8a4c;
-    --shadow-sm:0 1px 2px rgba(28,26,22,.05);
-    --shadow-lg:0 18px 48px -12px rgba(28,26,22,.22);
-    --r-lg:12px; --r-md:9px; --r-sm:7px; --r-pill:999px;
+    --brand:#d1774e; --brand-soft:rgba(209,119,78,.12);
+    --app:#f1eee7; --bg:#f1eee7; --surface:#fbfaf6; --panel:#fbfaf6; --panel-2:#f0ede5;
+    --stage:#e9e5db; --canvas:#e9e5db;
+    --ink:#3a372f; --muted:#8b877b; --faint:#b2ada0;
+    --border:#e8e3d8; --border-strong:#ddd7c9;
+    --primary:#403c33; --primary-ink:#faf9f5; --ok:#5f8f63;
+    --shadow-sm:0 1px 3px rgba(58,55,47,.06);
+    --shadow-md:0 6px 20px -6px rgba(58,55,47,.14);
+    --shadow-lg:0 22px 55px -18px rgba(58,55,47,.26);
+    --r-lg:16px; --r-md:12px; --r-sm:9px; --r-pill:999px;
     --ease:cubic-bezier(.2,.7,.3,1);
     color-scheme:light;
   }
-  /* Dark applies on OS-dark (unless the user forced light) and always when the toggle set dark. */
   @media (prefers-color-scheme:dark){ :root:not([data-theme=light]){
-    --brand:#ff7a3d; --brand-soft:rgba(255,122,61,.13);
-    --bg:#0d0d0e; --panel:#161615; --panel-2:#1c1c1a; --stage:#0a0a0a;
-    --ink:#eeece7; --muted:#8f8c85; --border:#262521; --border-strong:#34322d;
-    --primary:#eeece7; --primary-ink:#161615; --ok:#3fbf72;
-    --shadow-sm:0 1px 2px rgba(0,0,0,.5); --shadow-lg:0 20px 52px -12px rgba(0,0,0,.7);
+    --brand:#e0906a; --brand-soft:rgba(224,144,106,.15);
+    --app:#17161a; --bg:#17161a; --surface:#211f24; --panel:#211f24; --panel-2:#2a272d;
+    --stage:#110f13; --canvas:#110f13;
+    --ink:#e4e0d7; --muted:#948f86; --faint:#615d57;
+    --border:#2a2830; --border-strong:#38343d;
+    --primary:#e4e0d7; --primary-ink:#211f24; --ok:#6fae74;
+    --shadow-sm:0 1px 3px rgba(0,0,0,.45);
+    --shadow-md:0 8px 24px -6px rgba(0,0,0,.55); --shadow-lg:0 24px 60px -18px rgba(0,0,0,.72);
     color-scheme:dark;
   }}
   :root[data-theme=dark]{
-    --brand:#ff7a3d; --brand-soft:rgba(255,122,61,.13);
-    --bg:#0d0d0e; --panel:#161615; --panel-2:#1c1c1a; --stage:#0a0a0a;
-    --ink:#eeece7; --muted:#8f8c85; --border:#262521; --border-strong:#34322d;
-    --primary:#eeece7; --primary-ink:#161615; --ok:#3fbf72;
-    --shadow-sm:0 1px 2px rgba(0,0,0,.5); --shadow-lg:0 20px 52px -12px rgba(0,0,0,.7);
+    --brand:#e0906a; --brand-soft:rgba(224,144,106,.15);
+    --app:#17161a; --bg:#17161a; --surface:#211f24; --panel:#211f24; --panel-2:#2a272d;
+    --stage:#110f13; --canvas:#110f13;
+    --ink:#e4e0d7; --muted:#948f86; --faint:#615d57;
+    --border:#2a2830; --border-strong:#38343d;
+    --primary:#e4e0d7; --primary-ink:#211f24; --ok:#6fae74;
+    --shadow-sm:0 1px 3px rgba(0,0,0,.45);
+    --shadow-md:0 8px 24px -6px rgba(0,0,0,.55); --shadow-lg:0 24px 60px -18px rgba(0,0,0,.72);
     color-scheme:dark;
   }
   *{box-sizing:border-box;}
   html,body{height:100%;}
-  body{margin:0;font:15px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
-       background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;}
+  body{margin:0;display:flex;flex-direction:column;font:15px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+       background:var(--app);color:var(--ink);-webkit-font-smoothing:antialiased;}
   button{font:inherit;color:inherit;cursor:pointer;}
 
-  /* Header */
-  header{display:flex;align-items:center;gap:14px;padding:15px 22px;background:var(--panel);border-bottom:1px solid var(--border);}
+  /* Header — borderless, sits on the app bg */
+  header{display:flex;align-items:center;gap:14px;padding:18px 26px 14px;background:transparent;}
   .brandmark{display:flex;align-items:center;gap:11px;}
   .brandmark .rail{width:3px;height:22px;border-radius:2px;background:var(--brand);flex:none;}
   .h-txt h1{margin:0;font-size:14px;font-weight:400;letter-spacing:.01em;color:var(--muted);}
@@ -112,11 +121,10 @@ export function writeGallery(
   .icon-btn .moon{display:none;} :root[data-theme=dark] .icon-btn .sun{display:none;}
   :root[data-theme=dark] .icon-btn .moon{display:block;}
 
-  /* Layout */
-  .layout{display:flex;height:calc(100vh - 61px);}
-  .sidebar{width:250px;flex:none;border-right:1px solid var(--border);background:var(--panel);
-           padding:16px 12px;display:flex;flex-direction:column;gap:2px;overflow-y:auto;}
-  .side-label{font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:2px 12px 10px;}
+  /* Layout — fills below the header; both columns borderless on the app bg */
+  .layout{flex:1;min-height:0;display:flex;gap:0;padding:0 14px 14px;}
+  .sidebar{width:236px;flex:none;background:transparent;padding:6px 8px;display:flex;flex-direction:column;gap:2px;overflow-y:auto;}
+  .side-label{font-size:10.5px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:var(--faint);padding:2px 12px 12px;}
   /* Rows, not cards: quiet, with a left orange rail marking the active one (brand as thin accent). */
   .card{position:relative;display:flex;flex-direction:column;gap:3px;text-align:left;padding:9px 12px;
         border-radius:var(--r-sm);border:0;background:transparent;transition:background .14s var(--ease);}
@@ -128,29 +136,31 @@ export function writeGallery(
   .card-kb{color:var(--muted);font-size:11.5px;font-variant-numeric:tabular-nums;flex:none;}
   .chip{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);white-space:nowrap;}
 
-  /* Viewer */
-  .viewer{flex:1;display:flex;flex-direction:column;min-width:0;}
-  .toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:12px 20px;background:var(--panel);border-bottom:1px solid var(--border);}
-  .crumb{display:flex;align-items:baseline;gap:9px;min-width:0;}
-  .crumb .name{font-weight:600;font-size:14px;letter-spacing:-.01em;}
-  .crumb .meta{color:var(--muted);font-size:11.5px;font-variant-numeric:tabular-nums;}
-  .controls{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
-  .seg{display:inline-flex;border:1px solid var(--border);border-radius:var(--r-sm);padding:2px;gap:2px;}
-  .seg button{border:0;background:transparent;border-radius:5px;padding:6px 12px;font-size:12.5px;font-weight:500;color:var(--muted);transition:.14s var(--ease);}
+  /* Viewer = a soft rounded preview canvas; controls live in a floating sticky pill inside it */
+  .viewer{flex:1;min-width:0;display:flex;}
+  .canvas{flex:1;min-width:0;background:var(--canvas);border-radius:var(--r-lg);box-shadow:inset 0 0 0 1px var(--border);}
+  .scroll{height:100%;overflow:auto;display:flex;flex-direction:column;align-items:center;padding:16px 24px 52px;}
+  .floatbar{position:sticky;top:0;z-index:5;display:inline-flex;align-items:center;gap:5px;padding:6px;margin-bottom:22px;
+            background:var(--surface);border:1px solid var(--border);border-radius:var(--r-pill);box-shadow:var(--shadow-md);}
+  .fb-sep{width:1px;height:20px;background:var(--border);margin:0 3px;flex:none;}
+  .caption{display:flex;align-items:baseline;gap:9px;justify-content:center;margin-bottom:16px;}
+  .caption .name{font-weight:600;font-size:14px;letter-spacing:-.01em;}
+  .caption .meta{color:var(--muted);font-size:11.5px;font-variant-numeric:tabular-nums;}
+  .seg{display:inline-flex;gap:2px;}
+  .seg button{border:0;background:transparent;border-radius:var(--r-pill);padding:6px 13px;font-size:12.5px;font-weight:500;color:var(--muted);transition:.14s var(--ease);}
   .seg button:hover{color:var(--ink);}
-  .seg button.active{background:var(--ink);color:var(--panel);font-weight:550;}
-  /* Primary = ink (one confident action). Ghost = hairline. No orange fills. */
-  .btn{display:inline-flex;align-items:center;gap:7px;padding:8px 13px;border-radius:var(--r-sm);font-size:12.5px;font-weight:550;white-space:nowrap;
+  .seg button.active{background:var(--ink);color:var(--surface);font-weight:550;}
+  /* Primary = soft ink (one confident action). Ghost = borderless, hover-tint. No orange fills. */
+  .btn{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:var(--r-pill);font-size:12.5px;font-weight:550;white-space:nowrap;
        border:1px solid var(--primary);background:var(--primary);color:var(--primary-ink);transition:.15s var(--ease);text-decoration:none;}
-  .btn:hover{opacity:.88;}
-  .btn.ghost{background:transparent;color:var(--ink);border-color:var(--border);font-weight:500;}
-  .btn.ghost:hover{border-color:var(--border-strong);opacity:1;background:var(--panel-2);}
+  .btn:hover{opacity:.9;}
+  .btn.ghost{background:transparent;color:var(--ink);border-color:transparent;font-weight:500;}
+  .btn.ghost:hover{background:var(--panel-2);border-color:transparent;opacity:1;}
   .btn.ok{background:var(--ok);border-color:var(--ok);color:#fff;}
   .btn svg{width:15px;height:15px;}
 
-  /* Stage: flat neutral (no decorative grid) — the framed email is the only object. */
-  .stage{flex:1;overflow:auto;background:var(--stage);display:flex;justify-content:center;padding:34px 24px;}
-  .device{background:#fff;border:1px solid var(--border-strong);border-radius:var(--r-lg);
+  /* The framed email — the hero object on the soft canvas */
+  .device{background:#fff;border:1px solid rgba(0,0,0,.06);border-radius:var(--r-md);
            box-shadow:var(--shadow-lg);overflow:hidden;height:fit-content;transition:width .28s var(--ease);}
   .device-bar{height:32px;display:flex;align-items:center;gap:6px;padding:0 13px;background:#f3f2ef;border-bottom:1px solid #e7e4df;}
   .dot{width:9px;height:9px;border-radius:50%;background:#cfcbc3;}
@@ -205,10 +215,12 @@ export function writeGallery(
   kbd{font:inherit;font-size:10px;background:var(--panel-2);border:1px solid var(--border);border-bottom-width:2px;border-radius:5px;padding:1px 5px;}
 
   @media (max-width:820px){
-    .layout{flex-direction:column;height:auto;}
-    .sidebar{width:auto;flex-direction:row;overflow-x:auto;}
-    .card{flex:none;min-width:190px;}
-    .controls{width:100%;margin-left:0;}
+    .layout{flex-direction:column;min-height:0;}
+    .sidebar{width:auto;flex-direction:row;overflow-x:auto;padding:4px 4px 10px;}
+    .card{flex:none;min-width:170px;}
+    .card.active::before{top:auto;bottom:0;left:8px;right:8px;width:auto;height:2px;}
+    .canvas{min-height:70vh;}
+    .floatbar{flex-wrap:wrap;justify-content:center;border-radius:var(--r-md);}
     .device{width:100%!important;}
   }
 </style></head>
@@ -232,28 +244,29 @@ export function writeGallery(
           <div class="hint">Switch with <kbd>↑</kbd> <kbd>↓</kbd></div>
     </nav>
     <main class="viewer">
-      <div class="toolbar">
-        <div class="crumb"><span class="name" id="crumbName"></span><span class="meta" id="crumbMeta"></span></div>
-        <div class="controls">
-          <div class="seg" id="wseg" role="group" aria-label="Preview width">
-            <button data-w="700" class="active">Desktop</button>
-            <button data-w="390">Mobile</button>
+      <div class="canvas">
+        <div class="scroll">
+          <div class="floatbar">
+            <div class="seg" id="wseg" role="group" aria-label="Preview width">
+              <button data-w="700" class="active">Desktop</button>
+              <button data-w="390">Mobile</button>
+            </div>
+            <span class="fb-sep"></span>
+            <button class="btn" id="assetbtn" title="Set hosted asset URLs, then copy the HTML">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+              <span>Copy HTML</span>
+            </button>
+            <button class="btn ghost" id="keysbtn" title="Merge keys this template needs">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h10M4 12h16M4 17h10"/><path d="M18 5l2 2-2 2"/></svg>
+              <span>Merge keys</span>
+            </button>
+            <a class="btn ghost" id="openRaw" target="_blank" rel="noopener" title="Open the shippable HTML with raw {{keys}}">Raw ↗</a>
           </div>
-          <button class="btn" id="assetbtn" title="Set hosted asset URLs, then copy the HTML">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
-            <span>Copy HTML</span>
-          </button>
-          <button class="btn ghost" id="keysbtn" title="Merge keys this template needs">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h10M4 12h16M4 17h10"/><path d="M18 5l2 2-2 2"/></svg>
-            <span>Merge keys</span>
-          </button>
-          <a class="btn ghost" id="openRaw" target="_blank" rel="noopener" title="Open the shippable HTML with raw {{keys}}">Raw ↗</a>
-        </div>
-      </div>
-      <div class="stage">
-        <div class="device" id="device" style="width:700px">
-          <div class="device-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="device-url" id="devUrl"></span></div>
-          <iframe id="frame" title="email preview"></iframe>
+          <div class="caption"><span class="name" id="crumbName"></span><span class="meta" id="crumbMeta"></span></div>
+          <div class="device" id="device" style="width:700px">
+            <div class="device-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="device-url" id="devUrl"></span></div>
+            <iframe id="frame" title="email preview"></iframe>
+          </div>
         </div>
       </div>
     </main>
