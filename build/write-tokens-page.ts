@@ -59,6 +59,12 @@ export function writeTokensPage(outDir: string, tokens: Tokens, builtAt: string)
   .sub{color:var(--muted);font-size:11px;margin-top:2px;font-variant-numeric:tabular-nums;}
   a.back{margin-left:auto;color:var(--muted);text-decoration:none;font-weight:500;font-size:12.5px;transition:color .15s;}
   a.back:hover{color:var(--ink);}
+  .icon-btn{width:34px;height:34px;border-radius:9px;border:1px solid var(--border);background:transparent;
+            display:grid;place-items:center;color:var(--muted);cursor:pointer;transition:.15s;}
+  .icon-btn:hover{color:var(--ink);}
+  .icon-btn svg{width:17px;height:17px;}
+  .icon-btn .moon{display:none;} :root[data-theme=dark] .icon-btn .sun{display:none;}
+  :root[data-theme=dark] .icon-btn .moon{display:block;}
   main{max-width:1000px;margin:0 auto;padding:22px 26px 64px;}
   h2{font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin:34px 0 12px;}
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;}
@@ -71,11 +77,20 @@ export function writeTokensPage(outDir: string, tokens: Tokens, builtAt: string)
   .radius-item{display:flex;flex-direction:column;align-items:center;gap:8px;}
   /* Neutral demo fill so the RADIUS is the point, not the colour (no orange soup). */
   .radius-demo{width:76px;height:56px;background:var(--demo);display:block;}
-</style></head>
+</style>
+<script>
+  /* Apply the shared theme (set by any tooling page's toggle) before paint — no flash. */
+  (function(){try{var t=localStorage.getItem('cmp-gallery-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
+   window.__toggleTheme=function(){var d=document.documentElement.getAttribute('data-theme')==='dark'||(!document.documentElement.getAttribute('data-theme')&&matchMedia('(prefers-color-scheme:dark)').matches);var n=d?'light':'dark';document.documentElement.setAttribute('data-theme',n);try{localStorage.setItem('cmp-gallery-theme',n);}catch(e){}};})();
+</script></head>
 <body>
   <header>
     <div><h1><b>COMACPRO</b>Design tokens</h1><div class="sub">Generated from tokens.ts · built ${builtAt}</div></div>
     <a class="back" href="./index.html">← Templates</a>
+    <button class="icon-btn" onclick="__toggleTheme()" title="Toggle theme" aria-label="Toggle light / dark theme">
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M4.5 12h-2M21.5 12h-2M6 6l-1.4-1.4M19.4 19.4 18 18M18 6l1.4-1.4M4.6 19.4 6 18"/></svg>
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.3 6.3 0 0 0 10.5 10.5Z"/></svg>
+    </button>
   </header>
   <main>
     <section>${swatches}</section>
