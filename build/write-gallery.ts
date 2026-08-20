@@ -7,24 +7,27 @@ export interface BuiltEmail {
 }
 
 /**
- * Emit dist/index.html — a preview gallery: pick a template from the sidebar, preview it in a framed
- * iframe at desktop/mobile width, open the raw/preview files, or copy its MINIFIED HTML to the
- * clipboard. Hash-routed (#<name>) so a specific template is directly linkable.
+ * Emit dist/index.html — the preview gallery. A real web page (not an email), so it gets the full
+ * treatment the templates can't have: a proper light/dark theme (system default + a persisted manual
+ * toggle), a design-token scale, a device-framed preview with a desktop/mobile switch, hash-routing
+ * (#<name>, directly linkable), keyboard nav (↑/↓), and one-click copy of the raw or minified HTML
+ * with a success state.
  */
 export function writeGallery(outDir: string, built: BuiltEmail[], builtAt: string): void {
-  const nav = built
+  const cards = built
     .map(
       (e, i) =>
-        `<button class="nav${i === 0 ? ' active' : ''}" data-name="${e.name}">` +
-        `<span class="nav-name">${e.name}</span>` +
-        `<span class="nav-meta">${e.kb} KB · ${e.category}</span></button>`,
+        `<button class="card${i === 0 ? ' active' : ''}" data-name="${e.name}" role="option" aria-selected="${i === 0}">
+            <span class="card-top"><span class="card-name">${e.name}</span><span class="chip chip-${e.category}">${e.category}</span></span>
+            <span class="card-kb">${e.kb} KB</span>
+          </button>`,
     )
-    .join('\n        ');
+    .join('\n          ');
 
-  const names = JSON.stringify(built.map((e) => e.name));
-  const metaMap = JSON.stringify(
-    Object.fromEntries(built.map((e) => [e.name, `${e.kb} KB · ${e.category}`])),
+  const data = JSON.stringify(
+    Object.fromEntries(built.map((e) => [e.name, { kb: e.kb, category: e.category }])),
   );
+  const names = JSON.stringify(built.map((e) => e.name));
   const first = built[0]?.name ?? '';
 
   writeFileSync(
@@ -34,93 +37,227 @@ export function writeGallery(outDir: string, built: BuiltEmail[], builtAt: strin
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>COMACPRO — Email templates</title>
 <style>
-  :root{color-scheme:light dark;--bg:#f4f5f7;--panel:#fff;--border:#e6e8eb;--ink:#122941;--muted:#6b7280;--brand:#e5641f;--brandsoft:rgba(229,100,31,.09);--stage:#eef0f3;}
-  @media (prefers-color-scheme:dark){:root{--bg:#0e1013;--panel:#191c22;--border:#2a2e36;--ink:#fff;--muted:#98a1ad;--stage:#0b0d10;}}
+  :root{
+    --brand:#e5641f; --brand-ink:#fff;
+    --bg:#f5f6f8; --panel:#ffffff; --panel-2:#fbfbfc; --stage:#eceef1;
+    --ink:#12263a; --muted:#64748b; --border:#e6e9ee; --border-strong:#d3d8e0;
+    --brand-soft:rgba(229,100,31,.10); --ok:#1a9d5a;
+    --shadow-sm:0 1px 2px rgba(16,32,58,.06),0 1px 3px rgba(16,32,58,.05);
+    --shadow-lg:0 12px 34px rgba(16,32,58,.14);
+    --r-lg:16px; --r-md:12px; --r-sm:9px; --r-pill:999px;
+    --sp:8px; --ease:cubic-bezier(.2,.7,.3,1);
+    color-scheme:light;
+  }
+  /* Dark palette applies when the OS prefers dark (unless the user forced light via the toggle),
+     and always when the toggle set data-theme=dark. Same declarations, two triggers. */
+  @media (prefers-color-scheme:dark){ :root:not([data-theme=light]){
+    --bg:#0d0f12; --panel:#16191f; --panel-2:#1b1f26; --stage:#0a0c0f;
+    --ink:#eef2f7; --muted:#8b95a4; --border:#262b33; --border-strong:#333a44;
+    --brand-soft:rgba(229,100,31,.16);
+    --shadow-sm:0 1px 2px rgba(0,0,0,.4); --shadow-lg:0 14px 40px rgba(0,0,0,.5);
+    color-scheme:dark;
+  }}
+  :root[data-theme=dark]{
+    --bg:#0d0f12; --panel:#16191f; --panel-2:#1b1f26; --stage:#0a0c0f;
+    --ink:#eef2f7; --muted:#8b95a4; --border:#262b33; --border-strong:#333a44;
+    --brand-soft:rgba(229,100,31,.16);
+    --shadow-sm:0 1px 2px rgba(0,0,0,.4); --shadow-lg:0 14px 40px rgba(0,0,0,.5);
+    color-scheme:dark;
+  }
   *{box-sizing:border-box;}
-  body{margin:0;font:15px/1.5 Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);}
-  header{padding:14px 24px;border-bottom:1px solid var(--border);background:var(--panel);}
-  h1{margin:0;font-size:16px;} .sub{color:var(--muted);font-size:12px;margin-top:2px;}
-  .layout{display:flex;min-height:calc(100vh - 60px);}
-  .sidebar{width:236px;flex:none;border-right:1px solid var(--border);background:var(--panel);padding:12px;display:flex;flex-direction:column;gap:6px;}
-  .nav{display:flex;flex-direction:column;gap:2px;text-align:left;padding:10px 12px;border-radius:10px;border:1px solid transparent;background:transparent;color:inherit;font:inherit;cursor:pointer;}
-  .nav:hover{border-color:var(--border);}
-  .nav.active{border-color:var(--brand);background:var(--brandsoft);}
-  .nav-name{font-weight:700;} .nav-meta{color:var(--muted);font-size:12px;}
+  html,body{height:100%;}
+  body{margin:0;font:15px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+       background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;}
+  button{font:inherit;color:inherit;cursor:pointer;}
+
+  /* Header */
+  header{display:flex;align-items:center;gap:16px;padding:14px 22px;background:var(--panel);border-bottom:1px solid var(--border);}
+  .logo{width:30px;height:30px;border-radius:9px;background:var(--brand);color:#fff;display:grid;place-items:center;font-weight:800;font-size:15px;flex:none;}
+  .h-txt h1{margin:0;font-size:15px;font-weight:700;letter-spacing:-.01em;}
+  .h-txt .sub{color:var(--muted);font-size:12px;margin-top:1px;}
+  .h-spacer{flex:1;}
+  .icon-btn{width:38px;height:38px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--panel-2);
+            display:grid;place-items:center;transition:.15s var(--ease);}
+  .icon-btn:hover{border-color:var(--border-strong);transform:translateY(-1px);}
+  .icon-btn svg{width:18px;height:18px;}
+  .icon-btn .moon{display:none;} :root[data-theme=dark] .icon-btn .sun{display:none;}
+  :root[data-theme=dark] .icon-btn .moon{display:block;}
+
+  /* Layout */
+  .layout{display:flex;height:calc(100vh - 61px);}
+  .sidebar{width:266px;flex:none;border-right:1px solid var(--border);background:var(--panel);
+           padding:14px;display:flex;flex-direction:column;gap:8px;overflow-y:auto;}
+  .side-label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:2px 6px 4px;}
+  .card{display:flex;flex-direction:column;gap:7px;text-align:left;padding:13px 14px;border-radius:var(--r-md);
+        border:1px solid var(--border);background:var(--panel-2);transition:.16s var(--ease);}
+  .card:hover{border-color:var(--border-strong);transform:translateY(-1px);box-shadow:var(--shadow-sm);}
+  .card.active{border-color:var(--brand);background:var(--brand-soft);box-shadow:none;}
+  .card-top{display:flex;align-items:center;gap:8px;justify-content:space-between;}
+  .card-name{font-weight:700;font-size:14px;letter-spacing:-.01em;}
+  .card-kb{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums;}
+  .chip{font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:var(--r-pill);white-space:nowrap;}
+  .chip-marketing{background:var(--brand-soft);color:var(--brand);}
+  .chip-transactional{background:rgba(26,157,90,.14);color:var(--ok);}
+  .chip-lifecycle{background:rgba(100,116,139,.16);color:var(--muted);}
+
+  /* Viewer */
   .viewer{flex:1;display:flex;flex-direction:column;min-width:0;}
-  .toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:11px 20px;border-bottom:1px solid var(--border);background:var(--panel);}
-  .crumb{font-weight:700;font-size:14px;} .crumb .meta{color:var(--muted);font-weight:400;font-size:12px;margin-left:8px;}
+  .toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:12px 20px;background:var(--panel);border-bottom:1px solid var(--border);}
+  .crumb{display:flex;align-items:baseline;gap:9px;min-width:0;}
+  .crumb .name{font-weight:700;font-size:14px;}
+  .crumb .meta{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums;}
   .controls{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
-  .seg{display:inline-flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;}
-  .seg button{font:inherit;font-size:13px;padding:6px 12px;border:0;background:transparent;color:inherit;cursor:pointer;}
-  .seg button.active{background:var(--brand);color:#fff;}
-  .btn{font:inherit;font-size:13px;font-weight:600;padding:7px 13px;border-radius:8px;border:1px solid var(--brand);background:var(--brand);color:#fff;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
-  .btn.ghost{background:transparent;color:var(--ink);border-color:var(--border);}
-  .stage{flex:1;overflow:auto;background:var(--stage);display:flex;justify-content:center;padding:24px;}
-  .frame-wrap{background:#fff;box-shadow:0 2px 18px rgba(0,0,0,.13);border-radius:8px;overflow:hidden;height:fit-content;transition:width .18s ease;}
-  iframe{display:block;border:0;width:100%;height:82vh;background:#fff;}
-  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(16px);opacity:0;background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-size:13px;font-weight:600;transition:.22s;pointer-events:none;z-index:9;}
-  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-  @media (max-width:720px){.layout{flex-direction:column;min-height:0;}.sidebar{width:auto;flex-direction:row;overflow-x:auto;}.nav{flex:none;}.controls{width:100%;margin-left:0;}}
+  .seg{display:inline-flex;background:var(--panel-2);border:1px solid var(--border);border-radius:var(--r-sm);padding:3px;gap:2px;}
+  .seg button{border:0;background:transparent;border-radius:6px;padding:6px 13px;font-size:13px;font-weight:600;color:var(--muted);transition:.14s var(--ease);}
+  .seg button.active{background:var(--brand);color:var(--brand-ink);box-shadow:var(--shadow-sm);}
+  .btn{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:var(--r-sm);font-size:13px;font-weight:600;
+       border:1px solid var(--brand);background:var(--brand);color:var(--brand-ink);transition:.15s var(--ease);text-decoration:none;}
+  .btn:hover{filter:brightness(1.05);transform:translateY(-1px);}
+  .btn.ghost{background:var(--panel-2);color:var(--ink);border-color:var(--border);}
+  .btn.ghost:hover{border-color:var(--border-strong);filter:none;}
+  .btn.ok{background:var(--ok);border-color:var(--ok);color:#fff;}
+  .btn svg{width:15px;height:15px;}
+
+  /* Stage + device frame */
+  .stage{flex:1;overflow:auto;background:
+          radial-gradient(circle at 1px 1px,var(--border) 1px,transparent 0) 0 0/22px 22px,var(--stage);
+          display:flex;justify-content:center;padding:30px 24px;}
+  .device{background:var(--panel);border:1px solid var(--border-strong);border-radius:var(--r-lg);
+           box-shadow:var(--shadow-lg);overflow:hidden;height:fit-content;transition:width .28s var(--ease);}
+  .device-bar{height:34px;display:flex;align-items:center;gap:6px;padding:0 13px;background:var(--panel-2);border-bottom:1px solid var(--border);}
+  .dot{width:10px;height:10px;border-radius:50%;background:var(--border-strong);}
+  .device-url{margin-left:8px;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;}
+  iframe{display:block;border:0;width:100%;height:78vh;background:#fff;}
+
+  /* Toast */
+  .toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,18px);opacity:0;pointer-events:none;
+         display:flex;align-items:center;gap:8px;background:var(--ink);color:var(--bg);
+         padding:11px 18px;border-radius:var(--r-pill);font-size:13px;font-weight:600;box-shadow:var(--shadow-lg);
+         transition:.24s var(--ease);z-index:20;}
+  .toast.show{opacity:1;transform:translate(-50%,0);}
+  .toast svg{width:16px;height:16px;}
+
+  .hint{color:var(--muted);font-size:11px;padding:6px 8px 2px;}
+  kbd{font:inherit;font-size:10px;background:var(--panel-2);border:1px solid var(--border);border-bottom-width:2px;border-radius:5px;padding:1px 5px;}
+
+  @media (max-width:820px){
+    .layout{flex-direction:column;height:auto;}
+    .sidebar{width:auto;flex-direction:row;overflow-x:auto;}
+    .card{flex:none;min-width:190px;}
+    .controls{width:100%;margin-left:0;}
+    .device{width:100%!important;}
+  }
 </style></head>
 <body>
-  <header><h1>COMACPRO — Email templates</h1><div class="sub">Preview gallery · built ${builtAt} · ${built.length} template(s)</div></header>
+  <header>
+    <div class="logo">C</div>
+    <div class="h-txt"><h1>COMACPRO — Email templates</h1><div class="sub">Preview gallery · built ${builtAt} · ${built.length} template(s)</div></div>
+    <div class="h-spacer"></div>
+    <button class="icon-btn" id="theme" title="Toggle theme" aria-label="Toggle light / dark theme">
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M4.5 12h-2M21.5 12h-2M6 6l-1.4-1.4M19.4 19.4 18 18M18 6l1.4-1.4M4.6 19.4 6 18"/></svg>
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.3 6.3 0 0 0 10.5 10.5Z"/></svg>
+    </button>
+  </header>
   <div class="layout">
-    <nav class="sidebar">
-        ${nav}
+    <nav class="sidebar" role="listbox" aria-label="Templates">
+          <div class="side-label">Templates</div>
+          ${cards}
+          <div class="hint">Switch with <kbd>↑</kbd> <kbd>↓</kbd></div>
     </nav>
     <main class="viewer">
       <div class="toolbar">
-        <div class="crumb"><span id="crumbName"></span><span class="meta" id="crumbMeta"></span></div>
+        <div class="crumb"><span class="name" id="crumbName"></span><span class="meta" id="crumbMeta"></span></div>
         <div class="controls">
-          <div class="seg" id="wseg">
-            <button data-w="680" class="active">Desktop</button>
+          <div class="seg" id="wseg" role="group" aria-label="Preview width">
+            <button data-w="700" class="active">Desktop</button>
             <button data-w="390">Mobile</button>
           </div>
-          <button class="btn" id="copymin">⧉ Copy minified</button>
-          <button class="btn ghost" id="copyraw">⧉ Copy raw</button>
+          <button class="btn" id="copymin">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+            <span>Copy minified</span>
+          </button>
+          <button class="btn ghost" id="copyraw">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+            <span>Copy raw</span>
+          </button>
           <a class="btn ghost" id="openPreview" target="_blank" rel="noopener">Preview ↗</a>
           <a class="btn ghost" id="openRaw" target="_blank" rel="noopener">Raw ↗</a>
         </div>
       </div>
       <div class="stage">
-        <div class="frame-wrap" id="wrap" style="width:680px"><iframe id="frame" title="email preview"></iframe></div>
+        <div class="device" id="device" style="width:700px">
+          <div class="device-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="device-url" id="devUrl"></span></div>
+          <iframe id="frame" title="email preview"></iframe>
+        </div>
       </div>
     </main>
   </div>
   <div class="toast" id="toast"></div>
   <script>
-    var names = ${names}, meta = ${metaMap};
-    var frame = document.getElementById('frame'), wrap = document.getElementById('wrap');
-    var toastEl = document.getElementById('toast'), toastT;
-    function toast(m){toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(toastT);toastT=setTimeout(function(){toastEl.classList.remove('show');},1900);}
+    var names = ${names}, data = ${data};
+    var $ = function(id){return document.getElementById(id);};
+    var frame=$('frame'), device=$('device'), toastEl=$('toast'), toastT, current='';
+
+    // Theme: system default, manual toggle persisted.
+    var THEME='cmp-gallery-theme';
+    function applyTheme(t){ if(t) document.documentElement.setAttribute('data-theme',t); else document.documentElement.removeAttribute('data-theme'); }
+    try{ applyTheme(localStorage.getItem(THEME)); }catch(e){}
+    $('theme').addEventListener('click',function(){
+      var dark=document.documentElement.getAttribute('data-theme')==='dark'
+        || (!document.documentElement.getAttribute('data-theme') && matchMedia('(prefers-color-scheme:dark)').matches);
+      var next=dark?'light':'dark'; applyTheme(next);
+      try{ localStorage.setItem(THEME,next); }catch(e){}
+    });
+
+    var CHECK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+    function toast(m){ toastEl.innerHTML=CHECK+'<span>'+m+'</span>'; toastEl.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(function(){toastEl.classList.remove('show');},2000); }
+
     function select(name){
       if(names.indexOf(name)<0) name=names[0];
+      current=name;
       frame.src='./'+name+'.preview.html';
-      document.getElementById('crumbName').textContent=name;
-      document.getElementById('crumbMeta').textContent=meta[name]||'';
-      document.getElementById('openPreview').href='./'+name+'.preview.html';
-      document.getElementById('openRaw').href='./'+name+'.html';
-      document.getElementById('copymin').setAttribute('data-name',name);
-      document.getElementById('copyraw').setAttribute('data-name',name);
-      Array.prototype.forEach.call(document.querySelectorAll('.nav'),function(b){b.classList.toggle('active',b.getAttribute('data-name')===name);});
+      $('devUrl').textContent=name+'.preview.html';
+      $('crumbName').textContent=name;
+      $('crumbMeta').textContent=data[name].kb+' KB · '+data[name].category;
+      $('openPreview').href='./'+name+'.preview.html';
+      $('openRaw').href='./'+name+'.html';
+      Array.prototype.forEach.call(document.querySelectorAll('.card'),function(b){
+        var on=b.getAttribute('data-name')===name; b.classList.toggle('active',on); b.setAttribute('aria-selected',on);
+      });
       if(location.hash.slice(1)!==name) history.replaceState(null,'','#'+name);
     }
-    Array.prototype.forEach.call(document.querySelectorAll('.nav'),function(b){b.addEventListener('click',function(){select(b.getAttribute('data-name'));});});
-    Array.prototype.forEach.call(document.querySelectorAll('#wseg button'),function(b){b.addEventListener('click',function(){
-      Array.prototype.forEach.call(document.querySelectorAll('#wseg button'),function(x){x.classList.remove('active');});
-      b.classList.add('active'); wrap.style.width=b.getAttribute('data-w')+'px';
-    });});
-    function copyFile(file,label){
-      var name=document.getElementById('copymin').getAttribute('data-name');
-      fetch('./'+name+file).then(function(r){return r.text();}).then(function(t){
+    Array.prototype.forEach.call(document.querySelectorAll('.card'),function(b){
+      b.addEventListener('click',function(){select(b.getAttribute('data-name'));});
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('#wseg button'),function(b){
+      b.addEventListener('click',function(){
+        Array.prototype.forEach.call(document.querySelectorAll('#wseg button'),function(x){x.classList.remove('active');});
+        b.classList.add('active'); device.style.width=b.getAttribute('data-w')+'px';
+      });
+    });
+    function copyFile(btn,file,label){
+      fetch('./'+current+file).then(function(r){return r.text();}).then(function(t){
         if(navigator.clipboard&&navigator.clipboard.writeText) return navigator.clipboard.writeText(t);
         throw new Error('no clipboard');
-      }).then(function(){toast('Copied '+label+' HTML — '+name);}).catch(function(){
-        window.open('./'+name+file,'_blank'); toast('Clipboard blocked — opened '+file+' (select all, copy)');
+      }).then(function(){
+        var span=btn.querySelector('span'), old=span.textContent;
+        btn.classList.add('ok'); span.textContent='Copied '+label;
+        toast('Copied '+label+' HTML — '+current);
+        setTimeout(function(){btn.classList.remove('ok'); span.textContent=old;},1500);
+      }).catch(function(){
+        window.open('./'+current+file,'_blank'); toast('Clipboard blocked — opened '+file);
       });
     }
-    document.getElementById('copymin').addEventListener('click',function(){copyFile('.min.html','minified');});
-    document.getElementById('copyraw').addEventListener('click',function(){copyFile('.html','raw');});
+    $('copymin').addEventListener('click',function(){copyFile(this,'.min.html','minified');});
+    $('copyraw').addEventListener('click',function(){copyFile(this,'.html','raw');});
+    document.addEventListener('keydown',function(e){
+      if(e.target.tagName==='INPUT'||e.metaKey||e.ctrlKey) return;
+      if(e.key==='ArrowDown'||e.key==='ArrowUp'){
+        e.preventDefault();
+        var i=names.indexOf(current), d=e.key==='ArrowDown'?1:-1;
+        select(names[(i+d+names.length)%names.length]);
+      }
+    });
     window.addEventListener('hashchange',function(){select(location.hash.slice(1));});
     select(location.hash.slice(1)||'${first}');
   </script>
