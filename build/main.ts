@@ -9,9 +9,11 @@ import { buildEmail } from './build-email.ts';
 import { EMAILS_DIR, GMAIL_CLIP_KB, OUT_DIR } from './config.ts';
 import { createEnv } from './create-env.ts';
 import { discoverEmails } from './discover-emails.ts';
+import { tokensSchema } from './schema.ts';
 import { type BuiltEmail, writeGallery } from './write-gallery.ts';
 import { type KeysDocEmail, writeKeysDoc } from './write-keys-doc.ts';
 import { writeSimulator } from './write-simulator.ts';
+import { writeTokensPage } from './write-tokens-page.ts';
 
 const minify = process.env.MINIFY === '1' || process.argv.includes('--minify');
 const env = createEnv();
@@ -76,6 +78,8 @@ async function main(): Promise<void> {
   console.log(`✓ ${OUT_DIR}/simulator.html  (inbox simulator)`);
   writeKeysDoc(OUT_DIR, keysDoc, builtAt);
   console.log(`✓ ${OUT_DIR}/KEYS.md  (merge-key reference)`);
+  writeTokensPage(OUT_DIR, tokensSchema.parse(tokens), builtAt);
+  console.log(`✓ ${OUT_DIR}/tokens.html  (design-token reference)`);
 
   if (failed) {
     console.error('\nBuild failed: fix the issues above.');

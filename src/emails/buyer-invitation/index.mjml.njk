@@ -45,17 +45,14 @@
     </mj-style>
   </mj-head>
 
+  {# Section registry: the email body is this ordered list of section partials, followed by the
+     shared closing blocks. Declaring the composition as data (rather than a run of includes) makes
+     the order explicit and reordering/adding a section a one-line edit. This campaign has NO
+     equipment grid and NO closing "BECOME AN OFFICIAL SUPPLIER" — it ends on the button pair. #}
+  {% set sections = ["hero", "intro", "markets", "proof", "cta-pair"] %}
+  {% set blocks = ["signature", "company-legal", "footer"] %}
   <mj-body background-color="{$ tokens.color.canvas $}" width="{$ tokens.layout.width $}">
-    {% include here + "/hero.njk" %}
-    {% include here + "/intro.njk" %}
-    {% include here + "/markets.njk" %}
-    {% include here + "/proof.njk" %}
-    {% include here + "/cta-pair.njk" %}
-
-    {# Shared closing blocks. This campaign has NO equipment grid and NO closing
-       "BECOME AN OFFICIAL SUPPLIER" section — it ends on the button pair above. #}
-    {% include "blocks/signature.njk" %}
-    {% include "blocks/company-legal.njk" %}
-    {% include "blocks/footer.njk" %}
+    {% for s in sections %}{% include here + "/" + s + ".njk" %}{% endfor %}
+    {% for b in blocks %}{% include "blocks/" + b + ".njk" %}{% endfor %}
   </mj-body>
 </mjml>

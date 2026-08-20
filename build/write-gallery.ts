@@ -153,6 +153,7 @@ export function writeGallery(outDir: string, built: BuiltEmail[], builtAt: strin
     <div class="logo">C</div>
     <div class="h-txt"><h1>COMACPRO — Email templates</h1><div class="sub">Preview gallery · built ${builtAt} · ${built.length} template(s)</div></div>
     <div class="h-spacer"></div>
+    <a class="btn ghost" href="./tokens.html" style="margin-right:4px;">Design tokens ↗</a>
     <button class="icon-btn" id="theme" title="Toggle theme" aria-label="Toggle light / dark theme">
       <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M4.5 12h-2M21.5 12h-2M6 6l-1.4-1.4M19.4 19.4 18 18M18 6l1.4-1.4M4.6 19.4 6 18"/></svg>
       <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.3 6.3 0 0 0 10.5 10.5Z"/></svg>

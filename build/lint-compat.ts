@@ -215,14 +215,12 @@ const ICON: Record<Severity, string> = { error: '✗', warn: '⚠', info: '·' }
 function main(): void {
   let files: string[];
   try {
+    // Lint the shippable email files (<name>.html and <name>.min.html) — not the sample-filled
+    // previews or the tooling pages (gallery / simulator / token reference), which are web pages
+    // and legitimately use flex/grid etc.
+    const TOOLING = new Set(['index.html', 'simulator.html', 'tokens.html']);
     files = readdirSync(OUT_DIR)
-      .filter(
-        (f) =>
-          f.endsWith('.html') &&
-          !f.endsWith('.preview.html') &&
-          f !== 'index.html' &&
-          f !== 'simulator.html',
-      )
+      .filter((f) => f.endsWith('.html') && !f.endsWith('.preview.html') && !TOOLING.has(f))
       .sort();
   } catch {
     console.error(`No ${OUT_DIR}/ directory. Run \`npm run build\` first.`);

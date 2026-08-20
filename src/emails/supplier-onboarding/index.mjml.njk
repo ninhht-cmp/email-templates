@@ -12,17 +12,12 @@
     <mj-preview>{$ content.document.preview $}</mj-preview>
   </mj-head>
 
+  {# Section registry — the body is this ordered list of section partials + the shared closing
+     blocks. Declaring the composition as data makes the order explicit and reordering trivial. #}
+  {% set sections = ["hero", "intro", "primary-cta", "why-partner", "reassurance", "equipment", "secondary-cta"] %}
+  {% set blocks = ["signature", "company-legal", "footer"] %}
   <mj-body background-color="{$ tokens.color.canvas $}" width="{$ tokens.layout.width $}">
-    {% include here + "/hero.njk" %}
-    {% include here + "/intro.njk" %}
-    {% include here + "/primary-cta.njk" %}
-    {% include here + "/why-partner.njk" %}
-    {% include here + "/reassurance.njk" %}
-    {% include here + "/equipment.njk" %}
-    {% include here + "/secondary-cta.njk" %}
-
-    {% include "blocks/signature.njk" %}
-    {% include "blocks/company-legal.njk" %}
-    {% include "blocks/footer.njk" %}
+    {% for s in sections %}{% include here + "/" + s + ".njk" %}{% endfor %}
+    {% for b in blocks %}{% include "blocks/" + b + ".njk" %}{% endfor %}
   </mj-body>
 </mjml>
