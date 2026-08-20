@@ -11,7 +11,7 @@ import { createEnv } from './create-env.ts';
 import { discoverEmails } from './discover-emails.ts';
 import { tokensSchema } from './schema.ts';
 import { type BuiltEmail, writeGallery } from './write-gallery.ts';
-import { type KeysDocEmail, writeKeysDoc } from './write-keys-doc.ts';
+import { type KeysDocEmail, keyDescriptions, writeKeysDoc } from './write-keys-doc.ts';
 import { writeSimulator } from './write-simulator.ts';
 import { writeTokensPage } from './write-tokens-page.ts';
 
@@ -72,7 +72,14 @@ async function main(): Promise<void> {
   }
 
   const builtAt = new Date().toISOString().slice(0, 16).replace('T', ' ');
-  writeGallery(OUT_DIR, built, builtAt);
+  // Per-email merge keys + descriptions for the gallery's "Merge keys" modal.
+  const keysByEmail = Object.fromEntries(
+    keysDoc.map((e) => [
+      e.name,
+      e.requiredKeys.map((key) => ({ key, description: keyDescriptions[key] ?? '' })),
+    ]),
+  );
+  writeGallery(OUT_DIR, built, builtAt, keysByEmail);
   console.log(`✓ ${OUT_DIR}/index.html  (preview gallery)`);
   writeSimulator(OUT_DIR, built, builtAt);
   console.log(`✓ ${OUT_DIR}/simulator.html  (inbox simulator)`);

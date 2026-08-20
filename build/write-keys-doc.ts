@@ -3,7 +3,7 @@ import { previewSamples } from './preview-samples.ts';
 
 // Human descriptions for known merge keys (shared — a key means the same thing in every email).
 // A key with no entry shows "—"; add it here when you introduce a new key.
-const keyDescriptions: Record<string, string> = {
+export const keyDescriptions: Record<string, string> = {
   company_name: 'Recipient company (greeting)',
   buyer_name: 'Recipient buyer name (greeting)',
   create_store_url: 'Primary CTA button link — use a tracked / per-send URL',

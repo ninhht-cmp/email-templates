@@ -13,7 +13,17 @@ export interface BuiltEmail {
  * (#<name>, directly linkable), keyboard nav (↑/↓), and one-click copy of the raw or minified HTML
  * with a success state.
  */
-export function writeGallery(outDir: string, built: BuiltEmail[], builtAt: string): void {
+export interface KeyInfo {
+  key: string;
+  description: string;
+}
+
+export function writeGallery(
+  outDir: string,
+  built: BuiltEmail[],
+  builtAt: string,
+  keysByEmail: Record<string, KeyInfo[]>,
+): void {
   const cards = built
     .map(
       (e, i) =>
@@ -28,6 +38,7 @@ export function writeGallery(outDir: string, built: BuiltEmail[], builtAt: strin
     Object.fromEntries(built.map((e) => [e.name, { kb: e.kb, category: e.category }])),
   );
   const names = JSON.stringify(built.map((e) => e.name));
+  const keys = JSON.stringify(keysByEmail);
   const first = built[0]?.name ?? '';
 
   writeFileSync(
@@ -137,6 +148,29 @@ export function writeGallery(outDir: string, built: BuiltEmail[], builtAt: strin
   .toast.show{opacity:1;transform:translate(-50%,0);}
   .toast svg{width:16px;height:16px;}
 
+  /* Merge-keys modal */
+  .overlay{position:fixed;inset:0;background:rgba(8,12,20,.55);backdrop-filter:blur(2px);display:none;
+           align-items:center;justify-content:center;padding:24px;z-index:30;}
+  .overlay.open{display:flex;}
+  .modal{width:min(620px,100%);max-height:82vh;display:flex;flex-direction:column;background:var(--panel);
+         border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--shadow-lg);overflow:hidden;}
+  .modal-head{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--border);}
+  .modal-head h2{margin:0;font-size:15px;font-weight:700;}
+  .modal-head .m-sub{color:var(--muted);font-size:12px;}
+  .modal-head .close{margin-left:auto;width:32px;height:32px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--panel-2);display:grid;place-items:center;}
+  .modal-head .close:hover{border-color:var(--border-strong);}
+  .klist{overflow-y:auto;padding:8px;display:flex;flex-direction:column;gap:4px;}
+  .krow{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:var(--r-md);border:1px solid transparent;}
+  .krow:hover{background:var(--panel-2);border-color:var(--border);}
+  .k-main{min-width:0;flex:1;}
+  .k-code{display:inline-flex;align-items:center;font:12px ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:700;color:var(--brand);}
+  .k-desc{color:var(--muted);font-size:12px;margin-top:2px;line-height:1.4;}
+  .k-copy{flex:none;width:32px;height:32px;border-radius:var(--r-sm);border:1px solid var(--border);background:var(--panel);display:grid;place-items:center;transition:.14s var(--ease);}
+  .k-copy:hover{border-color:var(--brand);color:var(--brand);transform:translateY(-1px);}
+  .k-copy.ok{border-color:var(--ok);color:var(--ok);}
+  .k-copy svg{width:15px;height:15px;}
+  .modal-foot{padding:12px 18px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:center;}
+  .modal-foot .note{color:var(--muted);font-size:12px;}
   .hint{color:var(--muted);font-size:11px;padding:6px 8px 2px;}
   kbd{font:inherit;font-size:10px;background:var(--panel-2);border:1px solid var(--border);border-bottom-width:2px;border-radius:5px;padding:1px 5px;}
 
@@ -177,6 +211,10 @@ export function writeGallery(outDir: string, built: BuiltEmail[], builtAt: strin
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
             <span>Copy HTML</span>
           </button>
+          <button class="btn ghost" id="keysbtn" title="Merge keys this template needs">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h10M4 12h16M4 17h10"/><path d="M18 5l2 2-2 2"/></svg>
+            <span>Merge keys</span>
+          </button>
           <a class="btn ghost" id="openPreview" target="_blank" rel="noopener">Preview ↗</a>
           <a class="btn ghost" id="openRaw" target="_blank" rel="noopener">Raw ↗</a>
         </div>
@@ -189,9 +227,21 @@ export function writeGallery(outDir: string, built: BuiltEmail[], builtAt: strin
       </div>
     </main>
   </div>
+  <div class="overlay" id="overlay">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Merge keys">
+      <div class="modal-head">
+        <div><h2>Merge keys</h2><div class="m-sub" id="mSub"></div></div>
+        <button class="close" id="mClose" aria-label="Close">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
+      <div class="klist" id="klist"></div>
+      <div class="modal-foot"><span class="note">Click a row's icon to copy that <code>{{key}}</code> into your sending system.</span></div>
+    </div>
+  </div>
   <div class="toast" id="toast"></div>
   <script>
-    var names = ${names}, data = ${data};
+    var names = ${names}, data = ${data}, keys = ${keys};
     var $ = function(id){return document.getElementById(id);};
     var frame=$('frame'), device=$('device'), toastEl=$('toast'), toastT, current='';
 
@@ -246,8 +296,37 @@ export function writeGallery(outDir: string, built: BuiltEmail[], builtAt: strin
       });
     }
     $('copymin').addEventListener('click',function(){copyFile(this,'.min.html','HTML');});
+
+    // Merge-keys modal
+    var COPY='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
+    function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+    function openKeys(){
+      var list=keys[current]||[];
+      $('mSub').textContent=current+' · '+list.length+' key'+(list.length===1?'':'s');
+      $('klist').innerHTML=list.map(function(k){
+        return '<div class="krow"><div class="k-main"><span class="k-code">{{'+esc(k.key)+'}}</span>'+
+          (k.description?'<div class="k-desc">'+esc(k.description)+'</div>':'')+
+          '</div><button class="k-copy" data-key="'+esc(k.key)+'" title="Copy {{'+esc(k.key)+'}}">'+COPY+'</button></div>';
+      }).join('');
+      Array.prototype.forEach.call($('klist').querySelectorAll('.k-copy'),function(btn){
+        btn.addEventListener('click',function(){
+          var tag='{{'+btn.getAttribute('data-key')+'}}';
+          function done(){ btn.classList.add('ok'); btn.innerHTML=CHECK; toast('Copied '+tag);
+            setTimeout(function(){btn.classList.remove('ok'); btn.innerHTML=COPY;},1400); }
+          if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(tag).then(done).catch(done);
+          else done();
+        });
+      });
+      $('overlay').classList.add('open');
+    }
+    function closeKeys(){ $('overlay').classList.remove('open'); }
+    $('keysbtn').addEventListener('click',openKeys);
+    $('mClose').addEventListener('click',closeKeys);
+    $('overlay').addEventListener('click',function(e){ if(e.target===$('overlay')) closeKeys(); });
     document.addEventListener('keydown',function(e){
       if(e.target.tagName==='INPUT'||e.metaKey||e.ctrlKey) return;
+      if(e.key==='Escape'){ closeKeys(); return; }
+      if($('overlay').classList.contains('open')) return;
       if(e.key==='ArrowDown'||e.key==='ArrowUp'){
         e.preventDefault();
         var i=names.indexOf(current), d=e.key==='ArrowDown'?1:-1;
