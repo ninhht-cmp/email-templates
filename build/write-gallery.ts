@@ -136,10 +136,15 @@ export function writeGallery(
   .card-kb{color:var(--muted);font-size:11.5px;font-variant-numeric:tabular-nums;flex:none;}
   .chip{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);white-space:nowrap;}
 
-  /* Viewer = a soft rounded preview canvas; controls live in a floating sticky pill inside it */
-  .viewer{flex:1;min-width:0;display:flex;}
-  .canvas{flex:1;min-width:0;background:var(--canvas);border-radius:var(--r-lg);box-shadow:inset 0 0 0 1px var(--border);}
+  /* Viewer = a soft rounded preview canvas that is the ONLY scroll region (app shell: header +
+     sidebar fixed). min-height:0 lets the flex chain actually bound the canvas height so .scroll
+     scrolls instead of the page growing. */
+  .viewer{flex:1;min-width:0;min-height:0;display:flex;}
+  .canvas{flex:1;min-width:0;min-height:0;background:var(--canvas);border-radius:var(--r-lg);box-shadow:inset 0 0 0 1px var(--border);}
   .scroll{height:100%;overflow:auto;display:flex;flex-direction:column;align-items:center;padding:16px 24px 52px;}
+  /* Children keep their natural height (no flex-shrink) — otherwise the column compresses the device
+     to fit and its overflow:hidden clips the email footer, leaving nothing to scroll to. */
+  .scroll > *{flex:none;}
   /* macOS-style floating toolbar: soft rounded-rectangle (not a full capsule), with rounded-rect
      controls inside — reads like a macOS command bar / Spotlight. */
   .floatbar{position:sticky;top:0;z-index:5;display:inline-flex;align-items:center;gap:5px;padding:7px;margin-bottom:22px;
