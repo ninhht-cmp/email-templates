@@ -17,3 +17,10 @@ export const NUNJUCKS_TAGS = { variableStart: '{$', variableEnd: '$}' } as const
 
 /** Gmail clips messages larger than ~102 KB. */
 export const GMAIL_CLIP_KB = 102;
+
+/**
+ * Asset hosts allowed in a shippable email. Any image on another host — a `*.dev` / staging CDN
+ * especially — is flagged by the build (see findUnhostedAssets) so a non-prod asset URL can't ship
+ * silently. Add a host here only once it's a real production CDN.
+ */
+export const PROD_ASSET_HOSTS: readonly string[] = ['storage.comacpro.net', 'flagcdn.com'];

@@ -19,5 +19,8 @@ export const previewSamples: Record<string, string> = {
 
 /** Replace {{key}} with its sample value; keys with no sample are left literal. */
 export function fillSamples(html: string, samples: Record<string, string>): string {
-  return html.replace(/\{\{\s*([a-z_]+)\s*\}\}/gi, (match, key: string) => samples[key] ?? match);
+  return html.replace(
+    /\{\{\s*([a-z0-9_]+)\s*\}\}/gi,
+    (match, key: string) => samples[key] ?? match,
+  );
 }

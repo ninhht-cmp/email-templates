@@ -1,6 +1,6 @@
 import { pathToFileURL } from 'node:url';
 import type { Environment } from 'nunjucks';
-import { EMAILS_DIR } from './config.ts';
+import { EMAILS_DIR, PROD_ASSET_HOSTS } from './config.ts';
 import { fillSamples, previewSamples } from './preview-samples.ts';
 import { applyFluidMaxWidth, findUnhostedAssets, renderEmail } from './render-email.ts';
 import { tokensSchema } from './schema.ts';
@@ -56,7 +56,7 @@ export async function buildEmail(
   const html = applyFluidMaxWidth(rawHtml);
 
   const { errors: keyErrors, warnings: keyWarnings } = reconcileMergeKeys(html, meta.requiredKeys);
-  const { relative, placeholder } = findUnhostedAssets(html);
+  const { relative, placeholder, nonProd } = findUnhostedAssets(html, PROD_ASSET_HOSTS);
 
   const previewHtml = fillSamples(html, { ...previewSamples, ...(meta.previewSamples ?? {}) });
 
@@ -72,6 +72,6 @@ export async function buildEmail(
     keyErrors,
     keyWarnings,
     metaWarnings: metaAdvisories(meta),
-    unhostedAssets: [...relative, ...placeholder],
+    unhostedAssets: [...relative, ...placeholder, ...nonProd],
   };
 }
