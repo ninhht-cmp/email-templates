@@ -11,7 +11,10 @@
 <mj-section css-class="hero-bg" background-url="{$ content.assets.hero $}" background-size="cover"
             background-position="left center" background-repeat="no-repeat"
             background-color="{$ tokens.color.white $}" padding="0">
-  <mj-column width="56%" vertical-align="middle" padding="24px 8px 24px 32px">
+  {# Fluid-hybrid (mw-334 / mw-262 inject inline max-width at build): keeps the 56/44 split
+     side-by-side on New Outlook / Outlook webml (no media query needed), and confines the copy to a
+     ~334px box on mobile so it stays over the left scrim rather than the busy centre. #}
+  <mj-column css-class="hero-s-col mw-334" width="56%" vertical-align="middle" padding="24px 8px 24px 32px">
     <mj-image align="left" width="128px" height="auto" src="{$ content.assets.logo $}" alt="COMACPRO" padding="0 0 14px 0" />
     <mj-text color="{$ tokens.color.heroTitle $}" font-size="24px" font-weight="600" line-height="1.25" padding="0">
       {$ content.hero.heading $}
@@ -21,7 +24,7 @@
       {$ content.hero.subline | replace('{brand}', '<span class="brand">COMACPRO</span>') | safe $}
     </mj-text>
   </mj-column>
-  <mj-column width="44%" vertical-align="middle" padding="0">
+  <mj-column css-class="hero-s-col mw-262" width="44%" vertical-align="middle" padding="0">
     <mj-text padding="0">&#8202;</mj-text>
   </mj-column>
 </mj-section>
