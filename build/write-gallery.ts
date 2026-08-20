@@ -94,7 +94,6 @@ export function writeGallery(
 
   /* Header */
   header{display:flex;align-items:center;gap:16px;padding:14px 22px;background:var(--panel);border-bottom:1px solid var(--border);}
-  .logo{width:30px;height:30px;border-radius:9px;background:var(--brand);color:#fff;display:grid;place-items:center;font-weight:800;font-size:15px;flex:none;}
   .h-txt h1{margin:0;font-size:15px;font-weight:700;letter-spacing:-.01em;}
   .h-txt .sub{color:var(--muted);font-size:12px;margin-top:1px;}
   .h-spacer{flex:1;}

@@ -246,16 +246,9 @@
 
     @media only screen and (max-width:479px) {
 
-      /* Keep the two stats SIDE BY SIDE on mobile instead of letting MJML stack them: each stat
-           is a column (number above label) and the pair stays one row at every width.
-           MJML only applies its 50% width above 480px, falling back to the inline width:100% that
-           causes stacking — so the width has to be re-asserted here (same trick as .eq-col). */
-      .stat-col {
-        width: 50% !important;
-        max-width: 50% !important;
-      }
-
-      /* Half of a phone screen is ~120px of usable column, so the desktop sizes no longer fit:
+      /* The two stats stay side-by-side at every width via mj-group (inline 50%), so no width
+           re-assertion is needed here — only the mobile sizing below.
+           Half of a phone screen is ~120px of usable column, so the desktop sizes no longer fit:
            the number was breaking mid-digit ("200,00 / 0+" at 320px) and only ONE label wrapped,
            leaving the pair lopsided. Shrink both, reclaim the column gutters, and pin the number
            to a single line — MJML puts `word-break: break-word` on the cell, which is what let a

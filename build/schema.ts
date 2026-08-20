@@ -57,6 +57,6 @@ export const tokensSchema = z.object({
     lg: z.string(),
     pill: z.string(),
   }),
-  layout: z.object({ width: z.string(), padX: z.string() }),
+  layout: z.object({ width: z.string() }),
 });
 export type Tokens = z.infer<typeof tokensSchema>;

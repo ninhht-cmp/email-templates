@@ -53,7 +53,6 @@ export function writeTokensPage(outDir: string, tokens: Tokens, builtAt: string)
   *{box-sizing:border-box;}
   body{margin:0;font:15px/1.55 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;}
   header{display:flex;align-items:center;gap:14px;padding:16px 26px;background:var(--panel);border-bottom:1px solid var(--border);}
-  .logo{width:30px;height:30px;border-radius:9px;background:var(--brand);color:#fff;display:grid;place-items:center;font-weight:800;}
   h1{margin:0;font-size:15px;} .sub{color:var(--muted);font-size:12px;}
   a.back{margin-left:auto;color:var(--brand);text-decoration:none;font-weight:600;font-size:13px;}
   main{max-width:1000px;margin:0 auto;padding:28px 26px 60px;}
