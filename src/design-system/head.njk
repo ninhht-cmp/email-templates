@@ -45,6 +45,11 @@
 
   /* Responsive */
   @media only screen and (max-width:479px) {
+    /* mj-group columns are inline-block with a fixed % (so New Outlook / Outlook webml keep them
+       side-by-side); these restack them to full-width rows on real mobile. Stats stay 2-across
+       (no rule) as short numbers; the CTA pair, hero, and benefit rows drop to one column. */
+    .cta-col, .hero-col, .benefit-col { display: block !important; width: 100% !important; }
+    .cta-col { padding: 0 0 10px 0 !important; }
     /* Equipment 6-across and features 4-across both collapse to 2-across */
     .eq-col, .feat-col { width: 50% !important; max-width: 50% !important; }
     /* Wider mobile columns need fewer desc lines, so drop the desktop height reservation. */

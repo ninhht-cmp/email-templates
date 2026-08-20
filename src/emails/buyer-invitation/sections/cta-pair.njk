@@ -1,20 +1,20 @@
 {% from "design-system/components/button.njk" import button %}
-{# Two side-by-side CTAs + divider. They stack on mobile automatically: MJML's min-width:480 rule
-   (which sets each column to 50%) drops away, so each column falls back to its inline width:100%.
-   That also covers style-stripping clients (Gmail app on non-Google accounts). The .cta-col class
-   is a styling hook only — there is NO rule on it today.
-   Each has its own merge key, so the sending system decides which one is the tracked CTA.
-   Fills use orangeStrong / navyDeep — orangeStrong instead of the decorative orange so the
-   white label keeps usable contrast (see tokens.ts).
-   width='100%' + padding='0' are required: mj-button defaults to 10px 25px padding and
-   shrink-to-fit, which makes the two buttons unequal and wraps the longer label. #}
+{# Two CTAs: side-by-side on desktop, stacked on mobile.
+   Wrapped in mj-group so each column gets an INLINE width:50% (desktop-first) instead of MJML's
+   default inline width:100% + a min-width:480 media query. That default collapses to one stacked
+   column in New Outlook / Outlook webview, which ignores the [if mso] ghost table AND doesn't apply
+   the <style> media query — so the columns fall back to width:100%. mj-group's inline % holds
+   without a media query; the .cta-col rule (head.njk, max-width:479) restacks on real mobile.
+   width='100%' + padding='0' keep the two buttons equal (mj-button otherwise shrinks to its label). #}
 <mj-section padding="22px 32px 0 32px">
-  <mj-column css-class="cta-col" width="50%" padding="0 7px 0 0">
-    {$ button(content.ctas.primary, '{{explore_equipment_url}}', tokens.color.orangeStrong, width='100%', padding='0') $}
-  </mj-column>
-  <mj-column css-class="cta-col" width="50%" padding="0 0 0 7px">
-    {$ button(content.ctas.secondary, '{{register_url}}', tokens.color.navyDeep, width='100%', padding='0') $}
-  </mj-column>
+  <mj-group>
+    <mj-column css-class="cta-col" width="50%" padding="0 7px 0 0">
+      {$ button(content.ctas.primary, '{{explore_equipment_url}}', tokens.color.orangeStrong, width='100%', padding='0') $}
+    </mj-column>
+    <mj-column css-class="cta-col" width="50%" padding="0 0 0 7px">
+      {$ button(content.ctas.secondary, '{{register_url}}', tokens.color.navyDeep, width='100%', padding='0') $}
+    </mj-column>
+  </mj-group>
 </mj-section>
 
 <mj-section padding="24px 32px 0 32px">
