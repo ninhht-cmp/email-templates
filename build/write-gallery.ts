@@ -173,13 +173,9 @@ export function writeGallery(outDir: string, built: BuiltEmail[], builtAt: strin
             <button data-w="700" class="active">Desktop</button>
             <button data-w="390">Mobile</button>
           </div>
-          <button class="btn" id="copymin">
+          <button class="btn" id="copymin" title="Copy the minified, production-ready HTML (merge keys intact)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
-            <span>Copy minified</span>
-          </button>
-          <button class="btn ghost" id="copyraw">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
-            <span>Copy raw</span>
+            <span>Copy HTML</span>
           </button>
           <a class="btn ghost" id="openPreview" target="_blank" rel="noopener">Preview ↗</a>
           <a class="btn ghost" id="openRaw" target="_blank" rel="noopener">Raw ↗</a>
@@ -249,8 +245,7 @@ export function writeGallery(outDir: string, built: BuiltEmail[], builtAt: strin
         window.open('./'+current+file,'_blank'); toast('Clipboard blocked — opened '+file);
       });
     }
-    $('copymin').addEventListener('click',function(){copyFile(this,'.min.html','minified');});
-    $('copyraw').addEventListener('click',function(){copyFile(this,'.html','raw');});
+    $('copymin').addEventListener('click',function(){copyFile(this,'.min.html','HTML');});
     document.addEventListener('keydown',function(e){
       if(e.target.tagName==='INPUT'||e.metaKey||e.ctrlKey) return;
       if(e.key==='ArrowDown'||e.key==='ArrowUp'){
