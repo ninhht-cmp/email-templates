@@ -129,7 +129,7 @@ export function writeGallery(
   .sidebar{width:236px;flex:none;background:transparent;padding:6px 8px;display:flex;flex-direction:column;gap:2px;
            position:sticky;top:12px;max-height:calc(100vh - 24px);overflow-y:auto;}
   .side-label{font-size:10.5px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:var(--faint);padding:2px 12px 12px;}
-  /* Rows, not cards: quiet, with a left orange rail marking the active one (brand as thin accent). */
+  /* Rows, not cards: quiet, active row marked by a soft brand-tinted background (no rail). */
   .card{position:relative;display:flex;flex-direction:column;gap:3px;text-align:left;padding:9px 12px;
         border-radius:var(--r-sm);border:0;background:transparent;transition:background .14s var(--ease);}
   .card:hover{background:var(--panel-2);}
@@ -139,9 +139,8 @@ export function writeGallery(
   .card-kb{color:var(--muted);font-size:11.5px;font-variant-numeric:tabular-nums;flex:none;}
   .chip{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);white-space:nowrap;}
 
-  /* Viewer = a soft rounded preview canvas that is the ONLY scroll region (app shell: header +
-     sidebar fixed). min-height:0 lets the flex chain actually bound the canvas height so .scroll
-     scrolls instead of the page growing. */
+  /* Viewer = a soft rounded preview canvas. The page scrolls (window); the canvas just grows with
+     its content (iframe auto-fit), so the whole email — footer included — is reachable. */
   .viewer{flex:1;min-width:0;display:flex;}
   .canvas{flex:1;min-width:0;background:var(--canvas);border-radius:var(--r-lg);box-shadow:inset 0 0 0 1px var(--border);}
   .scroll{display:flex;flex-direction:column;align-items:center;padding:16px 24px 52px;}
