@@ -216,9 +216,9 @@ function main(): void {
   let files: string[];
   try {
     // Lint the shippable email files (<name>.html and <name>.min.html) — not the sample-filled
-    // previews or the tooling pages (gallery / simulator / token reference), which are web pages
-    // and legitimately use flex/grid etc.
-    const TOOLING = new Set(['index.html', 'simulator.html', 'tokens.html']);
+    // previews or the tooling pages (gallery / token reference), which are web pages that
+    // legitimately use flex/grid etc.
+    const TOOLING = new Set(['index.html', 'tokens.html']);
     files = readdirSync(OUT_DIR)
       .filter((f) => f.endsWith('.html') && !f.endsWith('.preview.html') && !TOOLING.has(f))
       .sort();

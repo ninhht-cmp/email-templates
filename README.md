@@ -71,8 +71,8 @@ marketing emails with no advertising label.
 - `<name>.html` — shippable, beautified, raw `{{keys}}` intact.
 - `<name>.min.html` — shippable, minified (~30% smaller) — **what the gallery copies**.
 - `<name>.preview.html` — merge keys filled with sample values, for review only.
-- Shared: `index.html` (gallery), `simulator.html` (viewport simulator), `tokens.html`
-  (design-token reference), `KEYS.md` (merge-key reference), `sim/` (client-family sims).
+- Shared: `index.html` (gallery — preview + copy), `tokens.html` (design-token reference),
+  `KEYS.md` (merge-key reference), `sim/` (client-family sims via `npm run simulate`).
 
 `dist/` is git-ignored; CI (`.github/workflows/pages.yml`) rebuilds and deploys it to GitHub Pages.
 

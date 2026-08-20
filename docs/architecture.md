@@ -218,4 +218,4 @@ columns stay `width:100%` and collapse to one stack even on desktop. Two pattern
 
 Rule of thumb: **reach for `mw-<px>` (fluid-hybrid) by default; use `mj-group` only for
 never-stack pairs.** Verify both New Outlook and GANGA via `npm run simulate` (docs/email-testing.md
-§2b) whenever you touch a column's width, padding, or `mw-` value.
+§3) whenever you touch a column's width, padding, or `mw-` value.

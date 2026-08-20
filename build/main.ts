@@ -12,7 +12,6 @@ import { discoverEmails } from './discover-emails.ts';
 import { tokensSchema } from './schema.ts';
 import { type BuiltEmail, writeGallery } from './write-gallery.ts';
 import { type KeysDocEmail, keyDescriptions, writeKeysDoc } from './write-keys-doc.ts';
-import { writeSimulator } from './write-simulator.ts';
 import { writeTokensPage } from './write-tokens-page.ts';
 
 const minify = process.env.MINIFY === '1' || process.argv.includes('--minify');
@@ -83,8 +82,6 @@ async function main(): Promise<void> {
   );
   writeGallery(OUT_DIR, built, builtAt, keysByEmail, minByEmail);
   console.log(`✓ ${OUT_DIR}/index.html  (preview gallery)`);
-  writeSimulator(OUT_DIR, built, builtAt);
-  console.log(`✓ ${OUT_DIR}/simulator.html  (inbox simulator)`);
   writeKeysDoc(OUT_DIR, keysDoc, builtAt);
   console.log(`✓ ${OUT_DIR}/KEYS.md  (merge-key reference)`);
   writeTokensPage(OUT_DIR, tokensSchema.parse(tokens), builtAt);

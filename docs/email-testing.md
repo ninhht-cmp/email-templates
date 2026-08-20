@@ -1,14 +1,14 @@
 # Testing emails across clients
 
-Three layers, cheapest → most faithful. Do the first two on every change; the third before a
-real campaign send.
+Four layers, cheapest → most faithful. Do the lint + previews on every change; the real send before
+a campaign.
 
 | Layer | What it catches | What it can't | Command |
 |---|---|---|---|
 | **1. Compatibility lint** | Structural/CSS breakage (flex, absolute pos, missing VML, Gmail clip, external CSS, a11y tables) | Anything visual | `npm run lint:email` |
-| **2. Inbox simulator** | Reflow & stacking at each width, preview-pane column, mobile break points | Outlook's Word engine quirks (real rendering) | open `dist/simulator.html` |
-| **2b. Client-family sim** | Column collapse in CSS-stripping clients (New Outlook, Gmail GANGA) | Word-engine visuals | `npm run simulate` |
-| **3. Real send** | Everything, exactly — Outlook desktop especially | — | see below |
+| **2. Gallery preview** | Reflow & stacking at desktop / mobile width, preview text | Outlook's Word engine quirks (real rendering) | open `dist/index.html` |
+| **3. Client-family sim** | Column collapse in CSS-stripping clients (New Outlook, Gmail GANGA) | Word-engine visuals | `npm run simulate` |
+| **4. Real send** | Everything, exactly — Outlook desktop especially | — | see below |
 
 ## 1. Compatibility lint
 
@@ -21,26 +21,25 @@ npm run lint:email  # static-analyses dist/*.html
 `·` is informational / confirms a safeguard. Rules live in `build/lint-compat.ts` — asset hosting
 (CDN URLs, SVG→PNG) is deliberately **out of scope**; those are swapped before sending.
 
-## 2. Inbox simulator (local, offline)
+## 2. Gallery preview (local, offline)
 
 ```bash
 npm run build
-open dist/simulator.html      # macOS  (or just double-click it)
+open dist/index.html      # macOS  (or just double-click it)
 ```
 
-Renders the sample-filled `*.preview.html` inside iframes sized to how each client frames a
-message — Desktop webmail (700), Apple Mail (600), Outlook preview pane (480), mobile (375), small
-mobile (320). Switch template from the dropdown; "taller frames" to see the whole email at once.
+The gallery renders the sample-filled `*.preview.html` in a device frame; use the **Desktop / Mobile**
+toggle to check reflow & stacking at each width, and the preview text / layout per template.
 
-**It is a viewport simulator, not a rendering-engine emulator.** The browser is still Blink/WebKit,
+**It is a viewport preview, not a rendering-engine emulator.** The browser is still Blink/WebKit,
 so it reproduces layout *reflow* but not Outlook's Word engine (border-radius, object-fit,
-gradients degrade there — see `README.md` → Client compatibility). Use it to confirm nothing
-stacks or overflows wrong at each width; use layer 3 for true Outlook fidelity.
+gradients degrade there — see `README.md` → Client compatibility). Use it to confirm nothing stacks
+or overflows wrong; use layer 4 for true Outlook fidelity.
 
-## 2b. Client-family simulation (New Outlook / Gmail GANGA)
+## 3. Client-family simulation (New Outlook / Gmail GANGA)
 
-The viewport simulator keeps full CSS. Two clients **strip CSS** before rendering, so they collapse
-multi-column layouts in ways the simulator can't show — this is what broke the columns before:
+The gallery preview keeps full CSS. Two clients **strip CSS** before rendering, so they collapse
+multi-column layouts in ways the preview can't show — this is what broke the columns before:
 
 - **New Outlook / Outlook webview** — drops `@media` queries (and the `[if mso]` ghost table).
 - **Gmail app on a non-Google account (GANGA)** — strips all `<style>`.
@@ -56,9 +55,9 @@ npm run simulate     # writes dist/sim/<name>.{newoutlook,ganga}.html
 Open `dist/sim/<name>.newoutlook.html` at ~700px and `<name>.ganga.html` at ~390px. Columns must
 stay laid out — side-by-side on desktop, reflowed (not overflowing/collapsed) on mobile. This is the
 **guard for the `mw-<px>` values**: a wrong one makes columns wrap or leave a gap here. It's still
-Blink, so classic Outlook's Word engine needs layer 3.
+Blink, so classic Outlook's Word engine needs layer 4.
 
-## 3. Real send — true fidelity
+## 4. Real send — true fidelity
 
 The only way to see Outlook desktop (Windows) rendering exactly. Pick one:
 
@@ -103,5 +102,4 @@ PY
 ## Where each artifact comes from
 
 - `dist/<name>.html` — shippable, raw `{{keys}}`. **This is what you send / paste into Litmus.**
-- `dist/<name>.preview.html` — sample-filled, for the simulator and self-tests.
-- `dist/simulator.html` — the local multi-client viewer (regenerated every build).
+- `dist/<name>.preview.html` — sample-filled, for the gallery preview and self-tests.
