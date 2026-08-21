@@ -32,14 +32,23 @@ jobs:
       - run: npm ci
       # Gate the deploy on quality: typecheck + build + snapshot tests must pass.
       - run: npm run validate
-      # Stage dist/ + src/ so the emails' repo-relative asset paths (../src/…) resolve on Pages.
+      # Stage dist/ + the ASSET FILES ONLY, so the emails' repo-relative paths (../src/…) resolve on
+      # Pages. This used to `cp -r src _site/src`, which published every .ts/.njk source file — copy,
+      # schemas, merge-key names and office addresses — to a URL that is public even when the repo is
+      # private. The gallery only ever needs the images, so only the images ship.
       # A root redirect sends visitors from / to the /dist/ preview gallery.
       - name: Stage site
         run: |
           mkdir -p _site
           cp -r dist _site/dist
-          cp -r src _site/src
+          find src -type d -name assets -exec sh -c '
+            for dir do
+              target="_site/$dir"
+              mkdir -p "$target"
+              cp -r "$dir/." "$target/"
+            done' sh {} +
           printf '<!doctype html><meta http-equiv="refresh" content="0; url=./dist/">' > _site/index.html
+          echo "Published asset files:"; find _site/src -type f | sort
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site

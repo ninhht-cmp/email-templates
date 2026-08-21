@@ -17,8 +17,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      # Biome (format + lint) + typecheck + build (MJML + key governance) + snapshot tests.
-      - run: npm run lint
-      - run: npm run typecheck
-      - run: npm run build
-      - run: npm test
+      # Same gate as main. `npm run validate` runs: Biome (format + lint) → typecheck → build (MJML,
+      # key governance, breakpoint + fluid-hybrid invariants, opt-out check) → email-client compat
+      # lint → tests. It is one command on purpose: the compat lint used to run ONLY on main, so a
+      # client-compatibility error passed PR review and first went red after the merge, on the deploy.
+      - run: npm run validate

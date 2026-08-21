@@ -138,18 +138,44 @@ Build (`validate.mjs`) làm 2 việc **fail-fast**:
 | Config trình bày (chip/icon size) | Đưa vào **meta.ts per-email** vs global build | Global = P2 (bãi rác). Per-email = đúng chỗ nhưng lặp nếu nhiều email giống | Per-email trong `meta.ts`, default hợp lý ở design-system. |
 | i18n (đa ngôn ngữ) | Chưa làm vs data keyed theo locale | Làm sớm = phức tạp thừa; làm muộn = refactor data | **Thiết kế data cho phép** (`data.en.js`/`data.vi.js` khi cần), **chưa build** tới khi có yêu cầu. YAGNI. |
 | Content ops | content.ts (dev sửa) vs CMS/YAML (non-dev) | CMS = hạ tầng lớn; YAML = trung gian | Giữ `content.ts`. Khi marketing tự sửa copy nhiều → tách `content.yaml`. Chưa cần. |
-| dist/ trong repo | Commit vs build-only | Commit = tiện copy/diff; artifact bẩn git | Giữ commit (đội nhỏ, cần copy nhanh). Có `.gitignore` note để đổi sau. |
+| dist/ trong repo | Commit vs build-only | Commit = tiện copy/diff; artifact bẩn git | **CHỐT: build-only.** `dist/` đã vào `.gitignore`; CI (`pages.yml`) build lại và deploy lên GitHub Pages mỗi lần push `main`, nên preview luôn tươi và git không chứa artifact. (Mục này trước đây ghi "giữ commit" — sai so với thực tế.) |
 
 ---
 
-## 6. Quality gates (nâng chất lượng)
+## 6. Quality gates
 
-- **Lint:** MJML validation (đã có) + `htmlhint` cho HTML output.
-- **Schema + key reconciliation** (mục 4) — fail build.
-- **Size budget per-email:** hiện chỉ warn >102KB (`build.mjs:111`) → nâng thành **fail** có ngưỡng trong meta.
-- **Snapshot test:** lưu HTML output làm snapshot; đổi ngoài ý muốn → test đỏ (chống regression khi sửa design-system ảnh hưởng nhiều email).
-- **Cross-client:** tích hợp Litmus/Email on Acid (hoặc gửi tài khoản thật) — cổng thủ công trước khi ship.
-- **Preheader/asset check:** cảnh báo nếu còn `placehold.co` hoặc `../assets` (relative) trong HTML build (tránh ship ảnh vỡ — đúng lỗi đang gặp).
+Nguyên tắc: **thứ gì hỏng âm thầm thì phải fail build; thứ gì cần mắt người thì warn.**
+
+### FAIL build (`npm run build`, và `npm run validate` mà CI chạy trên cả PR lẫn main)
+
+| Gate | Vì sao fatal | Ở đâu |
+|---|---|---|
+| zod schema `meta.ts` + `content.ts` | shape sai → HTML hỏng | `validate-email.ts`, mỗi `content.schema.ts` |
+| MJML error | output hỏng | `render-email.ts` |
+| `{{key}}` render mà không khai trong `requiredKeys` | danh sách key nói dối | `reconcileMergeKeys` (kể cả key chỉ dùng trong `{{#if}}`) |
+| breakpoint thứ hai xuất hiện trong output | email có 2 trạng thái; mốc thứ 3 là tư duy web-CSS | `assertSingleBreakpoint` |
+| cột `fluid` không nhận được `max-width` inline | cột sẽ stack trên desktop ở New Outlook/GANGA — vô hình với mọi preview | `assertFluidInjected` |
+| email `marketing` không có `{{unsubscribe}}` | CAN-SPAM / GDPR / NĐ91 | `requireOptOut` |
+| `adLabel` set nhưng subject không mở đầu bằng nó | NĐ91 Điều 18 yêu cầu nhãn ở vị trí 0 | `emailMetaSchema.refine` |
+| >102 KB (đo body đã quoted-printable ×1.04, không phải file thô) | Gmail clip đuôi và ẩn luôn unsubscribe | `lint-compat.ts` |
+| SVG **đã host** trong `<img>` | URL hợp lệ nên mọi check asset đều pass, mà Gmail/Outlook không render gì | `lint-compat.ts` |
+| flex/grid, `position:absolute`, `<script>/<form>`, thiếu doctype, `<img>` thiếu `width` attribute | vỡ layout ở client chính | `lint-compat.ts` |
+| snapshot HTML lệch | chống regression khi sửa design-system ảnh hưởng nhiều email | `test/snapshot.test.ts` |
+
+### WARN (cố ý không fail — cần người quyết)
+
+- Asset chưa host / host non-prod / còn `placehold.co`.
+- Asset **không retina** cho kích thước nó render, hoặc vượt 200 KB/ảnh.
+- SVG master còn ở dạng repo-relative (bình thường lúc dev, phải rasterize trước campaign).
+- Email `marketing` không có `adLabel` — để việc bỏ nhãn luôn là lựa chọn có ý thức.
+- Key khai mà không render.
+
+### Cổng KHÔNG máy nào thay được
+
+- **Render thật ở 2 chiều rộng.** Bug 1-across-nửa-trái (mục 9.6) đi qua *toàn bộ* bảng trên mà vẫn
+  xanh. Mở `dist/<name>.preview.html` ở 700px và 390px sau mỗi lần sửa cột.
+- **`dist/sim/`** cho New Outlook + GANGA (build ghi sẵn, gallery có link).
+- **Gửi thật / Litmus – Email on Acid** cho Word engine của Outlook desktop.
 
 ---
 
@@ -162,8 +188,10 @@ Giữ template hiện tại chạy suốt quá trình.
 - ✅ **Giai đoạn 1 (DONE):** colocation `src/emails/supplier-onboarding/` (index+data+meta+assets).
   Build discover theo folder (`discover.mjs`).
 - ✅ **Giai đoạn 2 (DONE cùng GĐ1):** tách 3 tầng `design-system/` + `blocks/` + `emails/`.
-- 🟡 **Giai đoạn 3 (một phần):** đã có **key reconciliation** (`requiredKeys` vs `{{keys}}` — fail build)
-  + **asset/placeholder warn** trong `build/main.ts`. Còn lại: **zod schema cho data** + size-budget fail.
+- ✅ **Giai đoạn 3 (DONE):** key reconciliation (kể cả key chỉ dùng trong `{{#if}}`), zod schema cho
+  data + meta, size-budget fail theo size đã encode, và thêm 3 invariant mới fail-build:
+  **một breakpoint duy nhất**, **mọi cột `fluid` phải có max-width inline**, và **email marketing
+  phải có opt-out**. Cộng thêm advisory: asset không retina / quá nặng / SVG chưa rasterize.
 - ⬜ **Giai đoạn 4 (khi cần):** i18n, CMS content — chỉ khi có yêu cầu thật. (snapshot test: DONE)
 
 **Cập nhật khi thêm `buyer-invitation` (email #2):** ban đầu tưởng "EQUIPMENT WE COVER → footer"
@@ -196,26 +224,119 @@ Những cái này trả hết nợ coupling và biến "quản trị key" từ t
 
 ---
 
-## 9. Responsive columns — two mechanisms, on purpose
+## 9. Responsive — một breakpoint, ba pattern
 
-Multi-column sections must lay out side-by-side on desktop and stack on mobile, across clients that
-handle CSS very differently. MJML's default is **mobile-first**: each column is inline `width:100%`
-and a `@media(min-width:480px)` rule widens it. That breaks in clients that drop `<style>`/media
-queries — **New Outlook / Outlook webview** and **Gmail on non-Google accounts (GANGA)** — where the
-columns stay `width:100%` and collapse to one stack even on desktop. Two patterns fix this:
+Email chỉ có **hai trạng thái layout**: desktop multi-column và mobile stack. Không có thang
+sm/md/lg/xl, và thêm mốc thứ ba **fail build** (`assertSingleBreakpoint`) — Outlook desktop không đọc
+media query nào cả, còn client đọc được cũng chẳng cho ta thứ gì mà "tuning theo thiết bị" dùng được.
 
-- **Fluid-hybrid (`mw-<px>`)** — the default for real columns (hero, CTA pair, benefits, feature/
-  equipment grids). The column keeps inline `width:100%` and gets an inline `max-width:<px>` injected
-  at build time (`applyFluidMaxWidth` in `build/html-transforms.ts`, triggered by an `mw-<px>` css-
-  class). With no media query, a wide viewport sits columns side-by-side and a narrow one reflows —
-  correct in New Outlook *and* GANGA. A `max-width:479` rule in `head.njk` drops the cap for clean
-  full-width stacking on media-query mobile clients. `<px>` = round(width% × section content width);
-  it's coupled to the column's width/padding — `npm run simulate` is the guard.
+### 9.1 Breakpoint khai báo một lần
 
-- **`mj-group`** — used only where columns must stay side-by-side at *every* width (the proof-panel
-  stats: two short numbers that read fine as 2-across on mobile). mj-group emits an inline `width:%`,
-  so it never stacks. Don't use it for anything that must reflow on mobile.
+`src/design-system/head.njk`:
 
-Rule of thumb: **reach for `mw-<px>` (fluid-hybrid) by default; use `mj-group` only for
-never-stack pairs.** Verify both New Outlook and GANGA via `npm run simulate` (docs/email-testing.md
-§3) whenever you touch a column's width, padding, or `mw-` value.
+```njk
+<mj-breakpoint width="480px" />
+```
+
+Đây là thứ làm `mj-column` stack: MJML compile nó thành các rule `min-width:480px` để nới cột ra ở
+desktop. Khối `@media (max-width:479px)` duy nhất trong cùng file (479 = 480 − 1) là **nửa còn lại
+của cùng một breakpoint**. `BREAKPOINT_PX` (`build/config.ts`) là con số duy nhất mà cả hai được đối
+chiếu — nên chúng không thể lệch nhau mà không ai biết.
+
+### 9.2 Lỗ mà `mj-breakpoint` một mình không lấp được
+
+Hai họ client **xoá `<style>`** trước khi render, nên không bao giờ thấy media query đó:
+
+- **New Outlook / Outlook webview** — bỏ `@media` *và* ghost table `[if mso]`.
+- **Gmail trên tài khoản non-Google (GANGA)** — xoá toàn bộ `<style>`.
+
+Ở đó cột giữ nguyên `width:100%` inline của MJML và **stack cả trên màn hình desktop**. Vậy nên
+breakpoint là *cần* nhưng *không đủ* — và đây là lý do fluid-hybrid tồn tại, không phải sở thích.
+
+### 9.3 Pattern A — cột thật, stack trên mobile: `mj-column` + `css-class="fluid"`
+
+Mặc định. Chỉ đánh dấu, không con số:
+
+```njk
+<mj-column css-class="fluid" width="50%">…</mj-column>
+```
+
+`fluid` **không mang số**. Lúc build, `applyFluidMaxWidth` đọc đúng cái `width:<px>` mà MJML đã tự
+ghi vào ghost table Outlook cho cột đó, rồi mirror sang cột thành `max-width` inline. Kết hợp với
+`width:100%` inline của MJML: viewport rộng → side-by-side, viewport hẹp → reflow, **không cần media
+query** → đúng ở cả New Outlook và GANGA. Dưới breakpoint, rule `.fluid` bỏ cap để stack full-width.
+
+Vì px được **suy ra từ chính layout pass của MJML**, đổi padding của section là nó tự đổi theo. Không
+có gì phải giữ đồng bộ, không magic constant, và **Nunjucks không tính gì cả** — trước đây
+`mw(50, 536)` bắt Nunjucks làm toán responsive với `536` gõ tay, coupling với padding, không ai canh.
+
+Nếu output của MJML đổi shape, `assertFluidInjected` **fail build** thay vì âm thầm ship cột không
+cap — hỏng kiểu đó chỉ hiện ra ở đúng hai client mà không preview nào nhìn thấy.
+
+### 9.4 Pattern B — bảng dữ liệu KHÔNG được stack: `mj-table`
+
+Một dòng line-item không phải một cột layout: ba ô phải nằm cùng dòng ở mọi width. Dùng một
+`mj-table` với width ô khai báo rõ, **không** `fluid`, không rule stack; nó co lại bằng cách cho
+wrap đúng ô chịu được (`emails/order-confirmation/sections/items.njk`).
+
+### 9.5 Pattern C — cặp không bao giờ stack: `mj-group`
+
+`mj-group` phát ra `width:%` inline nên cột trong đó không stack ở bất kỳ width nào. Chỉ dùng cho
+đúng việc đó (2 con số ở proof panel của buyer — đọc 2-across trên điện thoại vẫn ổn), tuyệt đối
+không dùng cho thứ cần reflow.
+
+### 9.6 Style riêng cho mobile
+
+Đặt trong **một** khối `max-width:479px`, key theo `css-class` của mình — **không** theo class
+`.mj-column-per-*` do MJML sinh ra: nó dùng chung cho mọi cột cùng phần trăm và đổi khi ta đổi width.
+Và nhớ giới hạn của loại rule này: **Outlook desktop không đọc**, New Outlook + GANGA cũng không —
+nên CSS mobile chỉ để tinh chỉnh (gutter, cỡ chữ), **không bao giờ** để giữ layout. Layout nằm ở
+`fluid` + MJML.
+
+**CÁI BẪY (đã cắn một lần, ghi lại để không cắn lần hai).** Rule `.fluid` ở mobile set
+`display:block` — đúng cho cột đi full-width. Nhưng nếu bạn thu một cột `fluid` để nó nằm
+**N-across** trên mobile thì phải khôi phục `display:inline-block !important`: một **block** rộng 50%
+vẫn xếp dọc, nên ghi đè `width` một mình sẽ cho ra một cột nhồi trong nửa trái màn hình, nửa phải bỏ
+trống.
+
+Lần đầu chính là lúc gộp `.cta-col/.hero-col/.benefit-col/.hero-s-col` + `.eq-col/.feat-col` thành
+một rule `.fluid`: trước đó `.eq-col/.feat-col` **cố tình** không nằm trong danh sách `display:block`,
+nên chúng giữ `inline-block` của MJML và xếp 2-across. Gộp lại là cấp `display:block` cho chúng —
+lưới feature/equipment của supplier vỡ thành 1-across nửa trái, email dài thêm **647px**.
+
+Điều đáng nhớ hơn cả bản fix: **lỗi này không hiện ra trong HTML build, không có gate nào bắt được,
+và `npm run validate` vẫn xanh.** Chỉ render mới thấy. Nên sau khi thêm/sửa một override n-across,
+mở `dist/<name>.preview.html` ở 390px mà xem.
+
+**Hệ quả liên quan:** `office-col` (`blocks/company-legal.njk`) từng là cặp cột duy nhất thiếu
+`fluid` → 2 địa chỉ office stack cả trên desktop ở New Outlook/GANGA trong khi mọi cặp khác thì
+không. Đã thêm `fluid`. Giờ **mọi** cặp cột trong hệ thống đều dùng cùng một cơ chế, không còn ngoại
+lệ nào phải nhớ.
+
+### 9.7 Reserve chiều cao: phải đặt trên `div`, không phải `td`
+
+`min-height` **không áp dụng cho table cell** (CSS 2.1 §10.7), mà MJML đặt `css-class` của `mj-text`
+lên `<td>`. Nên `.feat-title { min-height: 44px }` là **dead code** — nó tồn tại để căn các mô tả
+feature cho thẳng hàng và chưa từng căn được gì. `mj-text` render `<td><div>…</div></td>`, nên
+reservation phải nằm trên div: `.feat-title div { … }`. Cùng pattern với `.stat-num div` vốn đã đúng.
+
+Và bỏ hết reservation ở khối mobile: ở 2-across (~180px/cột) mọi title/label đều vừa một dòng, giữ
+lại chỉ thêm ~100px khoảng trắng cho một vấn đề mobile không có.
+
+### 9.8 Vai trò của Nunjucks
+
+Nunjucks **chỉ** inject nội dung: copy, URL asset, và loop danh sách (`{% for %}`, filter `batch(2)`
+để chia hàng). Nó không sở hữu breakpoint, không tính width, không quyết định stack — đó là việc của
+MJML lúc compile và của `applyFluidMaxWidth` lúc post-render. `createEnv()` **không đăng ký global
+layout nào** cho đúng lý do này: một template cần tính px là template đang làm việc của MJML.
+
+> Lưu ý về loop line-item: `{% for %}` chạy lúc **build**, nên nó là dữ liệu mẫu cố định — đúng cho
+> preview, sai cho send thật (mỗi người nhận một đơn khác nhau). Ở production thay bằng block repeat
+> của hệ thống gửi, nó đi xuyên build y như `{{merge_key}}`. Markup không đổi, chỉ đổi ai lặp.
+
+### 9.9 Kiểm chứng
+
+`dist/sim/<name>.newoutlook.html` (xoá media query) và `.ganga.html` (xoá `<style>`) được ghi ra
+**mỗi lần build**, và có link ngay trong gallery. Mở `.newoutlook.html` ở ~700px và `.ganga.html` ở
+~390px mỗi khi sửa width/padding của cột: layout phải giữ. Chi tiết + ma trận gửi thật:
+`docs/email-testing.md`.

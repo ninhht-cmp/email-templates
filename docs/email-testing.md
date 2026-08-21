@@ -5,9 +5,9 @@ a campaign.
 
 | Layer | What it catches | What it can't | Command |
 |---|---|---|---|
-| **1. Compatibility lint** | Structural/CSS breakage (flex, absolute pos, missing VML, Gmail clip, external CSS, a11y tables) | Anything visual | `npm run lint:email` |
+| **1. Compatibility lint** | Structural/CSS breakage (flex, absolute pos, missing VML, Gmail clip on the *encoded* size, external CSS, a11y tables, **hosted SVG in `<img>`**, **extra breakpoints**, **uncapped fluid columns**) | Anything visual | `npm run lint:email` |
 | **2. Gallery preview** | Reflow & stacking at desktop / mobile width, preview text | Outlook's Word engine quirks (real rendering) | open `dist/index.html` |
-| **3. Client-family sim** | Column collapse in CSS-stripping clients (New Outlook, Gmail GANGA) | Word-engine visuals | `npm run simulate` |
+| **3. Client-family sim** | Column collapse in CSS-stripping clients (New Outlook, Gmail GANGA) | Word-engine visuals | written by `npm run build` → `dist/sim/` |
 | **4. Real send** | Everything, exactly — Outlook desktop especially | — | see below |
 
 ## 1. Compatibility lint
@@ -44,18 +44,32 @@ multi-column layouts in ways the preview can't show — this is what broke the c
 - **New Outlook / Outlook webview** — drops `@media` queries (and the `[if mso]` ghost table).
 - **Gmail app on a non-Google account (GANGA)** — strips all `<style>`.
 
-Both hold only if the layout survives via *inline* widths (the fluid-hybrid `mw-<px>` approach —
-see `build/render-email.ts`). Reproduce them:
+Both hold only if the layout survives via *inline* widths — `css-class="fluid"`, whose max-width is
+read from MJML's own ghost-table width at build time (`build/html-transforms.ts`,
+`docs/architecture.md` §9). `<mj-breakpoint>` alone does **not** hold here: these clients never see
+the media query it compiles to.
+
+The sims are written on **every build** (and linked from the gallery), so there is nothing to run
+first:
 
 ```bash
-npm run build
-npm run simulate     # writes dist/sim/<name>.{newoutlook,ganga}.html
+npm run build         # writes dist/sim/<name>.{newoutlook,ganga}.html
 ```
 
-Open `dist/sim/<name>.newoutlook.html` at ~700px and `<name>.ganga.html` at ~390px. Columns must
-stay laid out — side-by-side on desktop, reflowed (not overflowing/collapsed) on mobile. This is the
-**guard for the `mw-<px>` values**: a wrong one makes columns wrap or leave a gap here. It's still
-Blink, so classic Outlook's Word engine needs layer 4.
+There is no separate simulate command: it re-read the same files off disk and re-applied the same
+two transforms, so it was a second copy of the build's own logic waiting to drift. The sims are
+build output (`build/write-sims.ts`) and the gallery links straight to them.
+
+Open `dist/sim/<name>.newoutlook.html` at ~700px and `<name>.ganga.html` at ~390px. Columns must stay
+laid out — side-by-side on desktop, reflowed (not overflowing/collapsed) on mobile. It's still Blink,
+so classic Outlook's Word engine needs layer 4.
+
+**Two things now fail the build rather than waiting to be caught here**: a `fluid` column that did
+not receive its inline max-width, and a second breakpoint appearing anywhere in the output. The sims
+are for judging the *result*; the invariants are machine-checked.
+
+Start with **`order-confirmation`** — it is the responsive reference template and each of its
+sections is one pattern (stacking columns · non-stacking table · 4→2-across grid).
 
 ## 4. Real send — true fidelity
 
@@ -102,4 +116,6 @@ PY
 ## Where each artifact comes from
 
 - `dist/<name>.html` — shippable, raw `{{keys}}`. **This is what you send / paste into Litmus.**
+- `dist/<name>.txt` — the **text/plain alternative part**. Send it as the second MIME part of every
+  campaign: HTML-only is a spam signal, and these lists are cold-sourced.
 - `dist/<name>.preview.html` — sample-filled, for the gallery preview and self-tests.

@@ -1,73 +1,62 @@
-# Brand tokens — provenance
+# Brand tokens — provenance & conventions
 
-The **runtime source of truth is `src/design-system/tokens.ts`** — the build injects those values into every
-template, so changing a color there updates everywhere on rebuild. This document records what the
-tokens are and where they came from (sampled directly from the approved Figma design). Keep the two
-in sync: if you change `tokens.ts`, reflect it here.
+**Runtime source of truth: `src/design-system/tokens.ts`.** The build injects those values into every
+template, so changing a colour there updates everywhere on rebuild.
 
-## Colors
+**Every value is rendered live at `dist/tokens.html`** (generated FROM `tokens.ts` on each build —
+open it from the gallery's *Design tokens ↗* link). That page is the reference; this document
+deliberately does **not** repeat the values.
 
-**Two-tier orange:** `#F37134` is the most vibrant but fails contrast as text/on-buttons (2.91:1).
-It is used **decoratively only**; anything carrying meaning (links, text, buttons, badge labels)
-uses **`orangeStrong` `#E5641F`** (3.4:1 — clears WCAG AA-large, used on bold CTA/callout text).
-Chosen for brand vibrancy over strict AA-normal on small links (a common, accepted trade-off).
+> Why not: this file used to carry the full colour / type / layout tables next to the instruction
+> "keep the two in sync", and they drifted — four documented hexes (`#FEF1EB`, `#F6C6A6`, `#10233F`,
+> `#25D366`) no longer existed, two live tokens were undocumented, the breakpoint was listed as
+> 600px (it is 480), the button radius as 6px (it is 14), and a hero size that no template used.
+> Hand-maintained copies of machine-readable data drift; the fix is to delete the copy, not to
+> correct it. What stays here is what a generator cannot know: **where the values came from and why**.
 
-| Token | Hex | Where used |
+## Provenance
+
+Colours were sampled from the approved Figma design (coordinate-free extraction from the exported
+design PNG — the Figma file was not shared with edit access). If edit access arrives, pull exact
+`get_variable_defs` tokens and reconcile against `tokens.ts`.
+
+## The two-tier orange — the one decision worth documenting
+
+`#F37134` is the most vibrant brand orange and fails contrast as text (2.91:1 on white). It is
+therefore **decorative only**: accent bars, section-title rules, the hero divider. Never text, never
+a button fill.
+
+Anything carrying meaning uses **`orangeStrong` `#E5641F`** (3.40:1 on white). That clears WCAG
+**AA-large** and was accepted as a brand-vibrancy trade-off for large text.
+
+**Know exactly what that trade-off does and does not cover.** AA-large starts at 18.66px bold /
+24px regular. Measured against the sizes actually shipping:
+
+| Where | Ratio | Verdict |
 |---|---|---|
-| Orange (decorative) | `#F37134` | Accent bar, section-title rules — never text/buttons |
-| Orange strong (text) | `#E5641F` | CTA button, links, callout text, `.brand` emphasis, solid badge |
-| Orange soft (bg) | `#FEF1EB` | Feature icon chip, soft badge background |
-| Orange soft (border) | `#F6C6A6` | Callout border |
-| Navy (secondary) | `#143E69` | Section titles, logo mark, "Become a supplier" button (supplier-onboarding) |
-| Navy deep | `#001942` | "Register free" button (buyer-invitation) — the design's darker CTA fill |
-| Heading / dark text | `#122941` | Headings, greeting, overlines, card labels, company name |
-| Body text | `#4A4A4A` | Paragraph copy, addresses |
-| Muted text | `#4E5A64` | Feature descriptions |
-| Muted text (light) | `#6B7280` | Sender title, microcopy, UEN label |
-| Footer text | `#6B7280` | Unsubscribe line |
-| Hairline / border | `#E6E8EB` | Equipment card border |
-| Divider | `#EDEFF2` | Section dividers |
-| Badge gray (bg) | `#ECECEC` | Vietnam Office badge |
-| Badge gray (text) | `#48505E` | Vietnam Office badge text |
-| WhatsApp green | `#25D366` | Phone icon |
-| Hero fallback (Outlook) | `#10233F` | Behind hero image when blocked |
-| Canvas | `#F4F5F7` | Email background outside the 600px card |
-| Sky bg | `#F1F8FF` | Light-blue hero band (buyer-invitation) |
-| Panel bg | `#EDF0FF` | Inset benefit strip |
-| Panel border | `#CBD7FF` | Vertical rules inside the benefit strip |
+| Stat number, 26px/800 on `panelBg` | 3.00 | AA-large — at the line, no margin (19px/800 on mobile still qualifies) |
+| Reassurance callout, 17px/700 on white | 3.40 | **below** AA-large's 18.66px threshold → needs 4.5 |
+| Primary CTA label, white on `orangeStrong`, 15px/700 | 3.40 | **fails AA** — 15px bold is small text |
+| Inline `comacpro.net` link, 15px | 3.40 | **fails AA** |
+| Solid office badge, white on orange, 11px/700 | 3.40 | **fails AA** |
+| `badge` tone `soft` (orange on `orangeSoftBg`) | 2.70 | **below AA-large** — currently unused by any email, but a live trap in the design system |
 
-## Typography
-
-| Token | Value |
-|---|---|
-| Font stack | `Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif` (Outlook falls back to Arial) |
-| Body | 15px / 1.6 |
-| Greeting | 17px / 700 |
-| Hero headline | 32px / 800 (26px on mobile) |
-| Section overline | 14px / 800, letter-spacing 0.6px |
-| Feature title | 15px / 700 |
-| Small / caption | 12–13px |
-
-## Layout
-
-| Token | Value |
-|---|---|
-| Email width | 600px |
-| Section horizontal padding | 32px (24–26px on grid rows) |
-| Button radius | 6px |
-| Card / callout radius | 8px / 12px |
-| Mobile breakpoint | ≤ 600px (columns stack) |
-
-> Sampled from the design PNG (coordinate-free color extraction). If the Figma file is later shared
-> with edit access, pull exact `get_variable_defs` tokens and reconcile any drift here.
+So the documented justification ("accepted for large text") holds for the stat numbers and nothing
+else. Closing the gap without changing the design's character needs one darker step for
+text-and-button orange only — around `#C9530F` (4.6:1 on white) — leaving `#F37134` / `#E5641F` for
+decorative use. **That is a brand decision, not a build fix, and has not been made.** Recorded here
+so it is a choice rather than an oversight.
 
 ## Scales & conventions
 
-- **Radius** — a real token scale in `tokens.radius` (`sm 8 · md 12 · lg 14 · pill 999`). The
-  design-system components (button → `lg`, badge → `md`) and the `mj-button` head default consume it;
-  new sections should reference `tokens.radius.*` instead of literal px.
-- **Spacing** — follows a **4px rhythm** (4/8/12/16/20/24/32…). Kept as a convention, not a token map:
-  with two emails a spacing scale would be config with no real consumer. Promote to `tokens.space`
-  once a third template needs shared spacing.
-- **Type** — sizes are per-role (body 15, small 13, meta 12, section title 16, intro 17, hero 22–24).
-  Same rationale as spacing — documented here, promote to `tokens.type` when a third template shares them.
+- **Radius** — a real token scale in `tokens.radius` (`sm · md · lg · pill`). The design-system
+  components (button → `lg`, badge → `md`) and the `mj-button` head default consume it; new sections
+  should reference `tokens.radius.*` instead of literal px.
+- **Spacing** — follows a **4px rhythm** (4/8/12/16/20/24/32…). Kept as a convention, not a token
+  map: with three emails a spacing scale would be config with no real consumer. Promote to
+  `tokens.space` once several templates genuinely share values.
+- **Type** — sizes are per-role and authored in the sections (body 15, small 13, meta 12, section
+  title 16, greeting 17, hero 22–24). Same rationale as spacing.
+- **Breakpoint** — *not* a token in `tokens.ts`. It lives in `BREAKPOINT_PX` (`build/config.ts`) and
+  is declared to MJML by `<mj-breakpoint>` in `design-system/head.njk`, because it is a build
+  invariant the pipeline verifies — not a brand value. See `docs/architecture.md` §9.
