@@ -3,8 +3,7 @@
 {$ sectionTitle('WHY PARTNER WITH COMACPRO?', tokens) $}
 <mj-section padding="20px 20px 8px 20px">
   {% for feature in content.features %}
-  {# content = 600 − 2×20 (section padding) = 560 #}
-  <mj-column css-class="feat-col {$ mw(25, 560) $}" width="25%" padding="0 6px">
+  <mj-column css-class="feat-col fluid" width="25%" padding="0 6px">
     <mj-text align="center" padding="0 0 12px 0">
       {# width/height as HTML ATTRIBUTES (not CSS-only): Gmail app ignores CSS width/height on a
          <td> with no attribute and shrinks the pastel chip to the icon. Attributes are honored. #}

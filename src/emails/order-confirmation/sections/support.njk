@@ -1,0 +1,17 @@
+{% from "design-system/components/button.njk" import button %}
+{#
+  Closing CTA. One column, one button — a transactional email has exactly one thing to offer, and
+  the button is MJML's bulletproof one (VML-backed) so it is a real clickable block in Outlook.
+#}
+<mj-section padding="20px 32px 0 32px">
+  <mj-column><mj-divider border-width="1px" border-color="{$ tokens.color.divider $}" padding="0" /></mj-column>
+</mj-section>
+
+<mj-section padding="20px 40px 4px 40px">
+  <mj-column>
+    <mj-text align="center" color="{$ tokens.color.body $}" font-size="14px" line-height="1.55" padding="0 0 18px 0">
+      {$ content.support.text $}
+    </mj-text>
+    {$ button(content.support.cta, '{{order_status_url}}', tokens.color.navyDeep) $}
+  </mj-column>
+</mj-section>

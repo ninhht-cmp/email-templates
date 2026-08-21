@@ -1,0 +1,46 @@
+{% from "design-system/components/section-title.njk" import sectionTitle %}
+{#
+  PATTERN B — a data TABLE, which is the one case where mj-column is the wrong tool.
+
+  A line-item row is not a layout column: the three cells must stay on one line at every width (a
+  stacked "Komatsu PC200-8 / 1 / USD 48,500" is unreadable), and a table is what screen readers and
+  Outlook's Word engine both handle best. So this is one mj-table with explicit column widths and
+  NO `fluid`, NO stacking rule. It shrinks by reflowing the item name, which is the only cell that
+  can afford to wrap.
+
+  padding="0" is required: mj-table defaults to 10px 25px, which would eat 50px of the 536px body.
+
+  ── ON THE LOOP ────────────────────────────────────────────────────────────────────────────────
+  Nunjucks loops content.lineItems at BUILD time, so what you see here is fixed sample data — the
+  right thing for a preview, the wrong thing for a real send, where the rows differ per recipient.
+  For production, replace the `{% for %}` with your sending system's own repeat block, which passes
+  through the build untouched exactly like `{{merge_keys}}` do. E.g. Handlebars-style:
+      {$ '{{#each items}}' $} … {$ '{{/each}}' $}
+  with `{{name}} / {{qty}} / {{price}}` inside. Keep ONE <tr> per row either way — the markup does
+  not change, only who repeats it.
+#}
+{$ sectionTitle('ORDER SUMMARY', tokens) $}
+<mj-section padding="14px 32px 0 32px">
+  <mj-column>
+    <mj-table width="100%" padding="0" role="presentation" cellpadding="0" cellspacing="0" font-size="13px" line-height="1.45">
+      <tr>
+        <th align="left" style="padding:0 0 8px 0;border-bottom:1px solid {$ tokens.color.hairline $};font-size:11px;font-weight:700;letter-spacing:0.6px;color:{$ tokens.color.mutedLight $};">ITEM</th>
+        <th align="center" width="48" style="padding:0 0 8px 0;border-bottom:1px solid {$ tokens.color.hairline $};font-size:11px;font-weight:700;letter-spacing:0.6px;color:{$ tokens.color.mutedLight $};">QTY</th>
+        <th align="right" width="112" style="padding:0 0 8px 0;border-bottom:1px solid {$ tokens.color.hairline $};font-size:11px;font-weight:700;letter-spacing:0.6px;color:{$ tokens.color.mutedLight $};">AMOUNT</th>
+      </tr>
+      {% for item in content.lineItems %}
+      <tr>
+        <td align="left" style="padding:11px 8px 11px 0;border-bottom:1px solid {$ tokens.color.divider $};color:{$ tokens.color.heading $};font-weight:600;">{$ item.name | e $}</td>
+        <td align="center" style="padding:11px 0;border-bottom:1px solid {$ tokens.color.divider $};color:{$ tokens.color.body $};">{$ item.qty $}</td>
+        <td align="right" style="padding:11px 0;border-bottom:1px solid {$ tokens.color.divider $};color:{$ tokens.color.heading $};font-weight:600;white-space:nowrap;">{$ item.price $}</td>
+      </tr>
+      {% endfor %}
+      {% for total in content.totals %}
+      <tr>
+        <td colspan="2" align="right" style="padding:{$ '12px 8px 0 0' if loop.first else '6px 8px 0 0' $};color:{$ tokens.color.heading if total.strong else tokens.color.muted $};font-size:{$ '15px' if total.strong else '13px' $};font-weight:{$ '700' if total.strong else '500' $};">{$ total.label $}</td>
+        <td align="right" style="padding:{$ '12px 0 0 0' if loop.first else '6px 0 0 0' $};color:{$ tokens.color.orangeStrong if total.strong else tokens.color.heading $};font-size:{$ '17px' if total.strong else '13px' $};font-weight:700;white-space:nowrap;">{$ total.value $}</td>
+      </tr>
+      {% endfor %}
+    </mj-table>
+  </mj-column>
+</mj-section>

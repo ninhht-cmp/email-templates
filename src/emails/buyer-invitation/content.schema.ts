@@ -1,18 +1,20 @@
 // Shape contract for the buyer-invitation email. Kept separate from the data (content.ts) so the
 // schema can be reviewed independently; the inferred type documents the content model.
 import { z } from 'zod';
-import { companySchema, complianceSchema } from '../../blocks/shared-content.schema.ts';
+import {
+  companySchema,
+  complianceSchema,
+  sharedAssetsSchema,
+} from '../../blocks/shared-content.schema.ts';
 
 export const contentSchema = z.object({
   document: z.object({ title: z.string(), preview: z.string() }),
 
-  assets: z.object({
-    logo: z.string(),
+  // Brand logo + signature icons come from sharedAssetsSchema; the rest is this email's own art.
+  assets: sharedAssetsSchema.extend({
     /** Hero composite: browser mock + "Comacpro.net" pill, pre-flattened (see README). */
     heroBrowser: z.string(),
     avatar: z.string(),
-    whatsappIcon: z.string(),
-    emailIcon: z.string(),
   }),
 
   hero: z.object({ heading: z.string(), subline: z.string() }),

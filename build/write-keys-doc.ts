@@ -20,6 +20,16 @@ export const keyDescriptions: Record<string, string> = {
   sender_avatar: 'Full HTTPS URL of the rep photo (any ratio — object-fit crops it to a circle)',
   unsubscribe:
     'Footer unsubscribe link (href of the "Unsubscribe" text). It MUST hold a real URL at send time or the link breaks — so the sent email matches the preview. Either your ESP\'s unsubscribe toggle populates this {{unsubscribe}} tag, or you map it to your unsubscribe URL like any other variable. Confirm with a real test (Show original → the href is a URL, not literal {{unsubscribe}}).',
+
+  // order-confirmation (transactional): all per-order data the sending system pulls from the order.
+  order_number: 'Order reference as shown to the customer, e.g. CMP-2026-04817',
+  order_date: "Order date, already formatted for the recipient's locale",
+  payment_method: 'Payment method as agreed, e.g. "Telegraphic transfer (T/T)"',
+  delivery_city: 'Delivery destination, city + country',
+  order_total:
+    'Grand total WITH currency, e.g. "USD 63,650" — the template adds no currency symbol',
+  order_status_url:
+    "Deep link to this order's status page — per-recipient, and the only CTA in the email",
 };
 
 export interface KeysDocEmail {
@@ -27,16 +37,21 @@ export interface KeysDocEmail {
   category: string;
   subject: string;
   requiredKeys: string[];
+  /** This email's `meta.previewSamples` — per-email samples override/extend the shared defaults. */
+  previewSamples?: Record<string, string>;
 }
 
 /** Emit dist/KEYS.md — the per-email merge-key reference, generated from meta.requiredKeys. */
 export function writeKeysDoc(outDir: string, emails: KeysDocEmail[], builtAt: string): void {
   const sections = emails
     .map((email) => {
+      // Same precedence as the build: per-email samples win over the shared defaults. Reading only
+      // the shared map left every key an email defines itself showing "—" in this reference.
+      const samples = { ...previewSamples, ...(email.previewSamples ?? {}) };
       const rows = email.requiredKeys
         .map((key) => {
           const description = keyDescriptions[key] ?? '—';
-          const sample = previewSamples[key] ? `\`${previewSamples[key]}\`` : '—';
+          const sample = samples[key] ? `\`${samples[key]}\`` : '—';
           return `| \`{{${key}}}\` | ${description} | ${sample} |`;
         })
         .join('\n');

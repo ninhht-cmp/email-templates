@@ -47,8 +47,7 @@
   <mj-section background-color="{$ tokens.color.panelBg $}" border-radius="0 0 12px 12px"
               padding="12px 6px 16px 6px">
     {% for benefit in content.benefits %}
-    {# content = 600 − 2×32 (wrapper) − 2×6 (section) = 524 #}
-    <mj-column css-class="benefit-col {$ mw(33.33, 524) $}" width="33.33%" vertical-align="middle" padding="6px 8px">
+    <mj-column css-class="benefit-col fluid" width="33.33%" vertical-align="middle" padding="6px 8px">
       {# padding="0" is required: mj-table defaults to 10px 25px, which would leave the label
          ~60px and break words mid-word inside a column this narrow. #}
       <mj-table width="100%" padding="0" role="presentation" cellpadding="0" cellspacing="0">

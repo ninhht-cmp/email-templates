@@ -1,16 +1,18 @@
 // Shape contract for this email's content. Kept separate from the data (content.ts) so the
 // schema can be reviewed/reused independently. The inferred type documents the content model.
 import { z } from 'zod';
-import { companySchema, complianceSchema } from '../../blocks/shared-content.schema.ts';
+import {
+  companySchema,
+  complianceSchema,
+  sharedAssetsSchema,
+} from '../../blocks/shared-content.schema.ts';
 
 export const contentSchema = z.object({
   document: z.object({ title: z.string(), preview: z.string() }),
-  assets: z.object({
-    logo: z.string(),
+  // Brand logo + signature icons come from sharedAssetsSchema; the rest is this email's own art.
+  assets: sharedAssetsSchema.extend({
     hero: z.string(),
     avatar: z.string(),
-    whatsappIcon: z.string(),
-    emailIcon: z.string(),
   }),
   hero: z.object({ heading: z.string(), subline: z.string() }),
   features: z.array(z.object({ icon: z.string(), title: z.string(), desc: z.string() })),

@@ -6,7 +6,7 @@
 // URL after each run). Send-time {{merge_tags}} stay inline.
 
 // Content for the shared legal footer block — same in every campaign.
-import { company, compliance } from '../../blocks/shared-content.ts';
+import { company, compliance, sharedAssets } from '../../blocks/shared-content.ts';
 import { type BuyerInvitationContent, contentSchema } from './content.schema.ts';
 
 // Flags come straight from flagcdn (already hosted — nothing to upload). `h40` is 60×40, i.e. 2×
@@ -22,11 +22,9 @@ export const content: BuyerInvitationContent = contentSchema.parse({
   },
 
   assets: {
-    logo: `../src/emails/buyer-invitation/assets/comacpro-logo.png`,
-    heroBrowser: `../src/emails/buyer-invitation/assets/hero-browser.png`,
+    ...sharedAssets, // logo + signature contact icons (shared, not per-campaign)
+    heroBrowser: '../src/emails/buyer-invitation/assets/hero-browser.png',
     avatar: '{{sender_avatar}}', // per-sender, filled at send time
-    whatsappIcon: `../src/emails/buyer-invitation/assets/icons/whatsapp.svg`,
-    emailIcon: `../src/emails/buyer-invitation/assets/icons/email.svg`,
   },
 
   hero: {

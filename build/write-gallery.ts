@@ -3,7 +3,12 @@ import { writeFileSync } from 'node:fs';
 export interface BuiltEmail {
   name: string;
   kb: string;
+  /** Quoted-printable-encoded size of the minified HTML — what Gmail's clip limit measures. */
+  shippableKb: string;
   category: string;
+  /** The two things you have to paste into the ESP alongside the HTML. */
+  subject: string;
+  preview: string;
 }
 
 /**
@@ -26,18 +31,31 @@ export function writeGallery(
   minByEmail: Record<string, string>,
   samples: Record<string, string>,
 ): void {
+  // Buttons in a toolbar, not options in a listbox: a <button role="option"> is invalid ARIA (an
+  // option may not be a button), and a plain button list is already keyboard-operable.
   const cards = built
     .map(
       (e, i) =>
-        `<button class="card${i === 0 ? ' active' : ''}" data-name="${e.name}" role="option" aria-selected="${i === 0}">
+        `<button class="card${i === 0 ? ' active' : ''}" data-name="${e.name}" aria-current="${i === 0}">
             <span class="card-top"><span class="card-name">${e.name}</span><span class="chip chip-${e.category}">${e.category}</span></span>
-            <span class="card-kb">${e.kb} KB</span>
+            <span class="card-kb">${e.shippableKb} KB sent</span>
           </button>`,
     )
     .join('\n          ');
 
   const data = JSON.stringify(
-    Object.fromEntries(built.map((e) => [e.name, { kb: e.kb, category: e.category }])),
+    Object.fromEntries(
+      built.map((e) => [
+        e.name,
+        {
+          kb: e.kb,
+          shippableKb: e.shippableKb,
+          category: e.category,
+          subject: e.subject,
+          preview: e.preview,
+        },
+      ]),
+    ),
   );
   const names = JSON.stringify(built.map((e) => e.name));
   const keys = JSON.stringify(keysByEmail);
@@ -155,6 +173,31 @@ export function writeGallery(
   .caption{display:flex;align-items:baseline;gap:9px;justify-content:center;margin-bottom:16px;}
   .caption .name{font-weight:600;font-size:14px;letter-spacing:-.01em;}
   .caption .meta{color:var(--muted);font-size:11.5px;font-variant-numeric:tabular-nums;}
+
+  /* Inbox row — the subject + preheader as the recipient first sees them, above the frame. These
+     are the two strings you must paste into the ESP next to the HTML, and they used to live only in
+     KEYS.md; the mock also makes a too-short preheader visible instead of theoretical. */
+  .inbox{width:100%;max-width:700px;margin:0 auto 18px;background:var(--surface);border:1px solid var(--border);
+         border-radius:var(--r-md);box-shadow:var(--shadow-sm);overflow:hidden;}
+  .inbox-hd{display:flex;align-items:center;gap:8px;padding:8px 13px;border-bottom:1px solid var(--border);
+            font-size:10.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);}
+  .inbox-row{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;}
+  .inbox-av{width:34px;height:34px;flex:none;border-radius:var(--r-pill);background:var(--brand-soft);color:var(--brand);
+            display:grid;place-items:center;font-weight:700;font-size:12.5px;}
+  .inbox-main{min-width:0;flex:1;}
+  .inbox-line{display:flex;align-items:baseline;gap:8px;}
+  .inbox-subj{font-weight:600;font-size:13.5px;color:var(--ink);}
+  .inbox-pre{color:var(--muted);font-size:12.5px;margin-top:3px;
+             display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;}
+  .inbox-pre .cut{color:var(--faint);}
+  .icopy{flex:none;width:27px;height:27px;border-radius:7px;border:1px solid var(--border);background:transparent;
+         display:grid;place-items:center;color:var(--muted);transition:.14s var(--ease);}
+  .icopy:hover{border-color:var(--brand);color:var(--brand);}
+  .icopy.ok{border-color:var(--ok);color:var(--ok);}
+  .icopy svg{width:13px;height:13px;}
+  .sim-links{display:flex;gap:14px;justify-content:center;margin:-4px 0 18px;font-size:11.5px;}
+  .sim-links a{color:var(--muted);text-decoration:none;border-bottom:1px dotted var(--border-strong);}
+  .sim-links a:hover{color:var(--ink);}
   .seg{display:inline-flex;gap:2px;}
   .seg button{border:0;background:transparent;border-radius:var(--r-pill);padding:6px 13px;font-size:12.5px;font-weight:500;color:var(--muted);transition:.14s var(--ease);}
   .seg button:hover{color:var(--ink);}
@@ -255,7 +298,7 @@ export function writeGallery(
     </button>
   </header>
   <div class="layout">
-    <nav class="sidebar" role="listbox" aria-label="Templates">
+    <nav class="sidebar" aria-label="Templates">
           <div class="side-label">Templates</div>
           ${cards}
           <div class="hint">Switch with <kbd>↑</kbd> <kbd>↓</kbd></div>
@@ -282,6 +325,24 @@ export function writeGallery(
             <label class="fb-check" title="Simulate the sending system's unsubscribe toggle ({{#if unsubscribe}})"><input type="checkbox" id="unsubSim" checked> Unsubscribe</label>
           </div>
           <div class="caption"><span class="name" id="crumbName"></span><span class="meta" id="crumbMeta"></span></div>
+          <div class="inbox">
+            <div class="inbox-hd">Inbox row — subject &amp; preheader</div>
+            <div class="inbox-row">
+              <span class="inbox-av">CP</span>
+              <div class="inbox-main">
+                <div class="inbox-line"><span class="inbox-subj" id="ibSubject"></span></div>
+                <div class="inbox-pre" id="ibPreview"></div>
+              </div>
+              <button class="icopy" id="copySubject" title="Copy subject line" aria-label="Copy subject line">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="sim-links">
+            <a id="lnkText" target="_blank" rel="noopener" title="text/plain alternative part">Text part ↗</a>
+            <a id="lnkNewOutlook" target="_blank" rel="noopener" title="Media queries stripped — open at ~700px">New Outlook sim ↗</a>
+            <a id="lnkGanga" target="_blank" rel="noopener" title="All &lt;style&gt; stripped — open at ~390px">Gmail GANGA sim ↗</a>
+          </div>
           <div class="device" id="device" style="width:700px">
             <div class="device-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="device-url" id="devUrl"></span></div>
             <iframe id="frame" title="email preview"></iframe>
@@ -343,7 +404,28 @@ export function writeGallery(
     });
 
     var CHECK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
-    function toast(m){ toastEl.innerHTML=CHECK+'<span>'+m+'</span>'; toastEl.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(function(){toastEl.classList.remove('show');},2000); }
+    var WARN='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v5M12 17h.01M10.3 3.9 2.4 18a1.8 1.8 0 0 0 1.6 2.7h16a1.8 1.8 0 0 0 1.6-2.7L13.7 3.9a1.8 1.8 0 0 0-3.4 0Z"/></svg>';
+    function toast(m,bad){ toastEl.innerHTML=(bad?WARN:CHECK)+'<span>'+m+'</span>'; toastEl.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(function(){toastEl.classList.remove('show');},bad?4000:2000); }
+
+    // Copy that TELLS YOU THE TRUTH. navigator.clipboard needs a secure context, so it is absent
+    // when the gallery is opened as a file:// page — which is the normal local workflow. The old
+    // code fell through to the success path there and said "Copied" with an empty clipboard, i.e.
+    // you shipped nothing and believed you had. Now: async API, then execCommand on a temporary
+    // textarea, and if both fail, say so instead of claiming success.
+    function copyText(text, onDone){
+      function fallback(){
+        var ta=document.createElement('textarea');
+        ta.value=text; ta.setAttribute('readonly','');
+        ta.style.cssText='position:fixed;top:0;left:-9999px;opacity:0;';
+        document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0,text.length);
+        var ok=false; try{ ok=document.execCommand('copy'); }catch(e){ ok=false; }
+        document.body.removeChild(ta);
+        onDone(ok);
+      }
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(function(){onDone(true);}, fallback);
+      } else fallback();
+    }
 
     // Render the preview into the iframe via srcdoc — the sample-filled minified HTML, with
     // handlebars if-blocks evaluated (kept iff a sample exists; the Unsubscribe checkbox flips
@@ -356,29 +438,69 @@ export function writeGallery(
     }
     // Size the iframe to its content so it never scrolls internally (the email footer stays reachable
     // by scrolling the canvas, not a second scrollbar inside the frame). srcdoc is same-origin.
+    //
+    // Driven by a ResizeObserver on the iframe's own <body>, not a pair of guessed timeouts: the
+    // height changes whenever an image decodes, a web font swaps in, or the width toggle reflows the
+    // email, and a fixed 150/600ms pair raced all three (a slow image left the frame short and the
+    // footer clipped). The observer fires on the real event, every time.
     function fitFrame(){
       try{ var d=frame.contentDocument; if(d&&d.body){ frame.style.height=Math.ceil(d.body.scrollHeight)+'px'; } }catch(e){}
     }
-    frame.addEventListener('load', fitFrame);
+    var frameObserver=null;
+    function watchFrame(){
+      try{
+        var d=frame.contentDocument; if(!d||!d.body) return;
+        if(frameObserver) frameObserver.disconnect();
+        if(typeof ResizeObserver==='function'){
+          frameObserver=new ResizeObserver(fitFrame);
+          frameObserver.observe(d.body);
+        }
+        // Images have no layout size until they decode; each one nudges the height when it lands.
+        Array.prototype.forEach.call(d.images,function(img){
+          if(!img.complete) img.addEventListener('load',fitFrame,{once:true});
+        });
+        fitFrame();
+      }catch(e){}
+    }
+    frame.addEventListener('load', watchFrame);
     function renderPreview(){
       if(!current) return;
       var s = $('unsubSim').checked ? samples : Object.assign({}, samples, {unsubscribe:null});
       frame.srcdoc = fillPreview(minHtml(current), s);
-      setTimeout(fitFrame,150); setTimeout(fitFrame,600); // retry once images decode
     }
+    // Gmail shows roughly this much of the preheader next to the subject; past it the client stops
+    // reading. Marking the cut-off is how you SEE that a preheader is too short and the client will
+    // pull body copy in after it (design-system/preheader.njk pads against exactly that).
+    var PREHEADER_VISIBLE=110;
     function select(name){
       if(names.indexOf(name)<0) name=names[0];
       current=name;
       renderPreview();
+      var d=data[name];
       $('devUrl').textContent=name+'.preview.html';
       $('crumbName').textContent=name;
-      $('crumbMeta').textContent=data[name].kb+' KB · '+data[name].category;
+      $('crumbMeta').textContent=d.shippableKb+' KB sent · '+d.kb+' KB raw · '+d.category;
       $('openRaw').href='./'+name+'.html';
+      $('lnkText').href='./'+name+'.txt';
+      $('lnkNewOutlook').href='./sim/'+name+'.newoutlook.html';
+      $('lnkGanga').href='./sim/'+name+'.ganga.html';
+      $('ibSubject').textContent=d.subject;
+      $('ibPreview').innerHTML = d.preview.length>PREHEADER_VISIBLE
+        ? esc(d.preview.slice(0,PREHEADER_VISIBLE))+'<span class="cut">'+esc(d.preview.slice(PREHEADER_VISIBLE))+'</span>'
+        : esc(d.preview)+'<span class="cut"> · '+(PREHEADER_VISIBLE-d.preview.length)+' chars short of the visible strip — padded so the client can\\'t pull body copy in</span>';
       Array.prototype.forEach.call(document.querySelectorAll('.card'),function(b){
-        var on=b.getAttribute('data-name')===name; b.classList.toggle('active',on); b.setAttribute('aria-selected',on);
+        var on=b.getAttribute('data-name')===name; b.classList.toggle('active',on); b.setAttribute('aria-current',on);
       });
       if(location.hash.slice(1)!==name) history.replaceState(null,'','#'+name);
     }
+    $('copySubject').addEventListener('click',function(){
+      var btn=this;
+      copyText(data[current].subject,function(ok){
+        if(!ok){ toast('Could not copy — select the subject and copy manually',true); return; }
+        btn.classList.add('ok'); btn.innerHTML=CHECK; toast('Copied subject');
+        setTimeout(function(){btn.classList.remove('ok'); btn.innerHTML=COPY;},1400);
+      });
+    });
     Array.prototype.forEach.call(document.querySelectorAll('.card'),function(b){
       b.addEventListener('click',function(){select(b.getAttribute('data-name'));});
     });
@@ -386,8 +508,8 @@ export function writeGallery(
       b.addEventListener('click',function(){
         Array.prototype.forEach.call(document.querySelectorAll('#wseg button'),function(x){x.classList.remove('active');});
         b.classList.add('active'); device.style.width=b.getAttribute('data-w')+'px';
-        // Narrower width reflows the email taller — re-fit the iframe so it never scrolls on its own.
-        setTimeout(fitFrame,60); setTimeout(fitFrame,300);
+        // The narrower width reflows the email taller; the ResizeObserver on the iframe body picks
+        // that up on its own, so there is nothing to time here.
       });
     });
     // Unsubscribe checkbox mirrors the sending system's {{#if unsubscribe}} toggle: re-render the
@@ -396,7 +518,42 @@ export function writeGallery(
 
     // Merge-keys modal
     var COPY='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
-    function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+    function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+    // ── Modal focus management ────────────────────────────────────────────────────────────────
+    // Both dialogs declare role="dialog" aria-modal="true", which PROMISES a screen reader and a
+    // keyboard user that focus is inside and cannot leave. Nothing was enforcing it: focus stayed on
+    // the page behind, Tab walked the hidden toolbar, and closing left focus nowhere. This keeps the
+    // promise — focus in on open, cycled on Tab, restored to the trigger on close.
+    var lastFocus=null;
+    function focusables(root){
+      return Array.prototype.filter.call(
+        root.querySelectorAll('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])'),
+        function(el){ return !el.disabled && el.offsetParent !== null; });
+    }
+    function openModal(overlay, focusFirst){
+      lastFocus=document.activeElement;
+      overlay.classList.add('open');
+      var list=focusables(overlay);
+      (focusFirst||list[0]||overlay).focus();
+    }
+    function closeModal(overlay){
+      overlay.classList.remove('open');
+      if(lastFocus && lastFocus.focus) lastFocus.focus();
+      lastFocus=null;
+    }
+    function trapTab(e){
+      if(e.key!=='Tab') return;
+      var overlay=document.querySelector('.overlay.open');
+      if(!overlay) return;
+      var list=focusables(overlay);
+      if(list.length===0) return;
+      var first=list[0], last=list[list.length-1];
+      if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
+      else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
+    }
+    document.addEventListener('keydown', trapTab);
+
     function openKeys(){
       var list=keys[current]||[];
       $('mSub').textContent=current+' · '+list.length+' key'+(list.length===1?'':'s');
@@ -408,15 +565,16 @@ export function writeGallery(
       Array.prototype.forEach.call($('klist').querySelectorAll('.k-copy'),function(btn){
         btn.addEventListener('click',function(){
           var key=btn.getAttribute('data-key');
-          function done(){ btn.classList.add('ok'); btn.innerHTML=CHECK; toast('Copied '+key);
-            setTimeout(function(){btn.classList.remove('ok'); btn.innerHTML=COPY;},1400); }
-          if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(key).then(done).catch(done);
-          else done();
+          copyText(key,function(ok){
+            if(!ok){ toast('Could not copy '+key+' — copy it from the row manually',true); return; }
+            btn.classList.add('ok'); btn.innerHTML=CHECK; toast('Copied '+key);
+            setTimeout(function(){btn.classList.remove('ok'); btn.innerHTML=COPY;},1400);
+          });
         });
       });
-      $('overlay').classList.add('open');
+      openModal($('overlay'), $('mClose'));
     }
-    function closeKeys(){ $('overlay').classList.remove('open'); }
+    function closeKeys(){ if($('overlay').classList.contains('open')) closeModal($('overlay')); }
     $('keysbtn').addEventListener('click',openKeys);
     $('mClose').addEventListener('click',closeKeys);
     $('overlay').addEventListener('click',function(e){ if(e.target===$('overlay')) closeKeys(); });
@@ -457,25 +615,35 @@ export function writeGallery(
         inp.addEventListener('input',refreshAssets);
       });
       refreshAssets();
-      $('overlay2').classList.add('open');
+      // Focus the first input that still needs a hosted URL — that is the actual task in this modal.
+      openModal($('overlay2'), $('alist').querySelector('.a-input[data-required]'));
     }
-    function closeAssets(){ $('overlay2').classList.remove('open'); }
+    function closeAssets(){ if($('overlay2').classList.contains('open')) closeModal($('overlay2')); }
     $('assetbtn').addEventListener('click',openAssets);
     $('aClose').addEventListener('click',closeAssets);
     $('overlay2').addEventListener('click',function(e){ if(e.target===$('overlay2')) closeAssets(); });
     $('acopy').addEventListener('click',function(){
       if(this.getAttribute('aria-disabled')==='true') return; // gated: local assets not all hosted
-      var out=assetSrc, changed=0;
+      // Substitute LONGEST ORIGINAL FIRST. These are plain substring replacements, so when one asset
+      // URL is a prefix of another ("…/logo.png" vs "…/logo.png?w=64", which is exactly how the
+      // hosted equipment images are written) doing the short one first corrupts the long one into
+      // "<new-url>?w=64". Longest-first makes prefix collisions impossible.
+      var edits=[];
       Array.prototype.forEach.call($('alist').querySelectorAll('.a-input'),function(inp){
         var orig=inp.getAttribute('data-orig'), val=inp.value.trim();
-        if(val && val!==orig){ out=out.split(orig).join(val); changed++; }
+        if(val && val!==orig) edits.push({orig:orig, val:val});
       });
-      var btn=this, span=btn.querySelector('span'), old=span.textContent;
-      function done(){ btn.classList.add('ok'); span.textContent='Copied';
-        toast('Copied HTML — '+current+(changed?' ('+changed+' asset'+(changed===1?'':'s')+' set)':''));
-        setTimeout(function(){btn.classList.remove('ok'); span.textContent=old;},1500); }
-      if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(out).then(done).catch(done);
-      else done();
+      edits.sort(function(a,b){ return b.orig.length-a.orig.length; });
+      var out=assetSrc;
+      edits.forEach(function(e){ out=out.split(e.orig).join(e.val); });
+
+      var btn=this, span=btn.querySelector('span'), old=span.textContent, n=edits.length;
+      copyText(out,function(ok){
+        if(!ok){ toast('Could not copy — open '+current+'.min.html and copy from there',true); return; }
+        btn.classList.add('ok'); span.textContent='Copied';
+        toast('Copied HTML — '+current+(n?' ('+n+' asset'+(n===1?'':'s')+' set)':''));
+        setTimeout(function(){btn.classList.remove('ok'); span.textContent=old;},1500);
+      });
     });
     document.addEventListener('keydown',function(e){
       if(e.target.tagName==='INPUT'||e.metaKey||e.ctrlKey) return;

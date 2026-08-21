@@ -1,0 +1,32 @@
+{#
+  PATTERN A — two real columns that must stack on mobile. The default choice.
+
+  MJML's own model: one mj-section, N mj-columns. `css-class="fluid"` is the only addition, and it
+  carries no number — the build reads MJML's ghost-table width and injects it as an inline
+  max-width, which is what keeps the pair side-by-side in New Outlook / Gmail-GANGA where the
+  breakpoint media query never arrives. Below the breakpoint the shared `.fluid` rule drops the cap
+  and MJML's own stacking takes over.
+
+  Nunjucks loops the FACTS (content); it decides nothing about layout. Four facts render as 2×2
+  because two 50% columns per section is a layout decision made here, in MJML, not computed.
+#}
+{# `batch(2)` chunks the flat fact list into rows of two — Nunjucks' own filter for exactly this.
+   (Not a slice expression: Nunjucks has no Python-style `[:2]`, it silently yields nothing.) #}
+{% for row in content.orderFacts | batch(2) %}
+<mj-section padding="{$ '18px 32px 0 32px' if loop.first else '14px 32px 0 32px' $}">
+  {% for fact in row %}
+  <mj-column css-class="fluid" width="50%" vertical-align="top" padding="{$ '0 12px 0 0' if loop.first else '0' $}">
+    <mj-text color="{$ tokens.color.mutedLight $}" font-size="11px" font-weight="700" letter-spacing="0.6px" padding="0 0 4px 0">
+      {$ fact.label | upper $}
+    </mj-text>
+    <mj-text color="{$ tokens.color.heading $}" font-size="14px" font-weight="600" padding="0">
+      {$ '{{' + fact.key + '}}' $}
+    </mj-text>
+  </mj-column>
+  {% endfor %}
+</mj-section>
+{% endfor %}
+
+<mj-section padding="22px 32px 0 32px">
+  <mj-column><mj-divider border-width="1px" border-color="{$ tokens.color.divider $}" padding="0" /></mj-column>
+</mj-section>

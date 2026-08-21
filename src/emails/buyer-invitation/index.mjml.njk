@@ -10,34 +10,29 @@
   <mj-head>
     {% include "design-system/head.njk" %}
     <mj-title>{$ content.document.title $}</mj-title>
-    <mj-preview>{$ content.document.preview $}</mj-preview>
+    {% include "design-system/preheader.njk" %}
 
     {# Styles for sections that only this email has — kept here rather than in the shared head
-       so other emails do not carry rules they never use. #}
+       so other emails do not carry rules they never use.
+
+       ONE mobile block, same breakpoint as everything else (479 = BREAKPOINT_PX − 1). This used to
+       carry a SECOND query at max-width:359px to shrink the stats one more step for iPhone-SE-class
+       screens — web-CSS multi-breakpoint thinking. It's gone: the sizes below are the ones that fit
+       at 320px, so they fit at every mobile width and there is nothing to tune per device. The cost
+       is 2px of digit height between 360-479px; the gain is one mobile state instead of two. #}
     <mj-style>
       @media only screen and (max-width:479px) {
         /* The two stats stay side-by-side at every width via mj-group (inline 50%), so no width
-           re-assertion is needed here — only the mobile sizing below.
+           re-assertion is needed here — only the mobile sizing.
            Half of a phone screen is ~120px of usable column, so the desktop sizes no longer fit:
            the number was breaking mid-digit ("200,00 / 0+" at 320px) and only ONE label wrapped,
            leaving the pair lopsided. Shrink both, reclaim the column gutters, and pin the number
            to a single line — MJML puts `word-break: break-word` on the cell, which is what let a
-           run of digits break in the first place. */
+           run of digits break in the first place. 19px/10px is what keeps BOTH labels on one line
+           down to 320px ("EQUIPMENT LISTINGS" is the long one). */
         .stat-col td { padding-left: 2px !important; padding-right: 2px !important; }
-        .stat-num div { font-size: 21px !important; white-space: nowrap !important; }
-        .stat-lbl div { font-size: 11px !important; letter-spacing: 0 !important; }
-        /* Paired CTAs: stack full-width with a gap. The side gutters live on the inner td
-           (MJML puts column padding there), so both have to be cleared. */
-        .cta-col { padding: 0 0 12px 0 !important; }
-        .cta-col td { padding-left: 0 !important; padding-right: 0 !important; }
-      }
-
-      /* Sub-360px (iPhone SE 1st gen and similar). At 11px "EQUIPMENT LISTINGS" no longer fits one
-         line while the shorter "VERIFIED SUPPLIERS" still does, leaving the pair lopsided. One step
-         smaller keeps both on a single line rather than reserving two lines at every width. */
-      @media only screen and (max-width:359px) {
-        .stat-num div { font-size: 19px !important; }
-        .stat-lbl div { font-size: 10px !important; }
+        .stat-num div { font-size: 19px !important; white-space: nowrap !important; }
+        .stat-lbl div { font-size: 10px !important; letter-spacing: 0 !important; }
       }
     </mj-style>
   </mj-head>

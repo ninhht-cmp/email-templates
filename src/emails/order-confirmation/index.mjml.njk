@@ -1,0 +1,54 @@
+{#
+  COMACPRO — Order Confirmation (entry).
+
+  This is the RESPONSIVE REFERENCE TEMPLATE. It exists to be opened at Desktop vs Mobile in the
+  gallery (and in dist/sim/) to see each layout pattern behave, and it ships no art of its own so it
+  renders fully offline. The three patterns, one per section:
+
+    A. sections/order-meta.njk  — two real columns, stack on mobile      → mj-column + `fluid`
+    B. sections/items.njk       — a data table that must NOT stack       → mj-table, no `fluid`
+    C. sections/next-steps.njk  — 4-across grid, 2-across on mobile      → mj-column + `fluid` + one width rule
+
+  Everything responsive is MJML's: <mj-breakpoint> (declared once, in design-system/head.njk) makes
+  the columns stack, and the build injects the inline max-width that keeps them side-by-side in the
+  clients that drop <style>. Nunjucks here only injects content and loops lists.
+
+  {$ … $} = build-time (Nunjucks) · {{ … }} = send-time merge fields (untouched).
+  Context: `tokens` (design system) · `content` (this email) · `meta` (build/ops).
+#}
+{% set here = "emails/order-confirmation/sections" %}
+<mjml lang="en" dir="ltr">
+  <mj-head>
+    {% include "design-system/head.njk" %}
+    <mj-title>{$ content.document.title $}</mj-title>
+    {% include "design-system/preheader.njk" %}
+
+    {# Rules for the one pattern only this email has. Same single breakpoint as everywhere else —
+       adding a second width here fails the build (assertSingleBreakpoint). #}
+    <mj-style>
+      @media only screen and (max-width:479px) {
+        /* The step strip goes 4-across → 2-across rather than all the way to one column: four short
+           cards stacked would be a very tall block for very little content.
+
+           It must re-assert `display:inline-block` as well as the widths. The shared `.fluid` rule
+           sets `display:block` (correct for a column going full-width), and a 50%-wide BLOCK still
+           stacks vertically — so overriding width alone produced four rows crammed into the left
+           half of the screen. Only inline-block puts them side by side. */
+        .step-col { display: inline-block !important; width: 50% !important; max-width: 50% !important; }
+        /* Two lines of title fit at 2-across; drop the letter-spacing so short titles don't wrap. */
+        .step-title div { letter-spacing: 0 !important; }
+      }
+    </mj-style>
+  </mj-head>
+
+  {# Section registry — the body is this ordered list of section partials + the shared closing
+     blocks. NOTE which blocks are absent: no `signature` (a receipt has no sales rep pitching) and
+     the footer renders no unsubscribe because meta.category is 'transactional'. This is what
+     "blocks are opt-in, not global" means in practice — see docs/architecture.md §2. #}
+  {% set sections = ["header", "order-meta", "items", "next-steps", "support"] %}
+  {% set blocks = ["company-legal", "footer"] %}
+  <mj-body background-color="{$ tokens.color.canvas $}" width="{$ tokens.layout.width $}">
+    {% for s in sections %}{% include here + "/" + s + ".njk" %}{% endfor %}
+    {% for b in blocks %}{% include "blocks/" + b + ".njk" %}{% endfor %}
+  </mj-body>
+</mjml>

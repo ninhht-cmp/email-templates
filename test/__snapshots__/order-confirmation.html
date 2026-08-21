@@ -1,0 +1,966 @@
+<!doctype html>
+<html lang="en" dir="ltr" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+
+<head>
+  <title>Your COMACPRO order is confirmed</title>
+  <!--[if !mso]><!-->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!--<![endif]-->
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style type="text/css">
+    #outlook a {
+      padding: 0;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+
+    table,
+    td {
+      border-collapse: collapse;
+      mso-table-lspace: 0pt;
+      mso-table-rspace: 0pt;
+    }
+
+    img {
+      border: 0;
+      height: auto;
+      line-height: 100%;
+      outline: none;
+      text-decoration: none;
+      -ms-interpolation-mode: bicubic;
+    }
+
+    p {
+      display: block;
+      margin: 13px 0;
+    }
+  </style>
+  <!--[if mso]>
+    <noscript>
+    <xml>
+    <o:OfficeDocumentSettings>
+      <o:AllowPNG/>
+      <o:PixelsPerInch>96</o:PixelsPerInch>
+    </o:OfficeDocumentSettings>
+    </xml>
+    </noscript>
+    <![endif]-->
+  <!--[if lte mso 11]>
+    <style type="text/css">
+      .mj-outlook-group-fix { width:100% !important; }
+    </style>
+    <![endif]-->
+  <!--[if !mso]><!-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" type="text/css">
+  <style type="text/css">
+    @import url(https://fonts.googleapis.com/css?family=Roboto:300,400,500,700);
+    @import url(https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap);
+  </style>
+  <!--<![endif]-->
+  <style type="text/css">
+    @media only screen and (min-width:480px) {
+      .mj-column-per-100 {
+        width: 100% !important;
+        max-width: 100%;
+      }
+
+      .mj-column-per-50 {
+        width: 50% !important;
+        max-width: 50%;
+      }
+
+      .mj-column-per-25 {
+        width: 25% !important;
+        max-width: 25%;
+      }
+    }
+  </style>
+  <style media="screen and (min-width:480px)">
+    .moz-text-html .mj-column-per-100 {
+      width: 100% !important;
+      max-width: 100%;
+    }
+
+    .moz-text-html .mj-column-per-50 {
+      width: 50% !important;
+      max-width: 50%;
+    }
+
+    .moz-text-html .mj-column-per-25 {
+      width: 25% !important;
+      max-width: 25%;
+    }
+  </style>
+  <style type="text/css">
+    @media only screen and (max-width:479px) {
+      table.mj-full-width-mobile {
+        width: 100% !important;
+      }
+
+      td.mj-full-width-mobile {
+        width: auto !important;
+      }
+    }
+  </style>
+  <style type="text/css">
+    /* Contact links (WhatsApp + email): subtle by default, orange + underline on hover.
+     Hover only fires on clients with embedded CSS + a mouse (desktop webmail, Apple Mail). */
+    .contact-link a:hover {
+      color: #E5641F !important;
+      text-decoration: underline !important;
+    }
+
+    /* comacpro.net link: orange always, underline only on hover */
+    .link-orange a:hover {
+      text-decoration: underline !important;
+    }
+
+    /* Avatar: crop-to-fill (no distortion) for a non-square source. object-fit works in Apple Mail /
+     iOS / most webmail; Outlook ignores it, so the hosted avatar should still be a square crop. */
+    .avatar-img img {
+      object-fit: cover !important;
+      object-position: center !important;
+    }
+
+    /* Reserve heights so feature titles / equipment labels align across the grid, even when one
+     wraps to a second line — without touching the copy.
+
+     The ` div` is REQUIRED and was the bug: MJML puts an mj-text's css-class on the wrapping <td>,
+     and `min-height` does not apply to table cells (CSS 2.1 §10.7). So `.feat-title {min-height}`
+     was silently dead — a one-line title left its description 20px higher than a two-line one,
+     which is exactly what this rule exists to prevent. mj-text renders <td><div>…</div></td>, so
+     the reservation has to sit on the div. (Same pattern as `.stat-num div` in buyer-invitation.)
+
+     Embedded CSS: the style-stripping clients lose it and simply align to content. Cosmetic only. */
+    .feat-title div {
+      min-height: 44px;
+    }
+
+    .feat-desc div {
+      min-height: 104px;
+    }
+
+    .eq-label div {
+      min-height: 34px;
+    }
+
+    /* ── MOBILE — the one and only breakpoint (479 = BREAKPOINT_PX − 1) ──────────────────────────
+     Everything below the breakpoint lives in THIS block. Adding a second width here is a build
+     error (assertSingleBreakpoint), so keep mobile a single state.
+
+     Reminder on reach: this is embedded CSS. Outlook DESKTOP (Word engine) renders at full width
+     and never reads it — which is fine, because desktop is what these rules undo. New Outlook and
+     Gmail-GANGA also drop it; there the inline `max-width` from `.fluid` does the reflowing, so
+     nothing here is load-bearing for layout — only for polish (gutters, type sizes). */
+    @media only screen and (max-width:479px) {
+
+      /* Fluid-hybrid columns: drop the injected max-width cap so stacked columns go full-width.
+       One rule for every `fluid` column — a new fluid column is covered automatically.
+       (mj-group columns carry an inline width:% and never stack; they are not `fluid`.)
+
+       ⚠ THE TRAP, if you write an n-across override below: this sets `display:block`, and a
+       50%-wide BLOCK still stacks vertically — you get one column crammed into half the screen.
+       Any rule that narrows a `fluid` column to sit N-across MUST also restore
+       `display:inline-block !important`. That is what the .eq-col/.feat-col rule does. */
+      .fluid {
+        display: block !important;
+        width: 100% !important;
+        max-width: none !important;
+      }
+
+      /* Paired CTAs: gap between the stacked buttons; MJML puts the side gutters on the inner td. */
+      .cta-col {
+        padding: 0 0 12px 0 !important;
+      }
+
+      .cta-col td {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+      }
+
+      /* Equipment 6-across and features 4-across both collapse to 2-across — NOT to one column:
+       stacking six equipment cards would add ~650px of scroll for six words each.
+       `display:inline-block` is load-bearing here, not decoration: it undoes the `display:block`
+       from .fluid above, which would otherwise make these 50% boxes stack in the left half. */
+      .eq-col,
+      .feat-col {
+        display: inline-block !important;
+        width: 50% !important;
+        max-width: 50% !important;
+      }
+
+      /* Drop ALL the desktop height reservations here. At 2-across (~180px) every title, label and
+       description fits without the wrap the reservations exist to absorb, so keeping them would add
+       pure empty space — ~100px of it down the email — for an alignment problem mobile doesn't have. */
+      .feat-title div,
+      .feat-desc div,
+      .eq-label div {
+        min-height: 0 !important;
+      }
+
+      /* Stacked offices: gap between them + drop the desktop side gutter so both sit flush-left. */
+      .office-col {
+        padding: 0 0 18px 0 !important;
+      }
+
+      .office-col td {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+      }
+
+      /* Callout: stack the icon above the text (centered) instead of side-by-side */
+      .co-icon,
+      .co-text {
+        display: block !important;
+        text-align: center !important;
+      }
+
+      .co-icon {
+        padding: 0 0 8px 0 !important;
+      }
+
+      .co-text {
+        padding: 0 12px !important;
+      }
+
+      /* Signature on mobile: avatar left-aligned (same axis as the details), then details below. */
+      .sig-avatar {
+        padding: 0 0 14px 0 !important;
+      }
+    }
+
+    @media only screen and (max-width:479px) {
+
+      /* The step strip goes 4-across → 2-across rather than all the way to one column: four short
+           cards stacked would be a very tall block for very little content.
+
+           It must re-assert `display:inline-block` as well as the widths. The shared `.fluid` rule
+           sets `display:block` (correct for a column going full-width), and a 50%-wide BLOCK still
+           stacks vertically — so overriding width alone produced four rows crammed into the left
+           half of the screen. Only inline-block puts them side by side. */
+      .step-col {
+        display: inline-block !important;
+        width: 50% !important;
+        max-width: 50% !important;
+      }
+
+      /* Two lines of title fit at 2-across; drop the letter-spacing so short titles don't wrap. */
+      .step-title div {
+        letter-spacing: 0 !important;
+      }
+    }
+  </style>
+  <meta name="color-scheme" content="light">
+  <meta name="supported-color-schemes" content="light">
+  <meta name="format-detection" content="telephone=no,date=no,address=no,email=no">
+</head>
+
+<body style="word-spacing:normal;background-color:#F4F5F7;">
+  <div style="display:none;font-size:1px;color:#ffffff;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;">Order {{order_number}} is confirmed. Here is your summary and what happens next.&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;</div>
+  <div aria-label="Your COMACPRO order is confirmed" aria-roledescription="email" role="article" lang="en" dir="ltr" style="word-spacing:normal;background-color:#F4F5F7;">
+    <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" bgcolor="#F1F8FF" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+    <div style="background:#F1F8FF;background-color:#F1F8FF;margin:0px auto;max-width:600px;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#F1F8FF;background-color:#F1F8FF;width:100%;">
+        <tbody>
+          <tr>
+            <td style="direction:ltr;font-size:0px;padding:28px 32px 26px 32px;text-align:center;">
+              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:536px;" ><![endif]-->
+              <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
+                  <tbody>
+                    <tr>
+                      <td align="left" style="font-size:0px;padding:0 0 20px 0;word-break:break-word;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;border-spacing:0px;">
+                          <tbody>
+                            <tr>
+                              <td style="width:150px;">
+                                <img alt="COMACPRO" src="../src/design-system/assets/comacpro-logo.png" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="150" height="auto">
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="left" style="font-size:0px;padding:0;word-break:break-word;">
+                        <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:24px;font-weight:700;line-height:1.2;text-align:left;color:#003B79;">Your order is confirmed</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="left" style="font-size:0px;padding:12px 0 12px 0;word-break:break-word;">
+                        <p style="border-top:solid 4px #F37134;font-size:1px;margin:0px;width:58px;">
+                        </p>
+                        <!--[if mso | IE]><table align="left" border="0" cellpadding="0" cellspacing="0" style="border-top:solid 4px #F37134;font-size:1px;margin:0px;width:58px;" role="presentation" width="58px" ><tr><td style="height:0;line-height:0;"> &nbsp;
+</td></tr></table><![endif]-->
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="left" style="font-size:0px;padding:0;word-break:break-word;">
+                        <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:14px;line-height:1.5;text-align:left;color:#122941;">Thank you — we have received your order and our team is preparing it now.</div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" bgcolor="#FFFFFF" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+    <div style="background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#FFFFFF;background-color:#FFFFFF;width:100%;">
+        <tbody>
+          <tr>
+            <td style="direction:ltr;font-size:0px;padding:26px 32px 0 32px;text-align:center;">
+              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:536px;" ><![endif]-->
+              <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
+                  <tbody>
+                    <tr>
+                      <td align="left" style="font-size:0px;padding:0 0 12px 0;word-break:break-word;">
+                        <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:17px;font-weight:700;line-height:1.6;text-align:left;color:#122941;">Hi {{buyer_name}},</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="left" style="font-size:0px;padding:0;word-break:break-word;">
+                        <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:15px;line-height:1.6;text-align:left;color:#4A4A4A;">Your order <span class="brand" style="color: #E5641F; font-weight: 700;">{{order_number}}</span> is confirmed. The summary below is your record of it — keep this email until delivery is complete.</div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" bgcolor="#FFFFFF" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+    <div style="background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#FFFFFF;background-color:#FFFFFF;width:100%;">
+        <tbody>
+          <tr>
+            <td style="direction:ltr;font-size:0px;padding:18px 32px 0 32px;text-align:center;">
+              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="fluid-outlook" style="vertical-align:top;width:268px;" ><![endif]-->
+              <div class="mj-column-per-50 mj-outlook-group-fix fluid" style="max-width:268px;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                  <tbody>
+                    <tr>
+                      <td style="vertical-align:top;padding:0 12px 0 0;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style width="100%">
+                          <tbody>
+                            <tr>
+                              <td align="left" style="font-size:0px;padding:0 0 4px 0;word-break:break-word;">
+                                <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:11px;font-weight:700;letter-spacing:0.6px;line-height:1.6;text-align:left;color:#6B7280;">ORDER NUMBER</div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td align="left" style="font-size:0px;padding:0;word-break:break-word;">
+                                <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:14px;font-weight:600;line-height:1.6;text-align:left;color:#122941;">{{order_number}}</div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td><td class="fluid-outlook" style="vertical-align:top;width:268px;" ><![endif]-->
+              <div class="mj-column-per-50 mj-outlook-group-fix fluid" style="max-width:268px;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                  <tbody>
+                    <tr>
+                      <td style="vertical-align:top;padding:0;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style width="100%">
+                          <tbody>
+                            <tr>
+                              <td align="left" style="font-size:0px;padding:0 0 4px 0;word-break:break-word;">
+                                <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:11px;font-weight:700;letter-spacing:0.6px;line-height:1.6;text-align:left;color:#6B7280;">ORDER DATE</div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td align="left" style="font-size:0px;padding:0;word-break:break-word;">
+                                <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:14px;font-weight:600;line-height:1.6;text-align:left;color:#122941;">{{order_date}}</div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" bgcolor="#FFFFFF" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+    <div style="background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#FFFFFF;background-color:#FFFFFF;width:100%;">
+        <tbody>
+          <tr>
+            <td style="direction:ltr;font-size:0px;padding:14px 32px 0 32px;text-align:center;">
+              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="fluid-outlook" style="vertical-align:top;width:268px;" ><![endif]-->
+              <div class="mj-column-per-50 mj-outlook-group-fix fluid" style="max-width:268px;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                  <tbody>
+                    <tr>
+                      <td style="vertical-align:top;padding:0 12px 0 0;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style width="100%">
+                          <tbody>
+                            <tr>
+                              <td align="left" style="font-size:0px;padding:0 0 4px 0;word-break:break-word;">
+                                <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:11px;font-weight:700;letter-spacing:0.6px;line-height:1.6;text-align:left;color:#6B7280;">PAYMENT METHOD</div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td align="left" style="font-size:0px;padding:0;word-break:break-word;">
+                                <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:14px;font-weight:600;line-height:1.6;text-align:left;color:#122941;">{{payment_method}}</div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td><td class="fluid-outlook" style="vertical-align:top;width:268px;" ><![endif]-->
+              <div class="mj-column-per-50 mj-outlook-group-fix fluid" style="max-width:268px;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                  <tbody>
+                    <tr>
+                      <td style="vertical-align:top;padding:0;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style width="100%">
+                          <tbody>
+                            <tr>
+                              <td align="left" style="font-size:0px;padding:0 0 4px 0;word-break:break-word;">
+                                <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:11px;font-weight:700;letter-spacing:0.6px;line-height:1.6;text-align:left;color:#6B7280;">DELIVERY TO</div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td align="left" style="font-size:0px;padding:0;word-break:break-word;">
+                                <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:14px;font-weight:600;line-height:1.6;text-align:left;color:#122941;">{{delivery_city}}</div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" bgcolor="#FFFFFF" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+    <div style="background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#FFFFFF;background-color:#FFFFFF;width:100%;">
+        <tbody>
+          <tr>
+            <td style="direction:ltr;font-size:0px;padding:22px 32px 0 32px;text-align:center;">
+              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:536px;" ><![endif]-->
+              <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
+                  <tbody>
+                    <tr>
+                      <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
+                        <p style="border-top:solid 1px #EDEFF2;font-size:1px;margin:0px auto;width:100%;">
+                        </p>
+                        <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" style="border-top:solid 1px #EDEFF2;font-size:1px;margin:0px auto;width:536px;" role="presentation" width="536px" ><tr><td style="height:0;line-height:0;"> &nbsp;
+</td></tr></table><![endif]-->
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" bgcolor="#FFFFFF" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+    <div style="background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#FFFFFF;background-color:#FFFFFF;width:100%;">
+        <tbody>
+          <tr>
+            <td style="direction:ltr;font-size:0px;padding:22px 24px 8px 24px;text-align:center;">
+              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:552px;" ><![endif]-->
+              <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
+                  <tbody>
+                    <tr>
+                      <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
+                        <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:16px;font-weight:700;line-height:1.3;text-align:center;color:#143E69;"><span style="letter-spacing:0.5px;">ORDER SUMMARY</span></div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="center" style="font-size:0px;padding:10px 0 0 0;word-break:break-word;">
+                        <p style="border-top:solid 2px #F37134;font-size:1px;margin:0px auto;width:36px;">
+                        </p>
+                        <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" style="border-top:solid 2px #F37134;font-size:1px;margin:0px auto;width:36px;" role="presentation" width="36px" ><tr><td style="height:0;line-height:0;"> &nbsp;
+</td></tr></table><![endif]-->
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" bgcolor="#FFFFFF" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+    <div style="background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#FFFFFF;background-color:#FFFFFF;width:100%;">
+        <tbody>
+          <tr>
+            <td style="direction:ltr;font-size:0px;padding:14px 32px 0 32px;text-align:center;">
+              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:536px;" ><![endif]-->
+              <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
+                  <tbody>
+                    <tr>
+                      <td align="left" style="font-size:0px;padding:0;word-break:break-word;">
+                        <table cellpadding="0" cellspacing="0" role="presentation" width="100%" border="0" style="color:#000000;font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:13px;line-height:1.45;table-layout:auto;width:100%;border:none;">
+                          <tr>
+                            <th align="left" style="padding:0 0 8px 0;border-bottom:1px solid #E6E8EB;font-size:11px;font-weight:700;letter-spacing:0.6px;color:#6B7280;">ITEM</th>
+                            <th align="center" width="48" style="padding:0 0 8px 0;border-bottom:1px solid #E6E8EB;font-size:11px;font-weight:700;letter-spacing:0.6px;color:#6B7280;">QTY</th>
+                            <th align="right" width="112" style="padding:0 0 8px 0;border-bottom:1px solid #E6E8EB;font-size:11px;font-weight:700;letter-spacing:0.6px;color:#6B7280;">AMOUNT</th>
+                          </tr>
+                          <tr>
+                            <td align="left" style="padding:11px 8px 11px 0;border-bottom:1px solid #EDEFF2;color:#122941;font-weight:600;">Komatsu PC200-8 excavator</td>
+                            <td align="center" style="padding:11px 0;border-bottom:1px solid #EDEFF2;color:#4A4A4A;">1</td>
+                            <td align="right" style="padding:11px 0;border-bottom:1px solid #EDEFF2;color:#122941;font-weight:600;white-space:nowrap;">USD 48,500</td>
+                          </tr>
+                          <tr>
+                            <td align="left" style="padding:11px 8px 11px 0;border-bottom:1px solid #EDEFF2;color:#122941;font-weight:600;">Hydraulic breaker attachment</td>
+                            <td align="center" style="padding:11px 0;border-bottom:1px solid #EDEFF2;color:#4A4A4A;">2</td>
+                            <td align="right" style="padding:11px 0;border-bottom:1px solid #EDEFF2;color:#122941;font-weight:600;white-space:nowrap;">USD 6,200</td>
+                          </tr>
+                          <tr>
+                            <td align="left" style="padding:11px 8px 11px 0;border-bottom:1px solid #EDEFF2;color:#122941;font-weight:600;">Inspection &amp; documentation service</td>
+                            <td align="center" style="padding:11px 0;border-bottom:1px solid #EDEFF2;color:#4A4A4A;">1</td>
+                            <td align="right" style="padding:11px 0;border-bottom:1px solid #EDEFF2;color:#122941;font-weight:600;white-space:nowrap;">USD 850</td>
+                          </tr>
+                          <tr>
+                            <td colspan="2" align="right" style="padding:12px 8px 0 0;color:#4E5A64;font-size:13px;font-weight:500;">Subtotal</td>
+                            <td align="right" style="padding:12px 0 0 0;color:#122941;font-size:13px;font-weight:700;white-space:nowrap;">USD 61,750</td>
+                          </tr>
+                          <tr>
+                            <td colspan="2" align="right" style="padding:6px 8px 0 0;color:#4E5A64;font-size:13px;font-weight:500;">Inland freight</td>
+                            <td align="right" style="padding:6px 0 0 0;color:#122941;font-size:13px;font-weight:700;white-space:nowrap;">USD 1,900</td>
+                          </tr>
+                          <tr>
+                            <td colspan="2" align="right" style="padding:6px 8px 0 0;color:#122941;font-size:15px;font-weight:700;">Total</td>
+                            <td align="right" style="padding:6px 0 0 0;color:#E5641F;font-size:17px;font-weight:700;white-space:nowrap;">{{order_total}}</td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" bgcolor="#FFFFFF" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+    <div style="background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#FFFFFF;background-color:#FFFFFF;width:100%;">
+        <tbody>
+          <tr>
+            <td style="direction:ltr;font-size:0px;padding:22px 24px 8px 24px;text-align:center;">
+              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:552px;" ><![endif]-->
+              <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
+                  <tbody>
+                    <tr>
+                      <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
+                        <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:16px;font-weight:700;line-height:1.3;text-align:center;color:#143E69;"><span style="letter-spacing:0.5px;">WHAT HAPPENS NEXT</span></div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="center" style="font-size:0px;padding:10px 0 0 0;word-break:break-word;">
+                        <p style="border-top:solid 2px #F37134;font-size:1px;margin:0px auto;width:36px;">
+                        </p>
+                        <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" style="border-top:solid 2px #F37134;font-size:1px;margin:0px auto;width:36px;" role="presentation" width="36px" ><tr><td style="height:0;line-height:0;"> &nbsp;
+</td></tr></table><![endif]-->
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" bgcolor="#FFFFFF" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+    <div style="background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#FFFFFF;background-color:#FFFFFF;width:100%;">
+        <tbody>
+          <tr>
+            <td style="direction:ltr;font-size:0px;padding:16px 20px 4px 20px;text-align:center;">
+              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="step-col-outlook fluid-outlook" style="vertical-align:top;width:140px;" ><![endif]-->
+              <div class="mj-column-per-25 mj-outlook-group-fix step-col fluid" style="max-width:140px;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                  <tbody>
+                    <tr>
+                      <td style="vertical-align:top;padding:8px 6px;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style width="100%">
+                          <tbody>
+                            <tr>
+                              <td align="center" style="font-size:0px;padding:0 0 10px 0;word-break:break-word;">
+                                <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:15px;line-height:1.6;text-align:center;color:#4A4A4A;">
+                                  <table role="presentation" cellpadding="0" cellspacing="0" align="center" width="34" style="margin:0 auto;width:34px;">
+                                    <tr>
+                                      <td width="34" height="34" style="width:34px;height:34px;background-color:#FCE0CE;border-radius:999px;text-align:center;vertical-align:middle;font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:14px;font-weight:800;color:#143E69;">1</td>
+                                    </tr>
+                                  </table>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td align="center" class="step-title" style="font-size:0px;padding:0 0 5px 0;word-break:break-word;">
+                                <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:13px;font-weight:700;line-height:1.3;text-align:center;color:#122941;">Confirmation</div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
+                                <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:12px;line-height:1.5;text-align:center;color:#4E5A64;">Our team verifies stock and documents.</div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td><td class="step-col-outlook fluid-outlook" style="vertical-align:top;width:140px;" ><![endif]-->
+              <div class="mj-column-per-25 mj-outlook-group-fix step-col fluid" style="max-width:140px;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                  <tbody>
+                    <tr>
+                      <td style="vertical-align:top;padding:8px 6px;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style width="100%">
+                          <tbody>
+                            <tr>
+                              <td align="center" style="font-size:0px;padding:0 0 10px 0;word-break:break-word;">
+                                <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:15px;line-height:1.6;text-align:center;color:#4A4A4A;">
+                                  <table role="presentation" cellpadding="0" cellspacing="0" align="center" width="34" style="margin:0 auto;width:34px;">
+                                    <tr>
+                                      <td width="34" height="34" style="width:34px;height:34px;background-color:#FCE0CE;border-radius:999px;text-align:center;vertical-align:middle;font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:14px;font-weight:800;color:#143E69;">2</td>
+                                    </tr>
+                                  </table>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td align="center" class="step-title" style="font-size:0px;padding:0 0 5px 0;word-break:break-word;">
+                                <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:13px;font-weight:700;line-height:1.3;text-align:center;color:#122941;">Payment</div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
+                                <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:12px;line-height:1.5;text-align:center;color:#4E5A64;">We send the invoice and payment instructions.</div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td><td class="step-col-outlook fluid-outlook" style="vertical-align:top;width:140px;" ><![endif]-->
+              <div class="mj-column-per-25 mj-outlook-group-fix step-col fluid" style="max-width:140px;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                  <tbody>
+                    <tr>
+                      <td style="vertical-align:top;padding:8px 6px;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style width="100%">
+                          <tbody>
+                            <tr>
+                              <td align="center" style="font-size:0px;padding:0 0 10px 0;word-break:break-word;">
+                                <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:15px;line-height:1.6;text-align:center;color:#4A4A4A;">
+                                  <table role="presentation" cellpadding="0" cellspacing="0" align="center" width="34" style="margin:0 auto;width:34px;">
+                                    <tr>
+                                      <td width="34" height="34" style="width:34px;height:34px;background-color:#FCE0CE;border-radius:999px;text-align:center;vertical-align:middle;font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:14px;font-weight:800;color:#143E69;">3</td>
+                                    </tr>
+                                  </table>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td align="center" class="step-title" style="font-size:0px;padding:0 0 5px 0;word-break:break-word;">
+                                <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:13px;font-weight:700;line-height:1.3;text-align:center;color:#122941;">Inspection</div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
+                                <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:12px;line-height:1.5;text-align:center;color:#4E5A64;">Optional third-party inspection on request.</div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td><td class="step-col-outlook fluid-outlook" style="vertical-align:top;width:140px;" ><![endif]-->
+              <div class="mj-column-per-25 mj-outlook-group-fix step-col fluid" style="max-width:140px;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                  <tbody>
+                    <tr>
+                      <td style="vertical-align:top;padding:8px 6px;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style width="100%">
+                          <tbody>
+                            <tr>
+                              <td align="center" style="font-size:0px;padding:0 0 10px 0;word-break:break-word;">
+                                <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:15px;line-height:1.6;text-align:center;color:#4A4A4A;">
+                                  <table role="presentation" cellpadding="0" cellspacing="0" align="center" width="34" style="margin:0 auto;width:34px;">
+                                    <tr>
+                                      <td width="34" height="34" style="width:34px;height:34px;background-color:#FCE0CE;border-radius:999px;text-align:center;vertical-align:middle;font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:14px;font-weight:800;color:#143E69;">4</td>
+                                    </tr>
+                                  </table>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td align="center" class="step-title" style="font-size:0px;padding:0 0 5px 0;word-break:break-word;">
+                                <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:13px;font-weight:700;line-height:1.3;text-align:center;color:#122941;">Shipping</div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
+                                <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:12px;line-height:1.5;text-align:center;color:#4E5A64;">Loading, export papers and tracking details.</div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" bgcolor="#FFFFFF" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+    <div style="background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#FFFFFF;background-color:#FFFFFF;width:100%;">
+        <tbody>
+          <tr>
+            <td style="direction:ltr;font-size:0px;padding:20px 32px 0 32px;text-align:center;">
+              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:536px;" ><![endif]-->
+              <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
+                  <tbody>
+                    <tr>
+                      <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
+                        <p style="border-top:solid 1px #EDEFF2;font-size:1px;margin:0px auto;width:100%;">
+                        </p>
+                        <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" style="border-top:solid 1px #EDEFF2;font-size:1px;margin:0px auto;width:536px;" role="presentation" width="536px" ><tr><td style="height:0;line-height:0;"> &nbsp;
+</td></tr></table><![endif]-->
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" bgcolor="#FFFFFF" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+    <div style="background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#FFFFFF;background-color:#FFFFFF;width:100%;">
+        <tbody>
+          <tr>
+            <td style="direction:ltr;font-size:0px;padding:20px 40px 4px 40px;text-align:center;">
+              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:520px;" ><![endif]-->
+              <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
+                  <tbody>
+                    <tr>
+                      <td align="center" style="font-size:0px;padding:0 0 18px 0;word-break:break-word;">
+                        <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:14px;line-height:1.55;text-align:center;color:#4A4A4A;">Something not right with this order? Reply to this email or reach us directly — a real person handles every order.</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="center" style="font-size:0px;padding:10px 25px;word-break:break-word;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;line-height:100%;">
+                          <tbody>
+                            <tr>
+                              <td align="center" bgcolor="#001942" role="presentation" style="border:none;border-radius:14px;cursor:auto;mso-padding-alt:12px 30px;background:#001942;" valign="middle">
+                                <a href="{{order_status_url}}" style="display:inline-block;background:#001942;color:#FFFFFF;font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:15px;font-weight:700;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:12px 30px;mso-padding-alt:0px;border-radius:14px;" target="_blank"> VIEW ORDER STATUS </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" bgcolor="#FFFFFF" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+    <div style="background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#FFFFFF;background-color:#FFFFFF;width:100%;">
+        <tbody>
+          <tr>
+            <td style="direction:ltr;font-size:0px;padding:16px 32px 4px 32px;text-align:center;">
+              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:536px;" ><![endif]-->
+              <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
+                  <tbody>
+                    <tr>
+                      <td align="left" style="font-size:0px;padding:0 0 4px 0;word-break:break-word;">
+                        <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:16px;font-weight:700;line-height:1.6;text-align:left;color:#122941;">COMACPRO GLOBAL PTE. LTD.</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="left" style="font-size:0px;padding:0 0 16px 0;word-break:break-word;">
+                        <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:12px;line-height:1.6;text-align:left;color:#6B7280;">UEN: <span style="color:#4A4A4A;font-weight:600;">202630381C</span> &nbsp;·&nbsp; <a href="https://comacpro.net" style="color:#4A4A4A;font-weight:600;text-decoration:none;">comacpro.net</a></div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" bgcolor="#FFFFFF" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+    <div style="background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#FFFFFF;background-color:#FFFFFF;width:100%;">
+        <tbody>
+          <tr>
+            <td style="direction:ltr;font-size:0px;padding:0 32px 16px 32px;text-align:center;">
+              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="office-col-outlook fluid-outlook" style="vertical-align:top;width:268px;" ><![endif]-->
+              <div class="mj-column-per-50 mj-outlook-group-fix office-col fluid" style="max-width:268px;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                  <tbody>
+                    <tr>
+                      <td style="vertical-align:top;padding:0 24px 0 0;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style width="100%">
+                          <tbody>
+                            <tr>
+                              <td align="left" style="font-size:0px;padding:0 0 8px 0;word-break:break-word;">
+                                <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:15px;line-height:1.6;text-align:left;color:#4A4A4A;"><span style="display:inline-block;background-color:#E5641F;color:#FFFFFF;font-size:11px;font-weight:700;padding:4px 12px;border-radius:12px;">Head Office</span></div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td align="left" style="font-size:0px;padding:0;word-break:break-word;">
+                                <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:13px;line-height:1.55;text-align:left;color:#4A4A4A;">7500A Beach Road #04-326, The Plaza Singapore 199591</div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td><td class="office-col-outlook fluid-outlook" style="vertical-align:top;width:268px;" ><![endif]-->
+              <div class="mj-column-per-50 mj-outlook-group-fix office-col fluid" style="max-width:268px;font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                  <tbody>
+                    <tr>
+                      <td style="vertical-align:top;padding:0;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style width="100%">
+                          <tbody>
+                            <tr>
+                              <td align="left" style="font-size:0px;padding:0 0 8px 0;word-break:break-word;">
+                                <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:15px;line-height:1.6;text-align:left;color:#4A4A4A;"><span style="display:inline-block;background-color:#ECECEC;color:#48505E;font-size:11px;font-weight:700;padding:4px 12px;border-radius:12px;">Vietnam Office</span></div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td align="left" style="font-size:0px;padding:0;word-break:break-word;">
+                                <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:13px;line-height:1.55;text-align:left;color:#4A4A4A;">ACCI Building 210 Le Trong Tan St., Phuong Liet, Hanoi, Vietnam</div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:600px;" width="600" bgcolor="#FFFFFF" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+    <div style="background:#FFFFFF;background-color:#FFFFFF;margin:0px auto;max-width:600px;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#FFFFFF;background-color:#FFFFFF;width:100%;">
+        <tbody>
+          <tr>
+            <td style="direction:ltr;font-size:0px;padding:8px 32px 24px 32px;text-align:center;">
+              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:536px;" ><![endif]-->
+              <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
+                  <tbody>
+                    <tr>
+                      <td align="center" style="font-size:0px;padding:0 0 16px 0;word-break:break-word;">
+                        <p style="border-top:solid 1px #EDEFF2;font-size:1px;margin:0px auto;width:100%;">
+                        </p>
+                        <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" style="border-top:solid 1px #EDEFF2;font-size:1px;margin:0px auto;width:536px;" role="presentation" width="536px" ><tr><td style="height:0;line-height:0;"> &nbsp;
+</td></tr></table><![endif]-->
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="left" style="font-size:0px;padding:0;word-break:break-word;">
+                        <div style="font-family:Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;font-size:12px;line-height:1.6;text-align:left;color:#6B7280;">You are receiving this email because you placed an order with COMACPRO. It is a transactional message about that order, not marketing.</div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><![endif]-->
+  </div>
+</body>
+
+</html>

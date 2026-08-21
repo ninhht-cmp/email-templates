@@ -21,6 +21,15 @@ for (const name of discoverEmails(EMAILS_DIR)) {
 
     assert.deepEqual(result.mjmlErrors, [], 'no MJML errors');
     assert.deepEqual(result.keyErrors, [], 'no undeclared merge keys');
+    // One breakpoint, and every `fluid` column carries its inline max-width.
+    assert.deepEqual(result.layoutErrors, [], 'layout invariants hold');
+    // A marketing email has a working opt-out.
+    assert.deepEqual(result.complianceErrors, [], 'opt-out present where required');
+    // Regression guard for the fluid-hybrid refactor: every marked column got a real px cap, so a
+    // silent "injected nothing" can never pass as a clean build.
+    const capped = result.html.match(/class="[^"]*\bfluid\b[^"]*" style="max-width:\d+px;/g) ?? [];
+    const marked = result.html.match(/<div[^>]*class="[^"]*\bfluid\b[^"]*"/g) ?? [];
+    assert.equal(capped.length, marked.length, 'every fluid column has an inline max-width');
 
     const snapshotPath = `${SNAPSHOT_DIR}/${name}.html`;
     if (shouldUpdate || !existsSync(snapshotPath)) {

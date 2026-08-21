@@ -5,6 +5,20 @@
 // Each email still spreads it into its own `contentSchema.parse({...})`, so the shape is validated
 // per email and an email remains free to override it.
 
+/**
+ * Assets that are NOT per-campaign, so they live at the tier that owns them instead of being
+ * copy-pasted into every email's folder (they were byte-identical duplicates before):
+ *   · logo        — brand-wide, Tier 1 → src/design-system/assets/
+ *   · contact icons — rendered by blocks/signature.njk, Tier 2 → src/blocks/assets/
+ * Paths are relative to dist/ (where the built HTML sits), like every other asset URL.
+ * An email may still override any of these in its own `assets` object.
+ */
+export const sharedAssets = {
+  logo: '../src/design-system/assets/comacpro-logo.png',
+  whatsappIcon: '../src/blocks/assets/whatsapp.svg',
+  emailIcon: '../src/blocks/assets/email.svg',
+};
+
 /** Fixed legal facts rendered by blocks/company-legal.njk — never change per campaign. */
 export const company = {
   legalName: 'COMACPRO GLOBAL PTE. LTD.',

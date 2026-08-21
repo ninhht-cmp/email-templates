@@ -1,0 +1,20 @@
+{#
+  Inbox preheader — the grey line the client shows after the subject.
+
+  MJML's <mj-preview> emits the hidden div, but nothing more: if the preview text is shorter than
+  the strip the client has room for, the client keeps reading INTO the body and appends whatever
+  comes first. That is why the supplier email used to read:
+
+      "No listing fee. Reach qualified buyers … Dear {{company_name}} I'm {{sender_name}} …"
+
+  The fix is the standard one — pad the hidden div out past the longest preview strip (~140 chars in
+  Gmail) with a run of zero-width non-joiner + non-breaking space. The pair is deliberate: the
+  zero-width character occupies no visual space, and the &nbsp; between them stops clients from
+  collapsing the run. Invisible everywhere, and it truncates the leak instead of the copy.
+
+  Included from each email's <mj-head> INSTEAD of writing <mj-preview> there, so no template can
+  forget the padding. `content.document.preview` stays the single source of the text.
+#}
+{# (`range()` loop, not `'…' * 60` — that is Jinja2 string repetition; Nunjucks evaluates it to NaN
+   and cheerfully writes "NaN" into the preheader.) #}
+<mj-preview>{$ content.document.preview $}{% for _ in range(60) %}&zwnj;&nbsp;{% endfor %}</mj-preview>

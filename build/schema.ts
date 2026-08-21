@@ -23,16 +23,8 @@ export const emailMetaSchema = z
      * if the subject doesn't start with it — so a labelled campaign can't get the placement wrong.
      */
     adLabel: z.enum(AD_LABELS).optional(),
-    /**
-     * Colour-scheme handling (see design-system/head.njk):
-     *  - 'light' (default): pin to light so dark-mode clients DON'T auto-invert the brand. Safest for
-     *    a brand-controlled marketing email, and what both templates ship with today.
-     *  - 'auto': advertise `color-scheme: light dark` so supporting clients (Apple Mail/iOS,
-     *    Outlook.com) apply their OWN sensible dark treatment instead of force-inverting the brand.
-     *    Only choose this once the email has dark-safe assets (a transparent/dark logo). Full themed
-     *    dark surfaces are a deliberate follow-up, not part of this signal.
-     */
-    colorScheme: z.enum(['light', 'auto']).optional(), // omitted == 'light' (see head.njk)
+    // NOTE: there is no `colorScheme` field. Every email is light-only (design-system/head.njk pins
+    // it), so there is nothing per-email to configure. It was an option no email ever set.
     requiredKeys: z.array(z.string()),
     // Per-email sample values for the preview build (override/extend the shared defaults).
     previewSamples: z.record(z.string(), z.string()).optional(),

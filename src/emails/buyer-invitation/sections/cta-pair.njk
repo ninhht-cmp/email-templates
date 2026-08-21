@@ -1,16 +1,18 @@
 {% from "design-system/components/button.njk" import button %}
 {# Two CTAs: side-by-side on desktop, stacked on mobile.
-   Wrapped in mj-group so each column gets an INLINE width:50% (desktop-first) instead of MJML's
-   default inline width:100% + a min-width:480 media query. That default collapses to one stacked
-   column in New Outlook / Outlook webview, which ignores the [if mso] ghost table AND doesn't apply
-   the <style> media query — so the columns fall back to width:100%. mj-group's inline % holds
-   without a media query; the .cta-col rule (head.njk, max-width:479) restacks on real mobile.
+
+   Plain mj-section + two mj-columns — MJML's own model, no CSS grid/flex anywhere. Stacking below
+   the breakpoint is MJML's job (<mj-breakpoint> in head.njk); `css-class="fluid"` adds the inline
+   max-width that keeps them side-by-side in the clients that drop <style> (New Outlook, Gmail
+   GANGA), where MJML's min-width rule never runs. The .cta-col rules restack + reset the gutters
+   on real mobile.
+
    width='100%' + padding='0' keep the two buttons equal (mj-button otherwise shrinks to its label). #}
 <mj-section padding="22px 32px 0 32px">
-  <mj-column css-class="cta-col {$ mw(50, 536) $}" width="50%" padding="0 7px 0 0">
+  <mj-column css-class="cta-col fluid" width="50%" padding="0 7px 0 0">
     {$ button(content.ctas.primary, '{{explore_equipment_url}}', tokens.color.orangeStrong, width='100%', padding='0') $}
   </mj-column>
-  <mj-column css-class="cta-col {$ mw(50, 536) $}" width="50%" padding="0 0 0 7px">
+  <mj-column css-class="cta-col fluid" width="50%" padding="0 0 0 7px">
     {$ button(content.ctas.secondary, '{{register_url}}', tokens.color.navyDeep, width='100%', padding='0') $}
   </mj-column>
 </mj-section>

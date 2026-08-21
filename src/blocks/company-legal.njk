@@ -15,11 +15,17 @@
 
 <mj-section padding="0 32px 16px 32px">
   {% for office in content.company.offices %}
-  {# Gutter as the FIRST column's right padding only, both columns 0 on the left. Desktop keeps a
-     24px inter-column gap; on style-stripped clients (GANGA) the columns stack and both stay flush
-     to the left edge — same as the legal name / footer above and below — because the max-width:479
-     flush-reset can't reach there. (A left pad on the 2nd column would indent it on GANGA.) #}
-  <mj-column css-class="office-col" width="50%" vertical-align="top" padding="{$ '0 24px 0 0' if loop.first else '0' $}">
+  {# Gutter as the FIRST column's right padding only, both columns 0 on the left — so whenever these
+     DO stack, both sit flush to the left edge, in line with the legal name above and the footer
+     below. (A left pad on the 2nd column would indent it wherever the mobile reset can't reach.)
+
+     `fluid` was missing here and this was the last column pair in the system without it: the two
+     offices were stacking even on a desktop-width New Outlook / Gmail-GANGA, while every other pair
+     in every email stayed side-by-side. Now they match. Trade-off, the same one fluid-hybrid makes
+     everywhere else: on a NARROW GANGA screen (no <style>, so no mobile reset) each address is
+     capped at its 268px box instead of running full-width, i.e. one extra line wrap. Worth it to
+     stop the desktop collapse. #}
+  <mj-column css-class="office-col fluid" width="50%" vertical-align="top" padding="{$ '0 24px 0 0' if loop.first else '0' $}">
     <mj-text padding="0 0 8px 0">{$ badge(office.badge, office.tone, tokens) $}</mj-text>
     <mj-text font-size="13px" line-height="1.55" color="{$ tokens.color.body $}" padding="0">
       {$ office.address $}

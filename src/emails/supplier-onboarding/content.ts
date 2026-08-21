@@ -6,7 +6,7 @@
 // URL). Send-time {{merge_tags}} stay inline.
 
 // Content for the shared legal-footer block — same in every campaign.
-import { company, compliance } from '../../blocks/shared-content.ts';
+import { company, compliance, sharedAssets } from '../../blocks/shared-content.ts';
 import { contentSchema, type SupplierOnboardingContent } from './content.schema.ts';
 
 export const content: SupplierOnboardingContent = contentSchema.parse({
@@ -17,13 +17,15 @@ export const content: SupplierOnboardingContent = contentSchema.parse({
   },
 
   assets: {
-    logo: '../src/emails/supplier-onboarding/assets/comacpro-logo.png',
+    ...sharedAssets, // logo + signature contact icons (shared, not per-campaign)
     // Single wash-baked asset used for EVERY client and width — Gmail ignores CSS background-image
     // swaps, so a per-width swap can't be relied on; the wash keeps text legible full-width. See hero.njk.
-    hero: '../src/emails/supplier-onboarding/assets/comacpro-machinery.png',
+    //
+    // JPEG, not PNG: it is a photograph, and as a PNG it was 1031 KB — 89% of it wasted. q85 with
+    // 4:4:4 chroma subsampling (no colour downsampling) keeps the baked white scrim gradient smooth,
+    // which is the one region JPEG could have banded; measured difference is 0.45% RMSE there.
+    hero: '../src/emails/supplier-onboarding/assets/comacpro-machinery.jpg',
     avatar: '{{sender_avatar}}', // per-sender, filled at send time
-    whatsappIcon: `../src/emails/supplier-onboarding/assets/icons/whatsapp.svg`,
-    emailIcon: `../src/emails/supplier-onboarding/assets/icons/email.svg`,
   },
 
   hero: {

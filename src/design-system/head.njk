@@ -1,22 +1,56 @@
 {#
-  Shared <mj-head>: meta, brand defaults, styles, responsive rules.
-  Colour-scheme is driven by meta.colorScheme ('light' default | 'auto') — see schema.ts.
+  Shared <mj-head>: THE breakpoint, meta, brand defaults, styles, responsive rules.
+  Colour scheme is pinned light for every email — see the LIGHT ONLY note below.
   Colours/fonts come from `tokens`.
 #}
-{% if meta.colorScheme == 'auto' %}
-{# Opt-in: advertise both schemes so supporting clients (Apple Mail/iOS) apply the dark treatment
-   below instead of force-inverting. Needs a dark-safe logo per email to look right. #}
-<mj-raw>
-  <meta name="color-scheme" content="light dark">
-  <meta name="supported-color-schemes" content="light dark">
-</mj-raw>
-{% else %}
-{# Default: pin light so dark-mode clients render the brand as designed (no auto-invert). #}
+
+{#
+  ── THE BREAKPOINT ────────────────────────────────────────────────────────────────────────────
+  ONE number for the whole system, declared once, here. Email has exactly two states — desktop
+  multi-column and mobile stack — so there is no sm/md/lg/xl scale and no second mock. Do not add
+  another media-query width anywhere: build/validate-email.ts fails the build if a third breakpoint
+  appears in the output.
+
+  This is what makes every mj-column stack: MJML compiles it into `@media (min-width:480px)` rules
+  that widen the columns above the breakpoint. The `max-width:479px` block at the bottom of this
+  file is the OTHER HALF of the same breakpoint (480 − 1) — the two are checked against
+  config.ts BREAKPOINT_PX so they can never drift apart.
+
+  Note what this does NOT do: clients that strip <style> (New Outlook, Gmail on a non-Google
+  account) never see that media query, so the breakpoint alone would leave them stacked even on
+  desktop. That is what `css-class="fluid"` is for — see applyFluidMaxWidth.
+#}
+<mj-breakpoint width="480px" />
+
+{#
+  ── LIGHT ONLY ────────────────────────────────────────────────────────────────────────────────
+  These emails are light-only by decision, not by default: pinning the scheme tells dark-mode
+  clients to render the brand as designed instead of auto-inverting it. (The GALLERY has a dark
+  theme — that is the tooling UI, a real web page, and has nothing to do with the emails.)
+
+  There is deliberately no `meta.colorScheme:'auto'` branch any more. It was an unused option
+  waiting on a dark-safe logo that does not exist, i.e. exactly the speculative config
+  docs/architecture.md warns about. If a dark treatment is ever wanted, it comes back as a real
+  feature (dark-safe logo + themed surfaces), not as a flag.
+
+  HONEST LIMIT: this pin is respected by Apple Mail, iOS Mail and Outlook.com. The Gmail app on
+  Android force-inverts light backgrounds regardless of any meta — nothing in the HTML can prevent
+  that, which is why the logo being a dark wordmark on transparent still matters there. Tracked in
+  docs/tokens.md.
+#}
 <mj-raw>
   <meta name="color-scheme" content="light">
   <meta name="supported-color-schemes" content="light">
 </mj-raw>
-{% endif %}
+
+{# Apple Mail / iOS "data detectors" auto-link anything that looks like a phone number, date or
+   postal address and restyle it as blue underlined text — which lands squarely on the two office
+   addresses in blocks/company-legal.njk and turns them into map links in the brand's own footer.
+   Turning detection off is invisible in every other client. The WhatsApp phone number stays
+   tappable because it is a real <a href="https://wa.me/…">, not a detected one. #}
+<mj-raw>
+  <meta name="format-detection" content="telephone=no,date=no,address=no,email=no">
+</mj-raw>
 
 {# Load the brand web font for clients that support it (Apple Mail, iOS…). Outlook/Gmail
    ignore it and fall back to the native system stack in tokens.font.stack. #}
@@ -47,22 +81,50 @@
      iOS / most webmail; Outlook ignores it, so the hosted avatar should still be a square crop. */
   .avatar-img img { object-fit: cover !important; object-position: center !important; }
 
-  /* Reserve heights so feature titles / equipment labels bottom-align across the grid,
-     even when one wraps to a second line — without touching the copy. */
-  .feat-title { min-height: 44px; }
-  .feat-desc { min-height: 104px; }
-  .eq-label { min-height: 34px; }
+  /* Reserve heights so feature titles / equipment labels align across the grid, even when one
+     wraps to a second line — without touching the copy.
 
-  /* Responsive */
+     The ` div` is REQUIRED and was the bug: MJML puts an mj-text's css-class on the wrapping <td>,
+     and `min-height` does not apply to table cells (CSS 2.1 §10.7). So `.feat-title {min-height}`
+     was silently dead — a one-line title left its description 20px higher than a two-line one,
+     which is exactly what this rule exists to prevent. mj-text renders <td><div>…</div></td>, so
+     the reservation has to sit on the div. (Same pattern as `.stat-num div` in buyer-invitation.)
+
+     Embedded CSS: the style-stripping clients lose it and simply align to content. Cosmetic only. */
+  .feat-title div { min-height: 44px; }
+  .feat-desc div { min-height: 104px; }
+  .eq-label div { min-height: 34px; }
+
+  /* ── MOBILE — the one and only breakpoint (479 = BREAKPOINT_PX − 1) ──────────────────────────
+     Everything below the breakpoint lives in THIS block. Adding a second width here is a build
+     error (assertSingleBreakpoint), so keep mobile a single state.
+
+     Reminder on reach: this is embedded CSS. Outlook DESKTOP (Word engine) renders at full width
+     and never reads it — which is fine, because desktop is what these rules undo. New Outlook and
+     Gmail-GANGA also drop it; there the inline `max-width` from `.fluid` does the reflowing, so
+     nothing here is load-bearing for layout — only for polish (gutters, type sizes). */
   @media only screen and (max-width:479px) {
-    /* Fluid-hybrid columns: on real mobile (media-query clients) drop the injected max-width cap and
-       go full-width so hero / CTA / benefits stack cleanly. Stats stay 2-across (mj-group, no rule). */
-    .cta-col, .hero-col, .benefit-col, .hero-s-col { display: block !important; width: 100% !important; max-width: none !important; }
-    .cta-col { padding: 0 0 10px 0 !important; }
-    /* Equipment 6-across and features 4-across both collapse to 2-across */
-    .eq-col, .feat-col { width: 50% !important; max-width: 50% !important; }
-    /* Wider mobile columns need fewer desc lines, so drop the desktop height reservation. */
-    .feat-desc { min-height: 0 !important; }
+    /* Fluid-hybrid columns: drop the injected max-width cap so stacked columns go full-width.
+       One rule for every `fluid` column — a new fluid column is covered automatically.
+       (mj-group columns carry an inline width:% and never stack; they are not `fluid`.)
+
+       ⚠ THE TRAP, if you write an n-across override below: this sets `display:block`, and a
+       50%-wide BLOCK still stacks vertically — you get one column crammed into half the screen.
+       Any rule that narrows a `fluid` column to sit N-across MUST also restore
+       `display:inline-block !important`. That is what the .eq-col/.feat-col rule does. */
+    .fluid { display: block !important; width: 100% !important; max-width: none !important; }
+    /* Paired CTAs: gap between the stacked buttons; MJML puts the side gutters on the inner td. */
+    .cta-col { padding: 0 0 12px 0 !important; }
+    .cta-col td { padding-left: 0 !important; padding-right: 0 !important; }
+    /* Equipment 6-across and features 4-across both collapse to 2-across — NOT to one column:
+       stacking six equipment cards would add ~650px of scroll for six words each.
+       `display:inline-block` is load-bearing here, not decoration: it undoes the `display:block`
+       from .fluid above, which would otherwise make these 50% boxes stack in the left half. */
+    .eq-col, .feat-col { display: inline-block !important; width: 50% !important; max-width: 50% !important; }
+    /* Drop ALL the desktop height reservations here. At 2-across (~180px) every title, label and
+       description fits without the wrap the reservations exist to absorb, so keeping them would add
+       pure empty space — ~100px of it down the email — for an alignment problem mobile doesn't have. */
+    .feat-title div, .feat-desc div, .eq-label div { min-height: 0 !important; }
     /* Stacked offices: gap between them + drop the desktop side gutter so both sit flush-left. */
     .office-col { padding: 0 0 18px 0 !important; }
     .office-col td { padding-left: 0 !important; padding-right: 0 !important; }

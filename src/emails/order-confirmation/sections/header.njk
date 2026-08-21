@@ -1,0 +1,28 @@
+{#
+  Header + headline. Single column, so nothing to stack — the simplest case and the one to copy when
+  a section has one column: no css-class, no `fluid`, no rules. Only real COLUMNS need those.
+#}
+<mj-section background-color="{$ tokens.color.skyBg $}" padding="28px 32px 26px 32px">
+  <mj-column>
+    <mj-image align="left" width="150px" src="{$ content.assets.logo $}" alt="COMACPRO" padding="0 0 20px 0" />
+    <mj-text color="{$ tokens.color.heroTitle $}" font-size="24px" font-weight="700" line-height="1.2" padding="0">
+      {$ content.headline.title $}
+    </mj-text>
+    <mj-divider border-width="4px" border-color="{$ tokens.color.orange $}" width="58px" align="left" padding="12px 0 12px 0" />
+    <mj-text color="{$ tokens.color.heading $}" font-size="14px" line-height="1.5" padding="0">
+      {$ content.headline.subline $}
+    </mj-text>
+  </mj-column>
+</mj-section>
+
+<mj-section padding="26px 32px 0 32px">
+  <mj-column>
+    <mj-text color="{$ tokens.color.heading $}" font-size="17px" font-weight="700" padding="0 0 12px 0">
+      Hi {{buyer_name}},
+    </mj-text>
+    <mj-text padding="0">
+      Your order <span class="brand">{{order_number}}</span> is confirmed. The summary below is your
+      record of it — keep this email until delivery is complete.
+    </mj-text>
+  </mj-column>
+</mj-section>

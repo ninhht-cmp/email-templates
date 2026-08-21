@@ -1,25 +1,21 @@
 import nunjucks from 'nunjucks';
 import { NUNJUCKS_TAGS, SRC_ROOT } from './config.ts';
 
-/** Configure the Nunjucks environment used for every render (build and tests share this). */
+/**
+ * Configure the Nunjucks environment used for every render (build and tests share this).
+ *
+ * Nunjucks' job here is CONTENT ONLY — inject copy, asset URLs, and loop over item lists. It owns
+ * no layout and no responsive logic: stacking is MJML's `<mj-breakpoint>` at compile time, and the
+ * fluid-hybrid `max-width` is derived from MJML's own output afterwards (see applyFluidMaxWidth).
+ * There are deliberately NO layout globals/filters registered — a template that needs a pixel
+ * value computed is a template doing MJML's job.
+ */
 export function createEnv(): nunjucks.Environment {
-  const env = nunjucks.configure(SRC_ROOT, {
+  return nunjucks.configure(SRC_ROOT, {
     autoescape: false,
     trimBlocks: true,
     lstripBlocks: true,
     noCache: true,
     tags: NUNJUCKS_TAGS,
   });
-
-  // `mw(pct, contentWidth)` → the fluid-hybrid column class `mw-<px>`, where px is the column's
-  // desktop box width = pct% × contentWidth (contentWidth = 600 − 2×section horizontal padding).
-  // This DERIVES the max-width instead of hand-typing it (was the audit's H2 magic-number risk):
-  // it stays in sync with the column's width%/padding and matches MJML's own ghost-table px exactly.
-  // See applyFluidMaxWidth (build/html-transforms.ts) and docs/architecture.md §9.
-  env.addGlobal(
-    'mw',
-    (pct: number, contentWidth: number) => `mw-${Math.round((pct / 100) * contentWidth)}`,
-  );
-
-  return env;
 }

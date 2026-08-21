@@ -9,7 +9,7 @@
   <mj-head>
     {% include "design-system/head.njk" %}
     <mj-title>{$ content.document.title $}</mj-title>
-    <mj-preview>{$ content.document.preview $}</mj-preview>
+    {% include "design-system/preheader.njk" %}
   </mj-head>
 
   {# Section registry — the body is this ordered list of section partials + the shared closing

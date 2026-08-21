@@ -11,10 +11,10 @@
 <mj-section css-class="hero-bg" background-url="{$ content.assets.hero $}" background-size="cover"
             background-position="left center" background-repeat="no-repeat"
             background-color="{$ tokens.color.white $}" padding="0">
-  {# Fluid-hybrid: mw() derives max-width from width% × content-width (section padding 0 → content
-     600). Keeps the 56/44 split side-by-side on New Outlook / Outlook webml (no media query needed),
-     and confines the copy to its box on mobile so it stays over the left scrim, not the busy centre. #}
-  <mj-column css-class="hero-s-col {$ mw(56, 600) $}" width="56%" vertical-align="middle" padding="24px 8px 24px 32px">
+  {# `fluid` = inline max-width read from MJML's own ghost-table width at build time. Keeps the 56/44
+     split side-by-side on New Outlook / Outlook webml (no media query needed), and confines the copy
+     to its box on mobile so it stays over the left scrim, not the busy centre. #}
+  <mj-column css-class="hero-s-col fluid" width="56%" vertical-align="middle" padding="24px 8px 24px 32px">
     <mj-image align="left" width="128px" height="auto" src="{$ content.assets.logo $}" alt="COMACPRO" padding="0 0 14px 0" />
     <mj-text color="{$ tokens.color.heroTitle $}" font-size="24px" font-weight="600" line-height="1.25" padding="0">
       {$ content.hero.heading $}
@@ -24,7 +24,7 @@
       {$ content.hero.subline | replace('{brand}', '<span class="brand">COMACPRO</span>') | safe $}
     </mj-text>
   </mj-column>
-  <mj-column css-class="hero-s-col {$ mw(44, 600) $}" width="44%" vertical-align="middle" padding="0">
+  <mj-column css-class="hero-s-col fluid" width="44%" vertical-align="middle" padding="0">
     <mj-text padding="0">&#8202;</mj-text>
   </mj-column>
 </mj-section>

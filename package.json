@@ -13,7 +13,7 @@
     "format": "biome format --write .",
     "test": "tsx --test test/*.test.ts",
     "lint:email": "tsx build/lint-compat.ts",
-    "simulate": "tsx build/simulate-clients.ts",
+    "assets:optimize": "tsx build/optimize-assets.ts",
     "validate": "biome check . && tsc --noEmit && tsx build/main.ts && tsx build/lint-compat.ts && tsx --test test/*.test.ts"
   },
   "engines": {

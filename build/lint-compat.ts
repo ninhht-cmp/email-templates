@@ -2,8 +2,12 @@
 //
 // Static-analyses the built dist/*.html for CSS/markup that silently breaks in real
 // inboxes — the things MJML does NOT guarantee once you hand-edit sections/head. It is a
-// SAFETY NET for future edits, not an asset checker: image hosting (repo-relative paths,
-// SVG-vs-PNG) is deliberately out of scope — those are swapped to CDN URLs before sending.
+// SAFETY NET for future edits.
+//
+// Asset HOSTING (is this URL reachable / is it a prod host) is out of scope — build/main.ts owns
+// that. Asset FORMAT is in scope, because a wrong format is a rendering bug: a hosted `.svg` in an
+// <img> passes every hosting check and still shows nothing in Gmail and Outlook, so this is the only
+// place that can catch it.
 //
 // Severity:
 //   error → breaks layout/text in a mainstream client; fails `npm run lint:email`
@@ -13,7 +17,9 @@
 // Run:  npm run lint:email        (build first — it reads dist/, does not build)
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 
-import { GMAIL_CLIP_KB, OUT_DIR } from './config.ts';
+import { findSvgImages } from './analyze.ts';
+import { BREAKPOINT_PX, GMAIL_CLIP_KB, OUT_DIR, QP_OVERHEAD } from './config.ts';
+import { collectBreakpoints } from './html-transforms.ts';
 
 type Severity = 'error' | 'warn' | 'info';
 
@@ -41,33 +47,97 @@ function withoutMsoOnly(html: string): string {
 
 function lintOne(filePath: string): Finding[] {
   const html = readFileSync(filePath, 'utf8');
-  const kb = statSync(filePath).size / 1024;
+  // Gmail's limit applies to the quoted-printable MIME body, not the file on disk — quote the size
+  // the recipient's client actually measures, or the reported margin is ~4% better than the real one.
+  const kb = (statSync(filePath).size * QP_OVERHEAD) / 1024;
   const nonOutlook = withoutMsoOnly(html);
   const out: Finding[] = [];
   const add = (severity: Severity, rule: string, client: string, message: string) =>
     out.push({ severity, rule, client, message });
 
   // ── Gmail message clipping ──────────────────────────────────────────────
+  const sent = `${kb.toFixed(1)} KB encoded (quoted-printable, ×${QP_OVERHEAD})`;
   if (kb > GMAIL_CLIP_KB) {
     add(
       'error',
       'gmail-clip',
       'Gmail',
-      `${kb.toFixed(1)} KB > ${GMAIL_CLIP_KB} KB — Gmail clips the tail and hides the unsubscribe. Run build:min or trim a section.`,
+      `${sent} > ${GMAIL_CLIP_KB} KB — Gmail clips the tail and hides the unsubscribe. Ship the .min.html or trim a section.`,
     );
   } else if (kb > GMAIL_CLIP_KB * 0.9) {
     add(
       'warn',
       'gmail-clip',
       'Gmail',
-      `${kb.toFixed(1)} KB — within 10% of the ${GMAIL_CLIP_KB} KB clip limit. Watch size as sections are added.`,
+      `${sent} — within 10% of the ${GMAIL_CLIP_KB} KB clip limit. Watch size as sections are added.`,
+    );
+  } else {
+    add('info', 'gmail-clip', 'Gmail', `${sent} — under the ${GMAIL_CLIP_KB} KB clip limit.`);
+  }
+
+  // ── SVG in <img> — invisible in Gmail and Outlook ────────────────────────
+  // Not a hosting question (a hosted .svg passes every asset check and still breaks), so it lives
+  // here: this is the gate between "SVG masters preview fine locally" and "the icons shipped".
+  // Severity turns on whether the SVG is about to SHIP: a repo-relative one is an intentional
+  // design master that only ever renders in the local preview, so it is a to-do (warn). A HOSTED
+  // .svg means someone finished the hosting step with the wrong format and every other check in the
+  // repo says OK — that one is an error, because nothing else would ever catch it.
+  const svgs = findSvgImages(html);
+  const hostedSvgs = svgs.filter((src) => /^https?:\/\//i.test(src));
+  const localSvgs = svgs.filter((src) => !/^https?:\/\//i.test(src));
+  const names = (list: string[]) => list.map((s) => s.split('/').pop()).join(', ');
+  if (hostedSvgs.length > 0) {
+    add(
+      'error',
+      'svg-in-img',
+      'Gmail/Outlook',
+      `${hostedSvgs.length}× HOSTED SVG in <img src> — Gmail (web + app) and Outlook render nothing at all for these, and no asset-hosting check will flag it because the URL is valid. Rasterize to PNG: ${names(hostedSvgs)}`,
+    );
+  }
+  if (localSvgs.length > 0) {
+    add(
+      'warn',
+      'svg-in-img',
+      'Gmail/Outlook',
+      `${localSvgs.length}× local SVG master in <img src> — fine for the preview, invisible in Gmail/Outlook if sent as-is. Before the campaign: \`npm run assets:optimize -- --write\`, host dist/assets/, update content.ts. (${names(localSvgs)})`,
+    );
+  }
+
+  // ── One breakpoint, not a scale ──────────────────────────────────────────
+  const { min, max } = collectBreakpoints(html);
+  const extraMin = min.filter((px) => px !== BREAKPOINT_PX);
+  const extraMax = max.filter((px) => px !== BREAKPOINT_PX - 1);
+  if (extraMin.length > 0 || extraMax.length > 0) {
+    add(
+      'error',
+      'breakpoints',
+      'all',
+      `extra breakpoint(s) ${[...extraMin, ...extraMax].join(', ')}px — email has two states (desktop multi-column / mobile stack), so only ${BREAKPOINT_PX} (mj-breakpoint) and ${BREAKPOINT_PX - 1} (the mobile block) are allowed. Outlook desktop reads neither; per-device tuning buys nothing.`,
     );
   } else {
     add(
       'info',
-      'gmail-clip',
-      'Gmail',
-      `${kb.toFixed(1)} KB — comfortably under the ${GMAIL_CLIP_KB} KB clip limit.`,
+      'breakpoints',
+      'all',
+      `single breakpoint at ${BREAKPOINT_PX}px (+ its ${BREAKPOINT_PX - 1}px mobile mirror). Good.`,
+    );
+  }
+
+  // ── Fluid-hybrid columns must carry an INLINE max-width ─────────────────
+  // The clients this exists for (New Outlook, Gmail-GANGA) never see the <style> block, so a
+  // `fluid` column without an inline max-width silently stacks on desktop there.
+  const fluidCols = (html.match(/<div[^>]*\bclass="[^"]*\bfluid\b[^"]*"[^>]*>/g) ?? []).length;
+  if (fluidCols > 0) {
+    const capped = (
+      html.match(/<div[^>]*\bclass="[^"]*\bfluid\b[^"]*"[^>]*style="max-width:\d+px;/g) ?? []
+    ).length;
+    add(
+      capped === fluidCols ? 'info' : 'error',
+      'fluid-hybrid',
+      'New Outlook/Gmail GANGA',
+      capped === fluidCols
+        ? `${fluidCols}× fluid column, all with an inline max-width — columns hold without a media query. Good.`
+        : `${fluidCols - capped} of ${fluidCols} fluid columns have NO inline max-width — they will stack on desktop in clients that strip <style>.`,
     );
   }
 
@@ -184,6 +254,40 @@ function lintOne(filePath: string): Finding[] {
       `${cssVar}× var(--…) custom property — Outlook desktop can't resolve it and falls back to inherited/black. Inline the literal value.`,
     );
 
+  // ── Outlook desktop: every <img> needs a width ATTRIBUTE ─────────────────
+  // The Word engine sizes an image from its attributes, not CSS. An <img> with only a CSS width
+  // renders at the file's intrinsic size there — a 1774px hero inside a 600px table blows the whole
+  // layout apart. The attribute is also what a blocked-image inbox reserves space with.
+  const imgs = html.match(/<img\b[^>]*>/gi) ?? [];
+  const noWidthAttr = imgs.filter((tag) => !/\bwidth="/i.test(tag));
+  if (imgs.length > 0) {
+    add(
+      noWidthAttr.length === 0 ? 'info' : 'error',
+      'img-width-attr',
+      'Outlook',
+      noWidthAttr.length === 0
+        ? `${imgs.length}× <img>, all with a width attribute — Outlook's Word engine sizes from attributes, not CSS. Good.`
+        : `${noWidthAttr.length} of ${imgs.length} <img> have no width ATTRIBUTE — Outlook desktop renders them at intrinsic size and breaks the 600px layout. Add width="…" (keep the CSS too).`,
+    );
+  }
+
+  // ── Apple Mail / iOS data detectors ──────────────────────────────────────
+  if (!/format-detection/i.test(html)) {
+    add(
+      'warn',
+      'ios-data-detectors',
+      'Apple Mail/iOS',
+      'No <meta name="format-detection"> — iOS auto-links phone numbers, dates and postal addresses and restyles them blue/underlined, which hits the office addresses in the footer. Add the meta (design-system/head.njk).',
+    );
+  } else {
+    add(
+      'info',
+      'ios-data-detectors',
+      'Apple Mail/iOS',
+      'format-detection meta present — iOS will not re-style the footer addresses as map links. Good.',
+    );
+  }
+
   // ── role=presentation on layout tables — accessibility safeguard ─────────
   const roles = count(html, /role=["']presentation["']/gi);
   add(
@@ -196,14 +300,15 @@ function lintOne(filePath: string): Finding[] {
   );
 
   // ── Light-only pin — stops dark-mode clients auto-inverting the brand ────
+  // Light-only is a decision, not a default, so a missing pin is an error rather than an FYI.
   const colorScheme = /content=["']light["']/i.test(html) && /supported-color-schemes/i.test(html);
   add(
-    colorScheme ? 'info' : 'warn',
+    colorScheme ? 'info' : 'error',
     'dark-mode',
     'Apple Mail/iOS/Outlook.com',
     colorScheme
       ? 'color-scheme pinned to light — dark-mode clients render the brand as designed. Good.'
-      : 'No color-scheme=light pin — dark-mode clients may auto-invert brand colours unpredictably.',
+      : 'No color-scheme=light pin — these emails are light-only; without it dark-mode clients auto-invert the brand unpredictably. It belongs in design-system/head.njk.',
   );
 
   return out;

@@ -2,16 +2,23 @@
 <mj-section padding="8px 32px 24px 32px">
   <mj-column>
     <mj-divider border-width="1px" border-color="{$ tokens.color.divider $}" padding="0 0 16px 0" />
-    {# The unsubscribe clause is wrapped in a Handlebars if-conditional (passed through the build
-       untouched): the sending system renders it only when it provides an `unsubscribe` value (its
-       unsubscribe toggle on), and drops it otherwise. The `#if` open is emitted via a Nunjucks
-       string because Nunjucks' comment token is `{&hash;` — the two-brace `#if` would otherwise be
-       misread as a comment start; the close and the href are plain passthrough. The .unsub-sim span
-       lets the gallery preview simulate on/off (preview-samples.ts fills the sample so it shows by
-       default; the gallery checkbox toggles it). #}
+    {# The opt-out clause is rendered for MARKETING campaigns only — `meta.category` decides, which is
+       what that field is for. A transactional receipt must NOT offer to unsubscribe from receipts,
+       and offering it would be wrong rather than merely redundant. build/validate-email.ts asserts
+       the other direction: a marketing email that ends up WITHOUT {{unsubscribe}} fails the build.
+
+       Within a marketing send the clause is still wrapped in a Handlebars if-conditional (passed
+       through the build untouched): the sending system renders it only when it provides an
+       `unsubscribe` value (its unsubscribe toggle on), and drops it otherwise. The `#if` open is
+       emitted via a Nunjucks string because Nunjucks' comment token is `{&hash;` — the two-brace
+       `#if` would otherwise be misread as a comment start; the close and the href are plain
+       passthrough. The .unsub-sim span lets the gallery preview simulate on/off (preview-samples.ts
+       fills the sample so it shows by default; the gallery checkbox toggles it). #}
     <mj-text font-size="12px" color="{$ tokens.color.footer $}" line-height="1.6" padding="0">
       {$ content.compliance.sourceBasis $}
+      {% if meta.category == 'marketing' %}
       {$ '{{#if unsubscribe}}' $}<span class="unsub-sim">Prefer not to receive these emails? <a href="{{unsubscribe}}" style="color:{$ tokens.color.footer $};text-decoration:underline;">Unsubscribe</a>.</span>{{/if}}
+      {% endif %}
     </mj-text>
   </mj-column>
 </mj-section>
